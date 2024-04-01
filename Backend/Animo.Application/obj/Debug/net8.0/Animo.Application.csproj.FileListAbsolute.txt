@@ -1,0 +1,11 @@
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/bin/Debug/net8.0/Animo.Application.deps.json
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/bin/Debug/net8.0/Animo.Application.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/bin/Debug/net8.0/Animo.Application.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.AssemblyInfoInputs.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.AssemblyInfo.cs
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.csproj.CoreCompileInputs.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/refint/Animo.Application.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/ref/Animo.Application.dll

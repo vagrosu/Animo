@@ -1,0 +1,17 @@
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.deps.json
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Animo.Domain.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Animo.Domain.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.AssemblyReference.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfoInputs.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.AssemblyInfo.cs
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.CoreCompileInputs.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.csproj.CopyComplete
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/refint/Infrastructure.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.runtimeconfig.json
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.genruntimeconfig.cache
