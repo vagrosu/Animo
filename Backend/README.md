@@ -1,5 +1,5 @@
 # Creating a New Migration
-## 1. Infrastructure
+## Infrastructure
 ```bash
 dotnet ef migrations add MigrationName --project Infrastructure/Infrastructure.csproj --startup-project Animo.API/Animo.API.csproj --context AnimoContext
 ```
