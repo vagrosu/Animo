@@ -16,9 +16,11 @@
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.1" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Animo.Application\Animo.Application.csproj" />
       <ProjectReference Include="..\Animo.Domain\Animo.Domain.csproj" />
     </ItemGroup>
 
