@@ -9,3 +9,8 @@
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/refint/Animo.Application.dll
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.pdb
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/ref/Animo.Application.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/bin/Debug/net8.0/Animo.Domain.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/bin/Debug/net8.0/Animo.Domain.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.csproj.AssemblyReference.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.sourcelink.json
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/obj/Debug/net8.0/Animo.Application.csproj.CopyComplete

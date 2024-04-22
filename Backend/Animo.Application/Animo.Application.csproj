@@ -11,4 +11,9 @@
       <ProjectReference Include="..\Animo.Domain\Animo.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.2.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-preview.3.24172.9" />
+    </ItemGroup>
+
 </Project>

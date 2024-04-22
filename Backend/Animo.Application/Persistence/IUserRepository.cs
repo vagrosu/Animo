@@ -8,4 +8,5 @@ public interface IUserRepository : IAsyncRepository<User>
 {
     Task<Result<User>> FindByEmailAsync(string email);
     Task<Result<User>> FindByPhoneNumberAsync(string phoneNumber);
+    Task<Result<User>> FindByUsernameAsync(string username);
 }

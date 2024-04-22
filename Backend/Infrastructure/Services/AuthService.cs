@@ -16,11 +16,18 @@ public class AuthService(UserManager<User> userManager, IUserRepository userRepo
 {
     public async Task<(int, string)> RegistrationAsync(RegistrationModel model)
     {
-        var userByEmail = await userRepository.FindByEmailAsync(model.Email);
-        var userByPhoneNumber = await userRepository.FindByPhoneNumberAsync(model.PhoneNumber);
+        var userByUsername = await userRepository.FindByUsernameAsync(model.UserName);
+        if (userByUsername.IsSuccess)
+            return (0, "Username already exists");
 
-        if (userByEmail.IsSuccess || userByPhoneNumber.IsSuccess)
-            return (0, "User already exists");
+        var userByEmail = await userRepository.FindByEmailAsync(model.Email);
+        if (userByEmail.IsSuccess)
+            return (0, "Email already exists");
+
+        var userByPhoneNumber = await userRepository.FindByPhoneNumberAsync(model.PhoneNumber);
+        if (userByPhoneNumber.IsSuccess)
+            return (0, "Phone number already exists");
+
 
         if (!IsPasswordValid(model.Password))
         {
@@ -29,6 +36,7 @@ public class AuthService(UserManager<User> userManager, IUserRepository userRepo
 
         var user = new User()
         {
+            UserName = model.UserName,
             FirstName = model.FirstName,
             LastName = model.LastName,
             Email = model.Email,
@@ -37,20 +45,21 @@ public class AuthService(UserManager<User> userManager, IUserRepository userRepo
         };
         var createUserResult = await userManager.CreateAsync(user, model.Password);
 
-        return !createUserResult.Succeeded ? (0, "User creation failed! Please check user details and try again.") : (1, "User created successfully");
-
+        return !createUserResult.Succeeded ? (0, string.Join(", ", createUserResult.Errors.Select(x => "Code " + x.Code + " Description" + x.Description))) : (1, "User created successfully");
     }
 
     public async Task<(int, string)> LoginAsync(LoginModel model)
     {
+        var userByUsername = await userRepository.FindByUsernameAsync(model.Identifier);
         var userByEmail = await userRepository.FindByEmailAsync(model.Identifier);
         var userByPhoneNumber = await userRepository.FindByPhoneNumberAsync(model.Identifier);
-        if (!userByEmail.IsSuccess && !userByPhoneNumber.IsSuccess)
+
+        if (!userByEmail.IsSuccess && !userByPhoneNumber.IsSuccess && !userByUsername.IsSuccess)
         {
             return (0, "User not found");
         }
 
-        var user = userByEmail.IsSuccess ? userByEmail.Value : userByPhoneNumber.Value;
+        var user = userByEmail.IsSuccess ? userByEmail.Value : (userByPhoneNumber.IsSuccess ? userByPhoneNumber.Value : userByUsername.Value);
         if (!await userManager.CheckPasswordAsync(user, model.Password))
         {
             return (0, "Invalid password");

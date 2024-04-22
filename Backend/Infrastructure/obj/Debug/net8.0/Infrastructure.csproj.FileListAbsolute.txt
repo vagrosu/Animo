@@ -15,3 +15,6 @@
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Infrastructure.runtimeconfig.json
 /Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.genruntimeconfig.cache
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Animo.Application.dll
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/bin/Debug/net8.0/Animo.Application.pdb
+/Users/victorgrosu/Documents/Licenta/Animo/Backend/Infrastructure/obj/Debug/net8.0/Infrastructure.sourcelink.json

@@ -18,4 +18,10 @@ public class UserRepository(AnimoContext context) : BaseRespository<User>(contex
         var result = await context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber);
         return result == null ? Result<User>.Failure($"Entity with phone number {phoneNumber} not found") : Result<User>.Success(result);
     }
+
+    public async Task<Result<User>> FindByUsernameAsync(string username)
+    {
+        var result = await context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+        return result == null ? Result<User>.Failure($"Entity with username {username} not found") : Result<User>.Success(result);
+    }
 }

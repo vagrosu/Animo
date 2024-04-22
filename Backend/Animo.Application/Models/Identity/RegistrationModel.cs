@@ -4,6 +4,9 @@ namespace Animo.Application.Models.Identity;
 
 public class RegistrationModel
 {
+    [Required(ErrorMessage = "Username is required")]
+    public string UserName { get; set; }
+
     [Required(ErrorMessage = "First Name is required")]
     public string FirstName { get; set; }
 
