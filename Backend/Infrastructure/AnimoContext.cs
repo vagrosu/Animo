@@ -24,16 +24,6 @@ public class AnimoContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
         modelBuilder.Entity<ChatRoomMember>()
             .HasKey(crm => new { crm.UserId, crm.ChatRoomId });
 
-        modelBuilder.Entity<ChatRoomMember>()
-            .HasOne(crm => crm.User)
-            .WithMany(u => u.ChatRoomMembers)
-            .HasForeignKey(crm => crm.UserId);
-
-        modelBuilder.Entity<ChatRoomMember>()
-            .HasOne(crm => crm.ChatRoom)
-            .WithMany(c => c.ChatRoomMembers)
-            .HasForeignKey(crm => crm.ChatRoomId);
-
         modelBuilder.Entity<TextMessage>().ToTable("TextMessages");
         modelBuilder.Entity<ImageMessage>().ToTable("ImageMessages");
         modelBuilder.Entity<User>().ToTable("Users");

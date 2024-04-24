@@ -2,6 +2,8 @@ namespace Animo.Domain.Responses;
 
 public class BaseResponse
 {
+    public BaseResponse() => Success = true;
+
     public BaseResponse(bool success, int? statusCode = 200, string? message = null)
     {
         Success = success;
@@ -9,13 +11,8 @@ public class BaseResponse
         StatusCode = statusCode ?? (success ? 200 : 400);
     }
 
-    public bool Success { get; }
-    public int StatusCode { get; }
-    public string? Message { get; }
-    public IEnumerable<string>? ValidationErrors { get; private set; }
-
-    public void AddValidationError(string error)
-    {
-        ValidationErrors ??= new List<string>();
-        ((List<string>)ValidationErrors).Add(error);
-    }}
+    public bool Success { get; set; }
+    public int StatusCode { get; set; }
+    public string? Message { get; set; }
+    public IEnumerable<string> ValidationsErrors { get; set; }
+}

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Animo.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2fb7a25d311d3e391ebf027b1beadd514da81bfe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd202a13f2f2ad0b9370ce5ac986a55aaa432485")]
 [assembly: System.Reflection.AssemblyProductAttribute("Animo.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Animo.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

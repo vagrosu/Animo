@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class UserRepository(AnimoContext context) : BaseRespository<User>(context), IUserRepository
+public class UserRepository(AnimoContext context) : BaseRepository<User>(context), IUserRepository
 {
     public virtual async Task<Result<User>> FindByEmailAsync(string email)
     {

@@ -468,21 +468,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Animo.Domain.Entities.ChatRoomMember", b =>
                 {
-                    b.HasOne("Animo.Domain.Entities.ChatRoom", "ChatRoom")
+                    b.HasOne("Animo.Domain.Entities.ChatRoom", null)
                         .WithMany("ChatRoomMembers")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Animo.Domain.Entities.User", "User")
+                    b.HasOne("Animo.Domain.Entities.User", null)
                         .WithMany("ChatRoomMembers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ChatRoom");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Animo.Domain.Entities.MessageReaction", b =>

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class BaseRespository<T> : IAsyncRepository<T> where T : class
+public class BaseRepository<T> : IAsyncRepository<T> where T : class
 {
     protected readonly AnimoContext _context;
 
-    public BaseRespository(AnimoContext context)
+    public BaseRepository(AnimoContext context)
     {
         _context = context;
     }

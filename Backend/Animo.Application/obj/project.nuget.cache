@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "DDXNMit19XIDLQjYetLP8liZ+cahVNDpOvtTmIocw2vJDz68e+sQOFx1lFrUhtzYefiLzFjHoKrvtzPc6N+5Ug==",
+  "dgSpecHash": "8VYyOOJrrJx8NBo3aDYGkaUVyGHAIVfUU04TYvJi0vbnrPZMBFEP8DkogeqLQjYpRuxMnv7ILKyPFi23hVWf7g==",
   "success": true,
   "projectFilePath": "/Users/victorgrosu/Documents/Licenta/Animo/Backend/Animo.Application/Animo.Application.csproj",
   "expectedPackageFiles": [
+    "/Users/victorgrosu/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
     "/Users/victorgrosu/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
     "/Users/victorgrosu/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/victorgrosu/.nuget/packages/microsoft.aspnetcore.cryptography.internal/8.0.3/microsoft.aspnetcore.cryptography.internal.8.0.3.nupkg.sha512",
