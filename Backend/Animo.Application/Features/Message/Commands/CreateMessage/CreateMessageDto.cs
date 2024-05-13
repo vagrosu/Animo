@@ -1,6 +1,6 @@
-namespace Animo.Application.Features.TextMessages.Commands.CreateTextMessage;
+namespace Animo.Application.Features.Message.Commands.CreateMessage;
 
-public class CreateTextMessageDto
+public class CreateMessageDto
 {
     public Guid TextMessageId { get; set; }
     public string Text { get; set; }

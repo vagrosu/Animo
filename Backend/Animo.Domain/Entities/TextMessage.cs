@@ -6,7 +6,7 @@ public class TextMessage : Message
 {
     public string Text { get; set; }
 
-    private TextMessage(User sender, ChatRoom chatRoom, string text, MessageEmotion messageEmotion, UserPhotoEmotion userPhotoEmotion, TextMessage? repliedMessage, bool? isForwarded)
+    private TextMessage(User sender, ChatRoom chatRoom, string text, MessageEmotion? messageEmotion, UserPhotoEmotion? userPhotoEmotion, TextMessage? repliedMessage, bool? isForwarded)
     {
         ChatRoom = chatRoom;
         Sender = sender;

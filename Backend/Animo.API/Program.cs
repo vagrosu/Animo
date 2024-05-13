@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+DotNetEnv.Env.TraversePath().Load();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();

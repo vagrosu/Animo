@@ -1,4 +1,4 @@
-namespace Animo.Application.Features.ChatRooms.Queries;
+namespace Animo.Application.Features.ChatRooms.Queries.GetChatRoomsByUserId;
 
 public class GetChatRoomByUserIdDto
 {

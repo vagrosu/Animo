@@ -14,5 +14,5 @@ public class BaseResponse
     public bool Success { get; set; }
     public int StatusCode { get; set; }
     public string? Message { get; set; }
-    public IEnumerable<string> ValidationsErrors { get; set; }
+    public IEnumerable<string>? ValidationsErrors { get; set; }
 }

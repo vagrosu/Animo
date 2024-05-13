@@ -1,8 +1,8 @@
 using MediatR;
 
-namespace Animo.Application.Features.TextMessages.Commands.CreateTextMessage;
+namespace Animo.Application.Features.Message.Commands.CreateMessage;
 
-public class CreateTextMessageCommand : IRequest<CreateTextMessageCommandResponse>
+public class CreateMessageCommand : IRequest<CreateMessageCommandResponse>
 {
     public string ChatRoomId { get; set; }
     public string SenderId { get; set; }

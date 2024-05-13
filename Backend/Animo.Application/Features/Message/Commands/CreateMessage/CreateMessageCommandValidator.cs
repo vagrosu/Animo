@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Animo.Application.Features.TextMessages.Commands.CreateTextMessage;
+namespace Animo.Application.Features.Message.Commands.CreateMessage;
 
-public class CreateTextMessageCommandValidator : AbstractValidator<CreateTextMessageCommand>
+public class CreateMessageCommandValidator : AbstractValidator<CreateMessageCommand>
 {
-    public CreateTextMessageCommandValidator()
+    public CreateMessageCommandValidator()
     {
         RuleFor(c => c.ChatRoomId)
             .NotEmpty().WithMessage("{PropertyName} is required.")

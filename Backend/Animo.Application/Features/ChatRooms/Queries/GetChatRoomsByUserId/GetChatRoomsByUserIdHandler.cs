@@ -25,7 +25,7 @@ public class GetChatRoomsByUserIdHandler(IChatRoomRepository chatRoomRepository,
             return new GetChatRoomsByUserIdResponse
             {
                 Success = false,
-                ValidationsErrors = new List<string> { $"Invalid user id {request.UserId}." }
+                ValidationsErrors = new List<string> { $"Invalid userId {request.UserId}." }
             };
         }
         var user = await _userRepository.FindByIdAsync(userId);
@@ -39,6 +39,15 @@ public class GetChatRoomsByUserIdHandler(IChatRoomRepository chatRoomRepository,
         }
 
         var chatRooms = await _chatRoomRepository.GetByUserIdAsync(userId);
+        if (!chatRooms.IsSuccess)
+        {
+            return new GetChatRoomsByUserIdResponse
+            {
+                Success = false,
+                ValidationsErrors = new List<string> { chatRooms.Error }
+            };
+        }
+
         return new GetChatRoomsByUserIdResponse
         {
             Success = true,
