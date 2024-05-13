@@ -425,3 +425,5 @@ fabric.properties
 
 [Bb]in/
 [Oo]bj/
+
+.env
