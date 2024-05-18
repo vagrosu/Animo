@@ -6,5 +6,5 @@ namespace Animo.Application.Persistence;
 
 public interface ITextMessageRepository : IAsyncRepository<TextMessage>
 {
-    public Task<Result<IReadOnlyList<TextMessage>>> GetByChatRoomIdAsync(Guid chatRoomId);
+    public Task<Result<IReadOnlyList<TextMessage>>> FindByChatRoomIdAsync(Guid chatRoomId);
 }

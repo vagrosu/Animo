@@ -12,15 +12,26 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
     {
     }
 
-    public async Task<Result<IReadOnlyList<TextMessage>>> GetByChatRoomIdAsync(Guid chatRoomId)
+    public async Task<Result<TextMessage>> FindByIdAsync(Guid id)
     {
-        var result = _context.Set<TextMessage>()
+        var result = await _context.Set<TextMessage>()
+            .Include(message => message.Sender)
+            .Include(message => message.MessageEmotion)
+            .Include(message => message.UserPhotoEmotion)
+            .FirstOrDefaultAsync(message => message.MessageId == id);
+
+        return result == null ? Result<TextMessage>.Failure($"Entity with id {id} not found") : Result<TextMessage>.Success(result);
+    }
+
+    public async Task<Result<IReadOnlyList<TextMessage>>> FindByChatRoomIdAsync(Guid chatRoomId)
+    {
+        var result = await _context.Set<TextMessage>()
             .Where(textMessage => textMessage.ChatRoom.ChatRoomId == chatRoomId)
             .Include(message => message.Sender)
             .Include(message => message.MessageEmotion)
             .Include(message => message.UserPhotoEmotion)
             .ToListAsync();
 
-        return Result<IReadOnlyList<TextMessage>>.Success(await result);
+        return Result<IReadOnlyList<TextMessage>>.Success(result);
     }
 }

@@ -39,7 +39,7 @@ public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRep
             };
         }
 
-        var textMessages = await _textMessageRepository.GetByChatRoomIdAsync(chatRoomId);
+        var textMessages = await _textMessageRepository.FindByChatRoomIdAsync(chatRoomId);
         if (!textMessages.IsSuccess)
         {
             return new GetMessageByChatRoomIdResponse
@@ -56,7 +56,7 @@ public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRep
             {
                 var emotion = Emotion.Max(textMessage.MessageEmotion + textMessage.UserPhotoEmotion);
 
-                return new GetMessageByChatRoomIdDto
+                return new ChatRoomMessageDto
                 {
                     TextMessageId = textMessage.MessageId,
                     Text = textMessage.Text,

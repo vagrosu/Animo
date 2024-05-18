@@ -1,4 +1,5 @@
 using Animo.Application;
+using Animo.Application.Hubs;
 using Animo.Utility;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -10,9 +11,17 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Open", corsBuilder => corsBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+    options.AddPolicy(
+        "Open",
+        corsBuilder => corsBuilder
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
 });
 // Add services to the container.
+builder.Services.AddSignalR();
 builder.Services.AddIdentityInfrastructureToDi(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
@@ -60,6 +69,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+app.MapHub<ChatRoomHub>("/ChatRoomHub");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

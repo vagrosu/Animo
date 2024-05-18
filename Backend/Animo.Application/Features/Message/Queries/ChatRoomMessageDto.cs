@@ -1,6 +1,6 @@
-namespace Animo.Application.Features.Message.Queries.GetTextMessageByChatRoomId;
+namespace Animo.Application.Features.Message.Queries;
 
-public class GetMessageByChatRoomIdDto
+public class ChatRoomMessageDto
 {
     public Guid TextMessageId { get; set; }
     public string Text { get; set; }
