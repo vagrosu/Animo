@@ -1,12 +1,14 @@
 using Animo.Application.Contracts.Identity;
+using Animo.Application.Features.Users.Queries.GetCurrentUser;
 using Animo.Application.Models.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Animo.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
-public class AuthenticationController(IAuthService authService, ILogger<AuthenticationController> logger) : ControllerBase
+public class AuthenticationController(IAuthService authService, ILogger<AuthenticationController> logger) : ApiControllerBase
 {
     [HttpPost]
     [Route("login")]
@@ -53,12 +55,35 @@ public class AuthenticationController(IAuthService authService, ILogger<Authenti
                 return BadRequest(message);
             }
 
-            return CreatedAtAction(nameof(Register), model);
+            return CreatedAtAction(nameof(Register), null);
         }
         catch (Exception e)
         {
             logger.LogError(e.Message);
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
+    }
+
+    [HttpGet]
+    [Route("current-user")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var query = new GetCurrentUserQuery();
+        var response = await Mediator.Send(query);
+
+        if (response.StatusCode == 401)
+        {
+            return StatusCode(StatusCodes.Status401Unauthorized, response);
+        }
+
+        if (response.StatusCode == 500)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, response);
+        }
+
+        return Ok(response);
     }
 }

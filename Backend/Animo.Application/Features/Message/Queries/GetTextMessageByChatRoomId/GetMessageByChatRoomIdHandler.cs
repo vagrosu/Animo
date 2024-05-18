@@ -66,7 +66,7 @@ public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRep
                     RepliedMessageId = textMessage.RepliedMessage?.MessageId,
                     IsForwarded = textMessage.IsForwarded
                 };
-            }).OrderByDescending(textMessage => textMessage.SentTime).ToList()
+            }).OrderBy(textMessage => textMessage.SentTime).ToList()
         };
     }
 }
