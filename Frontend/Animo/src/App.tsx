@@ -1,10 +1,20 @@
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from "react-toastify";
+import {QueryClient, QueryClientProvider} from "react-query";
+import AppRoutes from "./routes/AppRoutes.tsx";
 
 function App() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false
+      }
+    }
+  });
 
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -15,8 +25,9 @@ function App() {
         theme="light"
         stacked
       />
-    </div>
+      <AppRoutes />
+    </QueryClientProvider>
   )
 }
 
-export default App
+export default App;

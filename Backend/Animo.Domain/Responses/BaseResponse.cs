@@ -2,7 +2,10 @@ namespace Animo.Domain.Responses;
 
 public class BaseResponse
 {
-    public BaseResponse() => Success = true;
+    public BaseResponse() {
+        Success = true;
+        StatusCode = 200;
+    }
 
     public BaseResponse(bool success, int? statusCode = 200, string? message = null)
     {
