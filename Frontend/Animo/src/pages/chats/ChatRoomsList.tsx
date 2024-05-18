@@ -33,6 +33,10 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
   }
 
   const onSelectChatRoom = async (chatRoom: Omit<ChatRoomType, "connection">) => {
+    if (selectedChatRoom && selectedChatRoom.chatRoomId === chatRoom.chatRoomId) {
+      return;
+    }
+
     try {
       if (selectedChatRoom?.connection) {
         await selectedChatRoom.connection.stop();
