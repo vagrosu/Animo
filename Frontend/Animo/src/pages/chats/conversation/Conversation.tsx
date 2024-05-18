@@ -1,14 +1,12 @@
 import {useQuery} from "react-query";
-import {MessagesChatRoomIdResponseType} from "../../../types/api/responses.tsx";
+import {MessagesChatRoomIdResponseType, MessagesMessageIdResponseType} from "../../../types/api/responses.tsx";
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
 import {format, isToday, isYesterday, parseISO} from "date-fns";
+import {ChatRoomType, MessageType} from "../types.ts";
+import {useEffect, useState} from "react";
 
-type ConversationProps = {
-  chatRoomId: string;
-}
-
-function formatMessageDate(date: string) {
+const formatMessageDate = (date: string) => {
   const dateIso = parseISO(date);
 
   if (isToday(dateIso)) {
@@ -20,28 +18,65 @@ function formatMessageDate(date: string) {
   }
 }
 
-export default function Conversation({chatRoomId}: ConversationProps) {
-  const {data, isLoading, error} = useQuery<MessagesChatRoomIdResponseType, AxiosError | Error>({
-    queryKey: ["Messages", chatRoomId, "ConversationContainer"],
-    queryFn: async () => api.get<MessagesChatRoomIdResponseType>(`Messages/${chatRoomId}`)
-      .then((res) => res.data)
-  })
+type ConversationProps = {
+  chatRoom: ChatRoomType,
+}
 
-  if (isLoading) {
+export default function Conversation({chatRoom}: ConversationProps) {
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const [newMessageId, setNewMessageId] = useState<string | null>(null);
+
+  const messagesQuery = useQuery<MessagesChatRoomIdResponseType, AxiosError | Error>({
+    queryKey: ["Messages", chatRoom.chatRoomId, "ConversationContainer"],
+    queryFn: async () => api.get<MessagesChatRoomIdResponseType>(`Messages?chatRoomId=${chatRoom.chatRoomId}`)
+      .then((res) => res.data),
+    onSuccess: (data) => {
+      setMessages(data.textMessages.map(message => ({
+        textMessageId: message.textMessageId,
+        text: message.text,
+        senderId: message.senderId,
+        emotion: message.emotion,
+        sentTime: message.sentTime,
+        repliedMessageId: message.repliedMessageId,
+        isForwarded: message.isForwarded
+      })))
+    }
+  });
+
+  useQuery<MessagesMessageIdResponseType, AxiosError | Error>({
+    queryKey: ["Messages", newMessageId],
+    queryFn: async () => api.get<MessagesMessageIdResponseType>(`Messages/${newMessageId}`)
+      .then((res) => res.data),
+    onSuccess: (data) => {
+      setMessages([...messages, data.textMessage])
+    },
+    onSettled: () => {
+      setNewMessageId(null);
+    },
+    enabled: !!newMessageId,
+  });
+
+  useEffect(() => {
+    chatRoom.connection.on("ReceiveMessage", (messageId: string) => {
+      setNewMessageId(messageId)
+    })
+  }, [chatRoom]);
+
+  if (messagesQuery.isLoading) {
     return <div>Loading</div>
   }
 
-  if (error) {
+  if (messagesQuery.error) {
     return <div>Error</div>
   }
 
-  if (!data || data.textMessages.length === 0) {
+  if (!messages.length) {
     return <div>No data</div>
   }
 
   return (
     <>
-      {data.textMessages.map((textMessage) => (
+      {messages.map((textMessage) => (
         <div key={textMessage.textMessageId}>
           <div className={"flex gap-4"}>
             <p>{textMessage.text}</p>

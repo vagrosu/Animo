@@ -1,21 +1,21 @@
 import {TextField} from "@mui/material";
 import {useState} from "react";
-import {useMutation, useQueryClient} from "react-query";
+import {useMutation} from "react-query";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
 import {MessagesQueryType} from "../../../types/api/queries.tsx";
 import {AxiosError} from "axios";
 import {MessagesResponseType} from "../../../types/api/responses.tsx";
 import {toast} from "react-toastify";
+import {ChatRoomType} from "../types.ts";
 
 type MessageInputProps = {
-  chatRoomId: string,
+  chatRoom: ChatRoomType,
 }
 
-export default function MessageInput ({chatRoomId}: MessageInputProps) {
+export default function MessageInput ({chatRoom}: MessageInputProps) {
   const user = useUser();
   const [message, setMessage] = useState<string>("");
-  const queryClient = useQueryClient();
 
   const mutation = useMutation<MessagesResponseType, Error | AxiosError, MessagesQueryType>({
     mutationFn: async (query) => api.post(
@@ -30,22 +30,24 @@ export default function MessageInput ({chatRoomId}: MessageInputProps) {
     ),
     onSuccess: () => {
       setMessage("");
-      //ToDo: check
-      queryClient.invalidateQueries(["Messages", chatRoomId])
     },
     onError: (error) => {
       toast.error(error.message);
     }
   })
 
-  const onSendMessage = () => {
-    mutation.mutate({
-      chatRoomId,
-      senderId: user.userId,
-      text: message,
-      repliedMessageId: undefined,
-      isForwarded: false,
-    })
+  const onSendMessage = async () => {
+    if (!mutation.isLoading) {
+      const newMessage = {
+        chatRoomId: chatRoom.chatRoomId,
+        senderId: user.userId,
+        text: message,
+        repliedMessageId: undefined,
+        isForwarded: false,
+      }
+
+      mutation.mutate(newMessage)
+    }
   }
 
   return (
@@ -57,7 +59,7 @@ export default function MessageInput ({chatRoomId}: MessageInputProps) {
       InputProps={{
         endAdornment: (
           <i
-            className={"fas fa-paper-plane cursor-pointer"}
+            className={`fa-fw fa-solid ${!mutation.isLoading ? "fa-paper-plane cursor-pointer" : "fa-circle-notch fa-spin"}`}
             onClick={onSendMessage}
           />
         )

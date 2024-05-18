@@ -1,13 +1,13 @@
 import {useUser} from "../../context/UserContext.tsx";
 import {useQuery} from "react-query";
-import {api} from "../../services/api.tsx";
+import {api, chatRoomHubConnection} from "../../services/api.tsx";
 import {ChatRoomsUserIdResponseType} from "../../types/api/responses.tsx";
 import {AxiosError} from "axios";
 import {ChatRoomType} from "./types.ts";
 import {Button} from "@mui/material";
 
 type ChatRoomsListProps = {
-  setSelectedChatRoom: (chatRoomId: ChatRoomType) => void;
+  setSelectedChatRoom: (chatRoomId: ChatRoomType) => void,
 }
 
 export default function ChatRoomsList({setSelectedChatRoom}: ChatRoomsListProps) {
@@ -31,12 +31,21 @@ export default function ChatRoomsList({setSelectedChatRoom}: ChatRoomsListProps)
     return <div>No data</div>
   }
 
-  const onSelectChatRoom = async (chatRoom: ChatRoomType) => {
-    setSelectedChatRoom({
-      chatRoomId: chatRoom.chatRoomId,
-      name: chatRoom.name,
-      lastUsedTime: chatRoom.lastUsedTime,
-    });
+  const onSelectChatRoom = async (chatRoom: Omit<ChatRoomType, "connection">) => {
+    try {
+      const conn = chatRoomHubConnection;
+      await conn.start();
+      await conn.invoke("JoinChatRoom", chatRoom.chatRoomId)
+
+      setSelectedChatRoom({
+        chatRoomId: chatRoom.chatRoomId,
+        connection: conn,
+        name: chatRoom.name,
+        lastUsedTime: chatRoom.lastUsedTime,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (

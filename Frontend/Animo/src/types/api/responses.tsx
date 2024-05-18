@@ -27,16 +27,22 @@ export type ChatRoomsUserIdResponseType = {
   }[]
 } & baseResponse;
 
+type ResponseTextMessageType = {
+  textMessageId: string,
+  text: string,
+  senderId: string,
+  emotion: string,
+  sentTime: string,
+  repliedMessageId?: string,
+  isForwarded?: boolean,
+}
+
+export type MessagesMessageIdResponseType = {
+  textMessage: ResponseTextMessageType
+} & baseResponse;
+
 export type MessagesChatRoomIdResponseType = {
-  textMessages: {
-    textMessageId: string,
-    text: string,
-    senderId: string,
-    emotion: string,
-    sentTime: string,
-    repliedMessageId?: string,
-    isForwarded?: boolean,
-  }[]
+  textMessages: ResponseTextMessageType[]
 } & baseResponse;
 
 export type MessagesResponseType = {
