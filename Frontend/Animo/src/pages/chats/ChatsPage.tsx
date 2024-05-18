@@ -9,7 +9,10 @@ export default function ChatsPage() {
   return (
     <div>
       <h1>ChatsPage</h1>
-      <ChatRoomsList setSelectedChatRoom={setSelectedChatRoom}/>
+      <ChatRoomsList
+        selectedChatRoom={selectedChatRoom}
+        setSelectedChatRoom={setSelectedChatRoom}
+      />
       {selectedChatRoom && (
         <ConversationContainer chatRoom={selectedChatRoom}/>
       )}

@@ -7,10 +7,11 @@ import {ChatRoomType} from "./types.ts";
 import {Button} from "@mui/material";
 
 type ChatRoomsListProps = {
-  setSelectedChatRoom: (chatRoomId: ChatRoomType) => void,
+  selectedChatRoom: ChatRoomType | null,
+  setSelectedChatRoom: (val: ChatRoomType) => void,
 }
 
-export default function ChatRoomsList({setSelectedChatRoom}: ChatRoomsListProps) {
+export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: ChatRoomsListProps) {
   const user = useUser();
 
   const {data, isLoading, error} = useQuery<ChatRoomsUserIdResponseType, AxiosError | Error>({
@@ -33,6 +34,10 @@ export default function ChatRoomsList({setSelectedChatRoom}: ChatRoomsListProps)
 
   const onSelectChatRoom = async (chatRoom: Omit<ChatRoomType, "connection">) => {
     try {
+      if (selectedChatRoom?.connection) {
+        await selectedChatRoom.connection.stop();
+      }
+
       const conn = chatRoomHubConnection;
       await conn.start();
       await conn.invoke("JoinChatRoom", chatRoom.chatRoomId)
