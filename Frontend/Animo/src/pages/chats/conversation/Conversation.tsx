@@ -3,26 +3,27 @@ import {MessagesChatRoomIdResponseType, MessagesMessageIdResponseType} from "../
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
 import {format, isToday, isYesterday, parseISO} from "date-fns";
-import {ChatRoomType, MessageType} from "../types.ts";
+import {ChatRoomType, MemberType, MessageType} from "../types.ts";
 import {useEffect, useState} from "react";
 
 const formatMessageDate = (date: string) => {
   const dateIso = parseISO(date);
 
   if (isToday(dateIso)) {
-    return format(dateIso, "p");
+    return format(dateIso, "HH:mm");
   } else if (isYesterday(dateIso)) {
-    return format(dateIso, "'Yesterday at' p");
+    return format(dateIso, "'Yesterday at' HH:mm");
   } else {
-    return format(dateIso, "MMM dd 'at' p");
+    return format(dateIso, "MMM dd 'at' HH:mm");
   }
 }
 
 type ConversationProps = {
   chatRoom: ChatRoomType,
+  members: MemberType[]
 }
 
-export default function Conversation({chatRoom}: ConversationProps) {
+export default function Conversation({chatRoom, members}: ConversationProps) {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
 
@@ -79,6 +80,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
       {messages.map((textMessage) => (
         <div key={textMessage.textMessageId}>
           <div className={"flex gap-4"}>
+            <p>{members.find(member => member.userId === textMessage.senderId)?.firstName}</p>
             <p>{textMessage.text}</p>
             <p>{textMessage.emotion}</p>
             <p>{formatMessageDate(textMessage.sentTime)}</p>

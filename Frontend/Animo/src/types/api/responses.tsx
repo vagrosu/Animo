@@ -24,6 +24,7 @@ export type ChatRoomsUserIdResponseType = {
     chatRoomId: string,
     name: string,
     lastUsedTime: string,
+    lastActivity: string,
   }[]
 } & baseResponse;
 
@@ -51,3 +52,12 @@ export type MessagesResponseType = {
   sentTime: string,
   isForwarded?: boolean,
 }
+
+export type UsersChatRoomIdResponseType = {
+  members: {
+    userId: string,
+    userName: string,
+    firstName: string,
+    lastName: string,
+  }[]
+} & baseResponse;

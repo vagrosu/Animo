@@ -7,6 +7,7 @@ import {MessagesQueryType} from "../../../types/api/queries.tsx";
 import {AxiosError} from "axios";
 import {MessagesResponseType} from "../../../types/api/responses.tsx";
 import {toast} from "react-toastify";
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {ChatRoomType} from "../types.ts";
 
 type MessageInputProps = {
@@ -58,10 +59,15 @@ export default function MessageInput ({chatRoom}: MessageInputProps) {
       fullWidth
       InputProps={{
         endAdornment: (
-          <i
-            className={`fa-fw fa-solid ${!mutation.isLoading ? "fa-paper-plane cursor-pointer" : "fa-circle-notch fa-spin"}`}
-            onClick={onSendMessage}
-          />
+          !mutation.isLoading ? (
+            <SendRoundedIcon
+              className={"cursor-pointer"}
+              style={{fontSize: "1.5rem"}}
+              onClick={onSendMessage}
+            />
+          ) : (
+            <i className={"fa-md fa-solid fa-circle-notch fa-spin fa-lg"}/>
+          )
         )
       }}
     />

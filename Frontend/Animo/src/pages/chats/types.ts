@@ -5,6 +5,7 @@ export type ChatRoomType = {
   connection: HubConnection,
   name: string,
   lastUsedTime: string,
+  lastActivity: string,
 }
 
 export type MessageType = {
@@ -15,4 +16,11 @@ export type MessageType = {
   sentTime: string,
   repliedMessageId?: string,
   isForwarded?: boolean,
+}
+
+export type MemberType = {
+  userId: string,
+  userName: string,
+  firstName: string,
+  lastName: string,
 }
