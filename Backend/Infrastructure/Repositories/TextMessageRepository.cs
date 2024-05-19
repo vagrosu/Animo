@@ -34,4 +34,19 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
 
         return Result<IReadOnlyList<TextMessage>>.Success(result);
     }
+
+    public async Task<Result<TextMessage>> FindLastByChatRoomIdAsync(Guid chatRoomId)
+    {
+        var lastMessage = await _context.Set<TextMessage>()
+            .Where(textMessage => textMessage.ChatRoom.ChatRoomId == chatRoomId)
+            .OrderByDescending(message => message.SentTime) // Efficient with indexing
+            .Include(message => message.Sender)
+            .Include(message => message.MessageEmotion)
+            .Include(message => message.UserPhotoEmotion)
+            .FirstOrDefaultAsync();
+
+        return lastMessage != null
+            ? Result<TextMessage>.Success(lastMessage)
+            : Result<TextMessage>.Failure("No messages found.");
+    }
 }

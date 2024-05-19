@@ -64,6 +64,17 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
             };
         }
 
+        chatRoom.Value.LastUsedTime = DateTime.UtcNow;
+        var updatedChatRoomResult = await _chatRoomRepository.UpdateAsync(chatRoom.Value);
+        if (!updatedChatRoomResult.IsSuccess)
+        {
+            return new CreateMessageCommandResponse
+            {
+                Success = false,
+                ValidationsErrors = new List<string> { updatedChatRoomResult.Error }
+            };
+        }
+
         Result<TextMessage>? repliedMessage = null;
         if (!string.IsNullOrWhiteSpace(request.RepliedMessageId))
         {

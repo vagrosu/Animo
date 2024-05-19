@@ -14,7 +14,10 @@ public class ChatRoomRepository : BaseRepository<ChatRoom>, IChatRoomRepository
 
     public async Task<Result<IReadOnlyList<ChatRoom>>> GetByUserIdAsync(Guid userId)
     {
-        var result = _context.Set<ChatRoom>().Where(chatRoom => chatRoom.ChatRoomMembers.Any(chatRoomMember => chatRoomMember.UserId == userId)).ToListAsync();
-        return Result<IReadOnlyList<ChatRoom>>.Success(await result);
+        var result = await _context.Set<ChatRoom>()
+            .Where(chatRoom => chatRoom.ChatRoomMembers.Any(chatRoomMember => chatRoomMember.UserId == userId))
+            .Include(chatRoom => chatRoom.ChatRoomMembers)
+            .ToListAsync();
+        return Result<IReadOnlyList<ChatRoom>>.Success(result);
     }
 }
