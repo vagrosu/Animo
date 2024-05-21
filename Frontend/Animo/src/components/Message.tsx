@@ -96,7 +96,7 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
   const isSentByUser = message.senderId === userId;
 
   return (
-    <div className={`flex ${isSentByUser && "justify-end"} ${!isFirstFromGroup && "ml-6"} ${isLastFromGroup ? "mb-5" : "mb-1"}`}>
+    <div className={`flex ${isSentByUser && "justify-end"} ${!isFirstFromGroup && "ml-7"} ${isLastFromGroup ? "mb-5" : "mb-1"}`}>
       {isFirstFromGroup && !isSentByUser && (
         <Avatar
           alt={"User"}
