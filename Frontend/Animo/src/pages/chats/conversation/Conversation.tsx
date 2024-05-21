@@ -4,7 +4,7 @@ import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
 import {ChatRoomType, MemberType, MessageType} from "../types.ts";
 import React, {useEffect, useRef, useState} from "react";
-import Message from "../../../components/Message.tsx";
+import Message from "../../../components/Message/Message.tsx";
 import {differenceInCalendarDays, differenceInYears, format, isToday, isYesterday, parseISO} from "date-fns";
 
 const formatMessageGroupDate = (date: string) => {
