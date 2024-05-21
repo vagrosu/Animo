@@ -5,6 +5,7 @@ import {useQuery} from "react-query";
 import {api} from "../../../services/api.tsx";
 import {UsersChatRoomIdResponseType} from "../../../types/api/responses.tsx";
 import {AxiosError} from "axios";
+import ConversationHeader from "./ConversationHeader.tsx";
 
 type ConversationContainerProps = {
   chatRoom: ChatRoomType,
@@ -30,9 +31,8 @@ export default function ConversationContainer ({chatRoom}: ConversationContainer
   }
 
   return (
-    <div>
-      <h1>Conversation {chatRoom.name}</h1>
-      <p>Chat room id: {chatRoom.chatRoomId}</p>
+    <div className={"flex flex-col w-full h-full"}>
+      <ConversationHeader chatRoom={chatRoom} />
       <Conversation
         chatRoom={chatRoom}
         members={membersQuery.data.members}

@@ -9,7 +9,7 @@ export default function ChatsPage() {
   const [selectedChatRoom, setSelectedChatRoom] = useState<ChatRoomType | null>(null);
 
   return (
-    <div className={"flex h-full"}>
+    <div className={"flex h-screen max-h-screen"}>
       <Sidebar />
       <ChatRoomsList
         selectedChatRoom={selectedChatRoom}

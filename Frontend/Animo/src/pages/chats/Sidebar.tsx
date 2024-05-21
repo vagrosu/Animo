@@ -35,7 +35,7 @@ export default function Sidebar() {
           arrow
           disableInteractive
         >
-          <i className={"fa-fw fa-solid fa-gear cursor-pointer"} />
+          <i className={"fa-fw fa-solid fa-gear text-gray-500 hover:text-blue-600 cursor-pointer"} />
         </Tooltip>
         <Tooltip
           title={"Log out"}
@@ -45,7 +45,7 @@ export default function Sidebar() {
         >
           <i
             onClick={onLogout}
-            className={"fa-fw fa-solid fa-arrow-right-from-bracket fa-flip-horizontal cursor-pointer"}
+            className={"fa-fw fa-solid fa-arrow-right-from-bracket fa-flip-horizontal text-gray-500 hover:text-blue-600 cursor-pointer"}
           />
         </Tooltip>
       </div>

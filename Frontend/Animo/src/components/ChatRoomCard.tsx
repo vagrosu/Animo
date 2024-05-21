@@ -50,14 +50,16 @@ export default function ChatRoomCard({chatRoom, onSelectChatRoom}: ChatRoomCardP
       </Avatar>
       <div className={"w-full flex justify-between gap-3 leading-[1.375rem] ml-2.5 truncate"}>
         <div className={"truncate"}>
-          <p className={"font-medium truncate"}>
+          <p className={"truncate"}>
             {chatRoom.name}
           </p>
-          <p className={"font-light truncate"}>
+          <p className={"font-extralight text-sm truncate"}>
             {chatRoom.lastActivity}
           </p>
         </div>
-        <p>{formatChatRoomCardDate(chatRoom.lastUsedTime)}</p>
+        <p className={"font-extralight text-sm/[1.375rem]"}>
+          {formatChatRoomCardDate(chatRoom.lastUsedTime)}
+        </p>
       </div>
     </div>
   )

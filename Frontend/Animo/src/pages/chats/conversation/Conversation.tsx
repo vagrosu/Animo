@@ -2,19 +2,25 @@ import {useQuery} from "react-query";
 import {MessagesChatRoomIdResponseType, MessagesMessageIdResponseType} from "../../../types/api/responses.tsx";
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
-import {format, isToday, isYesterday, parseISO} from "date-fns";
 import {ChatRoomType, MemberType, MessageType} from "../types.ts";
-import {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import Message from "../../../components/Message.tsx";
+import {differenceInCalendarDays, differenceInYears, format, isToday, isYesterday, parseISO} from "date-fns";
 
-const formatMessageDate = (date: string) => {
+const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
+  const today = new Date();
 
   if (isToday(dateIso)) {
-    return format(dateIso, "HH:mm");
+    return format(dateIso, "'Today'");
   } else if (isYesterday(dateIso)) {
-    return format(dateIso, "'Yesterday at' HH:mm");
+    return format(dateIso, "'Yesterday'");
+  } else if (differenceInCalendarDays(today, dateIso) <= 7) {
+    return format(dateIso, "EEEE");
+  } else if (differenceInYears(today, dateIso) < 1) {
+    return format(dateIso, "dd MMM");
   } else {
-    return format(dateIso, "MMM dd 'at' HH:mm");
+    return format(dateIso, "dd MMM, yyyy");
   }
 }
 
@@ -24,6 +30,7 @@ type ConversationProps = {
 }
 
 export default function Conversation({chatRoom, members}: ConversationProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
 
@@ -63,6 +70,12 @@ export default function Conversation({chatRoom, members}: ConversationProps) {
     })
   }, [chatRoom]);
 
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   if (messagesQuery.isLoading) {
     return <div>Loading</div>
   }
@@ -76,17 +89,36 @@ export default function Conversation({chatRoom, members}: ConversationProps) {
   }
 
   return (
-    <>
-      {messages.map((textMessage) => (
-        <div key={textMessage.textMessageId}>
-          <div className={"flex gap-4"}>
-            <p>{members.find(member => member.userId === textMessage.senderId)?.firstName}</p>
-            <p>{textMessage.text}</p>
-            <p>{textMessage.emotion}</p>
-            <p>{formatMessageDate(textMessage.sentTime)}</p>
-          </div>
-        </div>
-      ))}
-    </>
+    <div
+      ref={containerRef}
+      className={"bg-neutral-50 h-full overflow-y-scroll px-8"}
+    >
+      {messages.map((message, i) => {
+        const isFirstFromDay = i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
+        const isFirstFromGroup = isFirstFromDay || i === 0 || messages[i - 1].senderId !== message.senderId;
+        const isLastFromGroup = i === messages.length - 1 || messages[i + 1].senderId !== message.senderId;
+        const sender = members.find(member => member.userId === message.senderId);
+
+        return (
+          <React.Fragment key={message.textMessageId}>
+            {isFirstFromDay && (
+              <div className={"w-full flex items-center justify-center my-4"}>
+                <div className={"border-[0.5px] opacity-70 border-blue-600 w-full"}/>
+                <div className={"text-center text-sm text-blue-600 px-4"}>
+                  {formatMessageGroupDate(message.sentTime)}
+                </div>
+                <div className={"border-b-[1px] opacity-70 border-blue-600 w-full"}/>
+              </div>
+            )}
+            <Message
+              message={message}
+              sender={sender}
+              isFirstFromGroup={isFirstFromGroup}
+              isLastFromGroup={isLastFromGroup}
+            />
+          </React.Fragment>
+        )
+      })}
+    </div>
   )
 }
