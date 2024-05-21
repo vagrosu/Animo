@@ -84,7 +84,7 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
           Messages
         </h1>
         <InputBase
-          className={"mt-5 rounded-xl border-0 bg-gray-200 px-3 py-1 w-full"}
+          className={"mt-5 rounded-2xl border-0 bg-gray-200 px-3 py-1 w-full"}
           placeholder={"Search"}
           startAdornment={
             <InputAdornment position="start">
