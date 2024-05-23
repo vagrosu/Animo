@@ -37,7 +37,7 @@ public class MessagesController(IHubContext<ChatRoomHub> hubContext) : ApiContro
         return Ok(result);
     }
 
-    [HttpGet]
+    [HttpGet("by-chat-room-id")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetByChatRoomId([FromQuery] string chatRoomId)

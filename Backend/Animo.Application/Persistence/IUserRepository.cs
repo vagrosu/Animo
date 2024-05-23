@@ -10,4 +10,5 @@ public interface IUserRepository : IAsyncRepository<User>
     Task<Result<User>> FindByPhoneNumberAsync(string phoneNumber);
     Task<Result<User>> FindByUsernameAsync(string username);
     Task<Result<IReadOnlyList<User>>> FindByChatRoomIdAsync(Guid chatRoomId);
+    Task<Result<IReadOnlyList<User>>> SearchByNameAsync(String search);
 }

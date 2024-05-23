@@ -2,6 +2,7 @@ using Animo.Application.Persistence;
 using Animo.Domain.Common;
 using Animo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Repositories;
 
@@ -29,6 +30,22 @@ public class UserRepository(AnimoContext context) : BaseRepository<User>(context
     {
         var result = await _context.Users
             .Where(user => user.ChatRoomMembers.Any(chatRoomMember => chatRoomMember.ChatRoomId == chatRoomId))
+            .ToListAsync();
+
+        return Result<IReadOnlyList<User>>.Success(result);
+    }
+
+    public async Task<Result<IReadOnlyList<User>>> SearchByNameAsync(string search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+        {
+            return Result<IReadOnlyList<User>>.Failure("Search string is empty");
+        }
+
+        var normalizedSearch = search.ToLower().Trim();
+        var result = await _context.Users
+            .Where(user => EF.Functions.Like(user.FirstName.ToLower().Trim(), $"%{normalizedSearch}%") || EF.Functions.Like(user.LastName.ToLower().Trim(), $"%{normalizedSearch}%"))
+            .AsNoTracking()
             .ToListAsync();
 
         return Result<IReadOnlyList<User>>.Success(result);
