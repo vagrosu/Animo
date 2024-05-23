@@ -2,7 +2,11 @@ import {Avatar, Tooltip} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import animoLogo from "../../assets/animo-logo.png";
 
-export default function Sidebar() {
+type SidebarProps = {
+  openCreateChatRoomModal: () => void;
+}
+
+export default function Sidebar({openCreateChatRoomModal}: SidebarProps) {
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -19,15 +23,30 @@ export default function Sidebar() {
           height={32}
           className={"cursor-pointer"}
         />
-
       </div>
       <Avatar
         alt={"User"}
         className={"mt-7 cursor-pointer"}
         sx={{ width: 32, height: 32 }}
       >
-        <i className={"fa-solid fa-user"} />
+        <i className={"fa-solid fa-user text-base text-zinc-50"} />
       </Avatar>
+      <div className={"w-full my-7 border-b-[1px] border-gray-400 rounded-lg opacity-50"}/>
+      <Tooltip
+        title={"New chat"}
+        placement={"right"}
+        arrow
+        disableInteractive
+      >
+        <Avatar
+          alt={"User"}
+          className={"cursor-pointer transition-all ease-in-out hover:bg-blue-600"}
+          sx={{ width: 32, height: 32 }}
+          onClick={openCreateChatRoomModal}
+        >
+          <i className={"fa-fw fa-solid fa-comment text-base text-zinc-50"} />
+        </Avatar>
+      </Tooltip>
       <div className={"mt-auto flex flex-col gap-7 text-2xl"}>
         <Tooltip
           title={"Settings"}
@@ -35,7 +54,7 @@ export default function Sidebar() {
           arrow
           disableInteractive
         >
-          <i className={"fa-fw fa-solid fa-gear text-gray-500 hover:text-blue-600 cursor-pointer"} />
+          <i className={"fa-fw fa-solid fa-gear text-gray-500 transition ease-in-out hover:text-blue-600 cursor-pointer"} />
         </Tooltip>
         <Tooltip
           title={"Log out"}
@@ -45,7 +64,7 @@ export default function Sidebar() {
         >
           <i
             onClick={onLogout}
-            className={"fa-fw fa-solid fa-arrow-right-from-bracket fa-flip-horizontal text-gray-500 hover:text-blue-600 cursor-pointer"}
+            className={"fa-fw fa-solid fa-arrow-right-from-bracket fa-flip-horizontal text-gray-500 transition ease-in-out hover:text-blue-600 cursor-pointer"}
           />
         </Tooltip>
       </div>

@@ -1,4 +1,4 @@
-import { ChatRoomType } from "../types";
+import {ChatRoomType} from "../types";
 import {Avatar} from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 

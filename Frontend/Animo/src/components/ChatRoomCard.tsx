@@ -54,7 +54,7 @@ export default function ChatRoomCard({chatRoom, onSelectChatRoom}: ChatRoomCardP
             {chatRoom.name}
           </p>
           <p className={"font-extralight text-sm truncate"}>
-            {chatRoom.lastActivity}
+            {chatRoom.lastActivity || ""}
           </p>
         </div>
         <p className={"font-extralight text-sm/[1.375rem]"}>

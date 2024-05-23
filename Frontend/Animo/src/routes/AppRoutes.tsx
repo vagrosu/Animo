@@ -1,7 +1,7 @@
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import LoginPage from "../pages/login/LoginPage.tsx";
 import RegisterPage from "../pages/register/RegisterPage.tsx";
-import ProtectedRoute from "../components/ProtectedRoute.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
 import UserContextProvider from "../context/UserContext.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
 import ChatsPage from "../pages/chats/ChatsPage.tsx";
@@ -19,6 +19,7 @@ export default function AppRoutes() {
           {/* Protected routes */}
           <Route element={<ProtectedRoute/>}>
             <Route path={"/chats"} element={<ChatsPage/>}/>
+            <Route path={"/chats/:chatId"} element={<ChatsPage/>}/>
           </Route>
 
           <Route path="*" element={<Navigate to="/landing" replace/>}/>

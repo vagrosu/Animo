@@ -1,13 +1,14 @@
 import {useUser} from "../../context/UserContext.tsx";
 import {useQuery} from "react-query";
 import {api, chatRoomHubConnection} from "../../services/api.tsx";
-import {ChatRoomsUserIdResponseType} from "../../types/api/responses.tsx";
+import {ChatRoomsByUserIdResponseType} from "../../types/api/responses.tsx";
 import {AxiosError} from "axios";
-import {ChatRoomType} from "./types.ts";
-import {InputAdornment, InputBase} from "@mui/material";
+import {ChatRoomType, SelectedChatRoomType} from "./types.ts";
 import {useState} from "react";
 import SortByDropdown, {SORT_BY_OPTIONS} from "../../components/SortByDropdown.tsx";
 import ChatRoomCard from "../../components/ChatRoomCard.tsx";
+import SearchInput from "../../components/SearchInput.tsx";
+import {useNavigate} from "react-router-dom";
 
 const sortByFunction = (a: Omit<ChatRoomType, "connection">, b: Omit<ChatRoomType, "connection">, sortBy: number) => {
   switch (sortBy) {
@@ -25,31 +26,20 @@ const sortByFunction = (a: Omit<ChatRoomType, "connection">, b: Omit<ChatRoomTyp
 }
 
 type ChatRoomsListProps = {
-  selectedChatRoom: ChatRoomType | null,
-  setSelectedChatRoom: (val: ChatRoomType) => void,
+  selectedChatRoom: SelectedChatRoomType | null,
+  setSelectedChatRoom: (val: SelectedChatRoomType) => void,
 }
 
 export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: ChatRoomsListProps) {
   const user = useUser();
+  const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
 
-  const {data, isLoading, error} = useQuery<ChatRoomsUserIdResponseType, AxiosError | Error>({
-    queryKey: ["ChatRooms", user.userId, "ChatRoomsList"],
-    queryFn: async () => api.get<ChatRoomsUserIdResponseType>(`ChatRooms/${user.userId}`)
+  const {data, isLoading, error} = useQuery<ChatRoomsByUserIdResponseType, AxiosError | Error>({
+    queryKey: ["ChatRooms", "by-user-id", user.userId, "ChatRoomsList"],
+    queryFn: async () => api.get<ChatRoomsByUserIdResponseType>(`ChatRooms/by-user-id?userId=${user.userId}`)
       .then((res) => res.data)
   })
-
-  if (isLoading) {
-    return <div>Loading</div>
-  }
-
-  if (error) {
-    return <div>Error</div>
-  }
-
-  if (!data || data.chatRooms.length === 0) {
-    return <div>No data</div>
-  }
 
   const onSelectChatRoom = async (chatRoom: Omit<ChatRoomType, "connection">) => {
     if (selectedChatRoom && selectedChatRoom.chatRoomId === chatRoom.chatRoomId) {
@@ -68,14 +58,14 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
       setSelectedChatRoom({
         chatRoomId: chatRoom.chatRoomId,
         connection: conn,
-        name: chatRoom.name,
-        lastUsedTime: chatRoom.lastUsedTime,
-        lastActivity: chatRoom.lastActivity,
       });
+      navigate(`/chats/${chatRoom.chatRoomId}`)
     } catch (e) {
       console.log(e);
     }
   }
+
+  const chatRooms = data?.chatRooms || [];
 
   return (
     <div className={"flex flex-col border-r border-gray-200 min-w-[17rem] w-[32vw] max-w-[23rem]"}>
@@ -83,15 +73,7 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
         <h1 className={"font-bold text-3xl leading-8"}>
           Messages
         </h1>
-        <InputBase
-          className={"mt-5 rounded-2xl border-0 bg-gray-200 px-3 py-1 w-full"}
-          placeholder={"Search"}
-          startAdornment={
-            <InputAdornment position="start">
-              <i className={"fa-solid fa-magnifying-glass text-xs"}/>
-            </InputAdornment>
-          }
-        />
+        <SearchInput className={"mt-5"}/>
         <SortByDropdown
           sortBy={sortBy}
           setSortBy={setSortBy}
@@ -99,15 +81,19 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
         />
       </div>
       <div className={"mt-2.5"}>
-        {data.chatRooms
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : error ? (
+          <div>Error</div>
+        ) : chatRooms
           .sort((a, b) => sortByFunction(a, b, sortBy))
           .map((chatRoom) => (
-          <ChatRoomCard
-            key={chatRoom.chatRoomId}
-            chatRoom={chatRoom}
-            onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
-          />
-        ))}
+            <ChatRoomCard
+              key={chatRoom.chatRoomId}
+              chatRoom={chatRoom}
+              onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
+            />
+          ))}
       </div>
     </div>
   )

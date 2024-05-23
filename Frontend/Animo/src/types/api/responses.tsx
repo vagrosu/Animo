@@ -19,7 +19,15 @@ export type AuthenticationCurrentUserResponseType = {
   }
 } & baseResponse;
 
-export type ChatRoomsUserIdResponseType = {
+export type ChatRoomsByChatRoomIdResponseType = {
+  chatRoom: {
+    chatRoomId: string,
+    name: string,
+    lastUsedTime: string,
+  }
+} & baseResponse;
+
+export type ChatRoomsByUserIdResponseType = {
   chatRooms: {
     chatRoomId: string,
     name: string,
@@ -38,11 +46,11 @@ type ResponseTextMessageType = {
   isForwarded?: boolean,
 }
 
-export type MessagesMessageIdResponseType = {
+export type MessagesByMessageIdResponseType = {
   textMessage: ResponseTextMessageType
 } & baseResponse;
 
-export type MessagesChatRoomIdResponseType = {
+export type MessagesByChatRoomIdResponseType = {
   textMessages: ResponseTextMessageType[]
 } & baseResponse;
 
@@ -53,8 +61,17 @@ export type MessagesResponseType = {
   isForwarded?: boolean,
 }
 
-export type UsersChatRoomIdResponseType = {
+export type UsersByChatRoomIdResponseType = {
   members: {
+    userId: string,
+    userName: string,
+    firstName: string,
+    lastName: string,
+  }[]
+} & baseResponse;
+
+export type UsersBySearchResponseType = {
+  users: {
     userId: string,
     userName: string,
     firstName: string,

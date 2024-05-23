@@ -1,43 +1,52 @@
-import {ChatRoomType} from "../types.ts";
+import {ChatRoomType, SelectedChatRoomType} from "../types.ts";
 import Conversation from "./Conversation.tsx";
 import MessageInput from "./MessageInput.tsx";
 import {useQuery} from "react-query";
 import {api} from "../../../services/api.tsx";
-import {UsersChatRoomIdResponseType} from "../../../types/api/responses.tsx";
+import {ChatRoomsByChatRoomIdResponseType, UsersByChatRoomIdResponseType} from "../../../types/api/responses.tsx";
 import {AxiosError} from "axios";
 import ConversationHeader from "./ConversationHeader.tsx";
 
 type ConversationContainerProps = {
-  chatRoom: ChatRoomType,
+  selectedChatRoom: SelectedChatRoomType,
 }
 
-export default function ConversationContainer ({chatRoom}: ConversationContainerProps) {
-  const membersQuery = useQuery<UsersChatRoomIdResponseType, AxiosError | Error>({
-    queryKey: ["Users", chatRoom.chatRoomId, "ConversationContainer"],
-    queryFn: async () => api.get<UsersChatRoomIdResponseType>(`Users?chatRoomId=${chatRoom.chatRoomId}`)
+export default function ConversationContainer ({selectedChatRoom}: ConversationContainerProps) {
+  const chatRoomQuery = useQuery<ChatRoomsByChatRoomIdResponseType, AxiosError | Error>({
+    queryKey: ["ChatRooms", selectedChatRoom.chatRoomId, "ConversationContainer"],
+    queryFn: async () => api.get<ChatRoomsByChatRoomIdResponseType>(`ChatRooms/${selectedChatRoom.chatRoomId}`)
       .then((res) => res.data)
   })
 
-  if (membersQuery.isLoading) {
-    return <div>Loading</div>
+  const membersQuery = useQuery<UsersByChatRoomIdResponseType, AxiosError | Error>({
+    queryKey: ["Users", "by-chat-room-id", selectedChatRoom.chatRoomId, "ConversationContainer"],
+    queryFn: async () => api.get<UsersByChatRoomIdResponseType>(`Users/by-chat-room-id?chatRoomId=${selectedChatRoom.chatRoomId}`)
+      .then((res) => res.data)
+  })
+
+  if (chatRoomQuery.isLoading) {
+    return <div>Loading...</div>
   }
 
-  if (membersQuery.error) {
+  if (chatRoomQuery.isError || !chatRoomQuery.data) {
     return <div>Error</div>
   }
 
-  if (!membersQuery.data || membersQuery.data.members.length === 0) {
-    return <div>No data</div>
-  }
+  const chatRoom: ChatRoomType = {
+    chatRoomId: chatRoomQuery.data.chatRoom.chatRoomId,
+    name: chatRoomQuery.data.chatRoom.name,
+    lastUsedTime: chatRoomQuery.data.chatRoom.lastUsedTime,
+  };
 
   return (
     <div className={"flex flex-col w-full h-full"}>
       <ConversationHeader chatRoom={chatRoom} />
       <Conversation
+        selectedChatRoom={selectedChatRoom}
         chatRoom={chatRoom}
-        members={membersQuery.data.members}
+        membersQuery={membersQuery}
       />
-      <MessageInput chatRoom={chatRoom} />
+      <MessageInput selectedChatRoom={selectedChatRoom} />
     </div>
   )
 }

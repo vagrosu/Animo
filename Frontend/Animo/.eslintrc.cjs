@@ -13,11 +13,13 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': [
       'error',
       {
-        'ts-ignore': false,  // Allow @ts-ignore without a description
+        'ts-ignore': false,
         'ts-nocheck': true,
         'ts-check': false,
         'ts-expect-error': false,
       },
     ],
+    'no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
 }
