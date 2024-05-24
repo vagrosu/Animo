@@ -1,13 +1,18 @@
 using Animo.Application.Features.ChatRooms.Commands.CreateChatRoom;
 using Animo.Application.Features.ChatRooms.Queries.GetChatRoomById;
 using Animo.Application.Features.ChatRooms.Queries.GetChatRoomsByUserId;
+using Animo.Application.Hubs;
+using Animo.Application.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Animo.Controllers;
 
-public class ChatRoomsController : ApiControllerBase
+public class ChatRoomsController(IHubContext<ChatRoomsListHub> chatRoomsListHubContext) : ApiControllerBase
 {
+    private readonly IHubContext<ChatRoomsListHub> _chatRoomsListHubContext = chatRoomsListHubContext;
+
     [HttpPost]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -18,6 +23,12 @@ public class ChatRoomsController : ApiControllerBase
         {
             return BadRequest(result);
         }
+
+        foreach (var member in result.ChatRoom.Members)
+        {
+            await _chatRoomsListHubContext.Clients.Group(member.UserId.ToString()).SendAsync("UpdateChatRoom", result.ChatRoom.ChatRoomId);
+        }
+
         return Created("", result);
     }
 

@@ -11,6 +11,12 @@ public class ChatRoomHub : Hub
 
     public async Task JoinChatRoom(Guid chatRoomId)
     {
+        Console.WriteLine($"User {Context.ConnectionId} joined chat room {chatRoomId}");
         await Groups.AddToGroupAsync(Context.ConnectionId, chatRoomId.ToString());
+    }
+
+    public async Task LeaveChatRoom(Guid chatRoomId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatRoomId.ToString());
     }
 }

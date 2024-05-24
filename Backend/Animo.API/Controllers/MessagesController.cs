@@ -2,15 +2,18 @@ using Animo.Application.Features.Message.Commands.CreateMessage;
 using Animo.Application.Features.Message.Queries.GetMessageById;
 using Animo.Application.Features.Message.Queries.GetTextMessageByChatRoomId;
 using Animo.Application.Hubs;
+using Animo.Application.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Animo.Controllers;
 
-public class MessagesController(IHubContext<ChatRoomHub> hubContext) : ApiControllerBase
+public class MessagesController(IHubContext<ChatRoomHub> chatRoomHubContext, IHubContext<ChatRoomsListHub> chatRoomsListHubContext, IUserRepository userRepository) : ApiControllerBase
 {
-    private readonly IHubContext<ChatRoomHub> _hubContext = hubContext;
+    private readonly IHubContext<ChatRoomHub> _chatRoomHubContext = chatRoomHubContext;
+    private readonly IHubContext<ChatRoomsListHub> _chatRoomsListHubContext = chatRoomsListHubContext;
+    private readonly IUserRepository _userRepository = userRepository;
 
     [HttpPost]
     [Authorize]
@@ -23,7 +26,21 @@ public class MessagesController(IHubContext<ChatRoomHub> hubContext) : ApiContro
             return BadRequest(result);
         }
 
-        await _hubContext.Clients.Group(command.ChatRoomId).SendAsync("ReceiveMessage", result.TextMessage.TextMessageId);
+        await _chatRoomHubContext.Clients.Group(command.ChatRoomId).SendAsync("ReceiveMessage", result.TextMessage.TextMessageId);
+
+        if (Guid.TryParse(command.ChatRoomId, out var chatRoomId))
+        {
+            var chatMembers = await _userRepository.FindByChatRoomIdAsync(chatRoomId);
+            if (chatMembers.IsSuccess)
+            {
+                foreach (var member in chatMembers.Value)
+                {
+                    await _chatRoomsListHubContext.Clients.Group(member.Id.ToString()).SendAsync("UpdateChatRoom", command.ChatRoomId);
+                }
+            }
+        }
+
+
         return Created("", result);
     }
 

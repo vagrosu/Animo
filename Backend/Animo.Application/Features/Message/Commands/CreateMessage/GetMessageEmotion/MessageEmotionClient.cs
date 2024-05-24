@@ -30,7 +30,7 @@ public static class MessageEmotionClient
         using var response = await Client.SendAsync(request);
         response.EnsureSuccessStatusCode();
         var body = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(body);
+
         return JsonConvert.DeserializeObject<RapidApiEmotionAnalysisDto>(body);
     }
 }
