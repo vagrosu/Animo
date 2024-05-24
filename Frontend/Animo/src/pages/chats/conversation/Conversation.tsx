@@ -40,7 +40,7 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
   const {connection} = useChatRoomHub();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [showScrollIcon, setShowScrollIcon] = useState(false);
 
   const messagesQuery = useQuery<MessagesByChatRoomIdResponseType, AxiosError | Error>({
     queryKey: ["Messages", "by-chat-room-id", chatRoom.chatRoomId, "ConversationContainer"],
@@ -86,7 +86,11 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
-    setIsAtBottom(target.scrollHeight - target.scrollTop <= target.clientHeight + 100);
+    if (containerRef.current) {
+      setShowScrollIcon(containerRef.current?.scrollHeight > containerRef.current?.clientHeight && target.scrollHeight - target.scrollTop > target.clientHeight + 100);
+    } else {
+      setShowScrollIcon(false);
+    }
   }
 
   const scrollToBottom = () => {
@@ -139,12 +143,14 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
           </React.Fragment>
         )
       })}
-      {/*<div*/}
-      {/*  className={`sticky flex items-center justify-center z-10 left-1/2 translate-x-[-50%] transition-[transform] ease-out ${isAtBottom ? "translate-y-[100px] w-0 h-0" : "translate-y-0 w-7 h-7"} bottom-14 bg-neutral-50 border-blue-600 border-[0.5px] rounded-full cursor-pointer`}*/}
-      {/*  onClick={scrollToBottom}*/}
-      {/*>*/}
-      {/*  <i className={`fa-fw fa-solid fa-chevron-down text-blue-600 text-sm text-center transition-all ${isAtBottom ? "opacity-0" : ""}`}/>*/}
-      {/*</div>*/}
+      <div
+        className="sticky w-0 h-0 bottom-0 left-1/2 translate-x-[-50%] overflow-visible cursor-pointer"
+        onClick={scrollToBottom}
+      >
+        <div className={`flex items-center justify-center w-7 h-7 absolute bottom-14 ${!showScrollIcon ? "hidden" : ""} border-blue-600 border-[0.5px] rounded-full`}>
+          <i className={"fa-fw fa-solid fa-chevron-down text-blue-600 text-xl"}/>
+        </div>
+      </div>
     </div>
   )
 }

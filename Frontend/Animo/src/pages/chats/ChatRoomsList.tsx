@@ -113,7 +113,7 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
           className={"ml-2.5 mt-2"}
         />
       </div>
-      <div className={"mt-2.5"}>
+      <div className={"mt-2.5 p-1.5"}>
         {chatRoomsListQuery.isLoading ? (
           <div>Loading...</div>
         ) : chatRoomsListQuery.error ? (
