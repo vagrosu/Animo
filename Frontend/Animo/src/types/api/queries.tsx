@@ -19,3 +19,8 @@ export type MessagesQueryType = {
   repliedMessageId?: string,
   isForwarded?: boolean
 }
+
+export type ChatRoomsQueryType = {
+  name?: string,
+  memberIds: string[]
+}

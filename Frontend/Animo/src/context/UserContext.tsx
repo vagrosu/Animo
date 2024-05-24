@@ -2,7 +2,7 @@ import {useQuery} from "react-query";
 import { api } from "../services/api.tsx";
 import {Navigate} from "react-router-dom";
 import {AuthenticationCurrentUserResponseType} from "../types/api/responses.tsx";
-import {createContext, useContext} from "react";
+import {createContext, ReactNode, useContext} from "react";
 import {AxiosError, isAxiosError} from "axios";
 
 type UserContextType = {
@@ -33,7 +33,7 @@ export const useUser = () => {
   return context as UserType;
 }
 
-export default function UserContextProvider({children}: {children: React.ReactNode}) {
+export default function UserContextProvider({children}: {children: ReactNode}) {
   const {data, isLoading, error} = useQuery<AuthenticationCurrentUserResponseType, Error | AxiosError>({
     queryKey: ["Authentication", "current-user", "LoginRequiredContext"],
     queryFn: async () => api.get<AuthenticationCurrentUserResponseType>("Authentication/current-user")

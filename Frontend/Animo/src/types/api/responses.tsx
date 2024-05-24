@@ -1,3 +1,5 @@
+import {AxiosResponse} from "axios";
+
 type baseResponse = {
   success: boolean,
   statusCode: number,
@@ -24,6 +26,7 @@ export type ChatRoomsByChatRoomIdResponseType = {
     chatRoomId: string,
     name: string,
     lastUsedTime: string,
+    lastActivity: string,
   }
 } & baseResponse;
 
@@ -54,12 +57,25 @@ export type MessagesByChatRoomIdResponseType = {
   textMessages: ResponseTextMessageType[]
 } & baseResponse;
 
-export type MessagesResponseType = {
+export type MessagesResponseType = AxiosResponse<{
   textMessageId: string,
   text: string,
   sentTime: string,
   isForwarded?: boolean,
-}
+} & baseResponse>;
+
+export type ChatRoomResponseType = AxiosResponse<{
+  chatRoom: {
+    chatRoomId: string,
+    name: string,
+    members: {
+      userId: string,
+      userName: string,
+      firstName: string,
+      lastName: string,
+    }[]
+  }
+} & baseResponse>;
 
 export type UsersByChatRoomIdResponseType = {
   members: {

@@ -15,3 +15,8 @@ export const chatRoomHubConnection = new HubConnectionBuilder()
   .withUrl("http://localhost:5167/ChatRoomHub")
   .configureLogging(LogLevel.Information)
   .build();
+
+export const chatRoomsListHubConnection = new HubConnectionBuilder()
+  .withUrl("http://localhost:5167/ChatRoomsListHub")
+  .configureLogging(LogLevel.Information)
+  .build();

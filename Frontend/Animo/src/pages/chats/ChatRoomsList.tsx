@@ -1,14 +1,16 @@
 import {useUser} from "../../context/UserContext.tsx";
 import {useQuery} from "react-query";
-import {api, chatRoomHubConnection} from "../../services/api.tsx";
-import {ChatRoomsByUserIdResponseType} from "../../types/api/responses.tsx";
+import {api} from "../../services/api.tsx";
+import {ChatRoomsByChatRoomIdResponseType, ChatRoomsByUserIdResponseType} from "../../types/api/responses.tsx";
 import {AxiosError} from "axios";
-import {ChatRoomType, SelectedChatRoomType} from "./types.ts";
-import {useState} from "react";
+import {ChatRoomType} from "./types.ts";
+import {useEffect, useState} from "react";
 import SortByDropdown, {SORT_BY_OPTIONS} from "../../components/SortByDropdown.tsx";
 import ChatRoomCard from "../../components/ChatRoomCard.tsx";
 import SearchInput from "../../components/SearchInput.tsx";
 import {useNavigate} from "react-router-dom";
+import {useChatRoomHub} from "../../context/ChatRoomHubContext.tsx";
+import {useChatRoomsListHub} from "../../context/ChatRoomsListHubContext.tsx";
 
 const sortByFunction = (a: Omit<ChatRoomType, "connection">, b: Omit<ChatRoomType, "connection">, sortBy: number) => {
   switch (sortBy) {
@@ -26,46 +28,77 @@ const sortByFunction = (a: Omit<ChatRoomType, "connection">, b: Omit<ChatRoomTyp
 }
 
 type ChatRoomsListProps = {
-  selectedChatRoom: SelectedChatRoomType | null,
-  setSelectedChatRoom: (val: SelectedChatRoomType) => void,
+  selectedChatRoomId: string | null,
+  setSelectedChatRoomId: (val: string) => void,
 }
 
-export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: ChatRoomsListProps) {
+export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId}: ChatRoomsListProps) {
   const user = useUser();
+  const chatRoomHub = useChatRoomHub();
+  const chatRoomsListHub = useChatRoomsListHub();
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
 
-  const {data, isLoading, error} = useQuery<ChatRoomsByUserIdResponseType, AxiosError | Error>({
+  const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
+  const [chatRooms, setChatRooms] = useState<ChatRoomType[]>([]);
+  const [chatRoomIdToRefresh, setChatRoomIdToRefresh] = useState<string | null>(null);
+
+  const chatRoomsListQuery = useQuery<ChatRoomsByUserIdResponseType, AxiosError | Error>({
     queryKey: ["ChatRooms", "by-user-id", user.userId, "ChatRoomsList"],
     queryFn: async () => api.get<ChatRoomsByUserIdResponseType>(`ChatRooms/by-user-id?userId=${user.userId}`)
-      .then((res) => res.data)
+      .then((res) => res.data),
+    onSuccess: (data) => {
+      setChatRooms(data.chatRooms)
+    }
   })
 
-  const onSelectChatRoom = async (chatRoom: Omit<ChatRoomType, "connection">) => {
-    if (selectedChatRoom && selectedChatRoom.chatRoomId === chatRoom.chatRoomId) {
-      return;
+  useQuery<ChatRoomsByChatRoomIdResponseType, AxiosError | Error>({
+    queryKey: ["ChatRooms", chatRoomIdToRefresh, "ConversationContainer"],
+    queryFn: async () => api.get<ChatRoomsByChatRoomIdResponseType>(`ChatRooms/${chatRoomIdToRefresh}`)
+      .then((res) => res.data),
+    onSuccess: (data) => {
+      setChatRooms((prev) => {
+        const index = prev.findIndex((chatRoom) => chatRoom.chatRoomId === data.chatRoom.chatRoomId);
+        if (index !== -1) {
+          const newChatRooms = [...prev];
+          newChatRooms[index] = data.chatRoom;
+          return newChatRooms;
+        } else {
+          return [...prev, data.chatRoom];
+        }
+      })
+    },
+    onSettled: () => {
+      setChatRoomIdToRefresh(null);
+    },
+    enabled: !!chatRoomIdToRefresh,
+  })
+
+  useEffect(() => {
+    if (selectedChatRoomId && chatRoomHub.isConnected) {
+      chatRoomHub.connection?.invoke("JoinChatRoom", selectedChatRoomId)
     }
 
-    try {
-      if (selectedChatRoom?.connection) {
-        await selectedChatRoom.connection.stop();
+    return () => {
+      if (selectedChatRoomId && chatRoomHub.isConnected) {
+        chatRoomHub.connection?.invoke("LeaveChatRoom", selectedChatRoomId)
       }
+    }
+  }, [selectedChatRoomId, chatRoomHub.isConnected]);
 
-      const conn = chatRoomHubConnection;
-      await conn.start();
-      await conn.invoke("JoinChatRoom", chatRoom.chatRoomId)
-
-      setSelectedChatRoom({
-        chatRoomId: chatRoom.chatRoomId,
-        connection: conn,
+  useEffect(() => {
+    if (chatRoomsListHub.isConnected) {
+      chatRoomsListHub.connection?.on("UpdateChatRoom", (chatRoomId: string) => {
+        setChatRoomIdToRefresh(chatRoomId);
       });
+    }
+  }, [chatRoomsListHub])
+
+  const onSelectChatRoom = async (chatRoom: ChatRoomType) => {
+    if (selectedChatRoomId !== chatRoom.chatRoomId) {
+      setSelectedChatRoomId(chatRoom.chatRoomId);
       navigate(`/chats/${chatRoom.chatRoomId}`)
-    } catch (e) {
-      console.log(e);
     }
   }
-
-  const chatRooms = data?.chatRooms || [];
 
   return (
     <div className={"flex flex-col border-r border-gray-200 min-w-[17rem] w-[32vw] max-w-[23rem]"}>
@@ -81,15 +114,16 @@ export default function ChatRoomsList({selectedChatRoom, setSelectedChatRoom}: C
         />
       </div>
       <div className={"mt-2.5"}>
-        {isLoading ? (
+        {chatRoomsListQuery.isLoading ? (
           <div>Loading...</div>
-        ) : error ? (
+        ) : chatRoomsListQuery.error ? (
           <div>Error</div>
         ) : chatRooms
           .sort((a, b) => sortByFunction(a, b, sortBy))
           .map((chatRoom) => (
             <ChatRoomCard
               key={chatRoom.chatRoomId}
+              isSelected={selectedChatRoomId === chatRoom.chatRoomId}
               chatRoom={chatRoom}
               onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
             />

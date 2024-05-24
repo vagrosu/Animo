@@ -8,13 +8,12 @@ import {AxiosError} from "axios";
 import {MessagesResponseType} from "../../../types/api/responses.tsx";
 import {toast} from "react-toastify";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import {SelectedChatRoomType} from "../types.ts";
 
 type MessageInputProps = {
-  selectedChatRoom: SelectedChatRoomType,
+  selectedChatRoomId: string,
 }
 
-export default function MessageInput ({selectedChatRoom}: MessageInputProps) {
+export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
   const user = useUser();
   const [message, setMessage] = useState<string>("");
 
@@ -38,14 +37,14 @@ export default function MessageInput ({selectedChatRoom}: MessageInputProps) {
   })
 
   const onSendMessage = async () => {
-    if (!selectedChatRoom.chatRoomId) {
+    if (!selectedChatRoomId) {
       toast.error("Chat room not found")
       return
     }
 
     if (!mutation.isLoading) {
       const newMessage = {
-        chatRoomId: selectedChatRoom.chatRoomId,
+        chatRoomId: selectedChatRoomId,
         senderId: user.userId,
         text: message,
         repliedMessageId: undefined,

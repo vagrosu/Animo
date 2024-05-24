@@ -6,11 +6,12 @@ import {
 } from "../../../types/api/responses.tsx";
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
-import {ChatRoomType, MessageType, SelectedChatRoomType} from "../types.ts";
+import {ChatRoomType, MessageType} from "../types.ts";
 import React, {useEffect, useRef, useState} from "react";
 import Message from "../../../components/Message/Message.tsx";
 import {differenceInCalendarDays, differenceInYears, format, isToday, isYesterday, parseISO} from "date-fns";
 import {toast} from "react-toastify";
+import {useChatRoomHub} from "../../../context/ChatRoomHubContext.tsx";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -30,13 +31,13 @@ const formatMessageGroupDate = (date: string) => {
 }
 
 type ConversationProps = {
-  selectedChatRoom: SelectedChatRoomType,
   chatRoom: ChatRoomType,
   membersQuery: UseQueryResult<UsersByChatRoomIdResponseType>
 }
 
-export default function Conversation({selectedChatRoom, chatRoom, membersQuery}: ConversationProps) {
+export default function Conversation({chatRoom, membersQuery}: ConversationProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const {connection} = useChatRoomHub();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
   const [isAtBottom, setIsAtBottom] = useState(false);
@@ -72,10 +73,10 @@ export default function Conversation({selectedChatRoom, chatRoom, membersQuery}:
   });
 
   useEffect(() => {
-    selectedChatRoom.connection?.on("ReceiveMessage", (messageId: string) => {
+    connection?.on("ReceiveMessage", (messageId: string) => {
       setNewMessageId(messageId)
     })
-  }, [chatRoom]);
+  }, [connection, chatRoom]);
 
   useEffect(() => {
     if (containerRef.current) {

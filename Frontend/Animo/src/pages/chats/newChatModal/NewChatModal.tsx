@@ -6,6 +6,10 @@ import NewChatModalUsersList from "./NewChatModalUsersList.tsx";
 import {UserType} from "./types.ts";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
+import { useNavigate } from "react-router-dom";
+import {AxiosError} from "axios";
+import {ChatRoomResponseType} from "../../../types/api/responses.tsx";
+import {ChatRoomsQueryType} from "../../../types/api/queries.tsx";
 
 type NewChatModalProps = {
   isOpen: boolean,
@@ -15,16 +19,19 @@ type NewChatModalProps = {
 export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
   const queryClient = useQueryClient();
   const currentUser = useUser();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
-  const createChatMutation = useMutation({
-    mutationFn: async () => api.post("ChatRooms", {
-      name: selectedUsers.map(user => user.userName).join(", "),
-      memberIds: [currentUser.userId, ...selectedUsers.map(user => user.userId)],
+  const createChatMutation = useMutation<ChatRoomResponseType, Error | AxiosError, ChatRoomsQueryType>({
+    mutationFn: async (data) => api.post("ChatRooms", {
+      name: data.name,
+      memberIds: data.memberIds,
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["ChatRooms"]);
+    onSuccess: (res) => {
+      if (res.data?.chatRoom?.chatRoomId) {
+        navigate(`/chats/${res.data.chatRoom.chatRoomId}`)
+      }
       onClose();
     }
   })
@@ -42,6 +49,13 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
       debouncedSearch.clear();
     }
   }, [search]);
+
+  const onCreateChat = () => {
+    createChatMutation.mutate({
+      // name: ,
+      memberIds: [currentUser.userId, ...selectedUsers.map(user => user.userId)],
+    });
+  }
 
   return (
     <Dialog
@@ -68,9 +82,7 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={() => {
-            createChatMutation.mutate();
-          }}
+          onClick={onCreateChat}
         >Create</Button>
       </DialogActions>
     </Dialog>

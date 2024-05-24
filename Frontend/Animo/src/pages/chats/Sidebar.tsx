@@ -13,9 +13,16 @@ export default function Sidebar({openCreateChatRoomModal}: SidebarProps) {
     navigate("/auth/login");
   }
 
+  const onLogoClick = () => {
+    navigate("/chats");
+  }
+
   return (
     <div className={"flex flex-col items-center px-[0.625rem] py-7 w-[3.375rem] bg-zinc-50"}>
-      <div className={"flex items-center content-center w-8 h-8"}>
+      <div
+        onClick={onLogoClick}
+        className={"flex items-center content-center w-8 h-8"}
+      >
         <img
           src={animoLogo}
           alt={"Animo Logo"}

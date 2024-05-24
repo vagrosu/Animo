@@ -31,16 +31,17 @@ const formatChatRoomCardDate = (date: string) => {
 }
 
 type ChatRoomCardProps = {
-  chatRoom: Omit<ChatRoomType, "connection">,
+  isSelected: boolean,
+  chatRoom: ChatRoomType,
   onSelectChatRoom: () => void,
 }
 
-export default function ChatRoomCard({chatRoom, onSelectChatRoom}: ChatRoomCardProps) {
+export default function ChatRoomCard({isSelected, chatRoom, onSelectChatRoom}: ChatRoomCardProps) {
 
   return (
     <div
       onClick={onSelectChatRoom}
-      className={"flex items-center px-5 py-3 hover:bg-gray-200 cursor-pointer"}
+      className={`flex items-center px-5 py-3 ${isSelected ? "bg-gray-200" : ""} hover:bg-gray-200 cursor-pointer`}
     >
       <Avatar
         alt={"User"}
