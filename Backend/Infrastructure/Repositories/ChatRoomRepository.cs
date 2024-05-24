@@ -20,4 +20,20 @@ public class ChatRoomRepository : BaseRepository<ChatRoom>, IChatRoomRepository
             .ToListAsync();
         return Result<IReadOnlyList<ChatRoom>>.Success(result);
     }
+
+    public async Task<Result<ChatRoom>> FindByMemberIds(IReadOnlyList<Guid> memberIds)
+    {
+        var chatRooms = await _context.Set<ChatRoom>()
+            .Where(chatRoom => chatRoom.ChatRoomMembers.Count == memberIds.Count)
+            .Include(chatRoom => chatRoom.ChatRoomMembers)
+            .ToListAsync();
+
+        var chatRoom = chatRooms.FirstOrDefault(chatRoom =>
+            chatRoom.ChatRoomMembers.Select(chatRoomMember => chatRoomMember.UserId).OrderBy(id => id)
+                .SequenceEqual(memberIds.OrderBy(id => id)));
+
+        return chatRoom == null
+            ? Result<ChatRoom>.Failure("Chat room not found.")
+            : Result<ChatRoom>.Success(chatRoom);
+    }
 }

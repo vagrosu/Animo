@@ -24,7 +24,7 @@ public class CreateChatRoomHandler(IChatRoomRepository chatRoomRepository, IUser
         }
 
         var members = new List<User>();
-        foreach (var memberId in request.MemberIds!)
+        foreach (var memberId in request.MemberIds)
         {
             if (Guid.TryParse(memberId, out var memberGuid) == false)
             {
@@ -49,6 +49,29 @@ public class CreateChatRoomHandler(IChatRoomRepository chatRoomRepository, IUser
             {
                 members.Add(member.Value);
             }
+        }
+
+        var existingChatRoom = await _chatRoomRepository.FindByMemberIds(members.Select(m => m.Id).ToList());
+        if (existingChatRoom.IsSuccess)
+        {
+            return new CreateChatRoomCommandResponse
+            {
+                Success = true,
+                ChatRoom = new CreateChatRoomDto
+                {
+                    ChatRoomId = existingChatRoom.Value.ChatRoomId,
+                    Name = existingChatRoom.Value.Name,
+                    Members = members.Select(
+                        m => new ChatRoomUserDto
+                        {
+                            UserId = m.Id,
+                            FirstName = m.FirstName,
+                            LastName = m.LastName,
+                            UserName = m.UserName
+                        }
+                    ).ToArray()
+                }
+            };
         }
 
         if (members.Count() < 2)
