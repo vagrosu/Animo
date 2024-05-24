@@ -15,6 +15,8 @@ export type AuthenticationCurrentUserResponseType = {
   user: {
     isAuthenticated: boolean,
     userId: string,
+    firstName: string,
+    lastName: string,
     claims: {
       [key: string]: string
     }

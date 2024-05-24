@@ -1,6 +1,7 @@
 import {Avatar, Tooltip} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import animoLogo from "../../assets/animo-logo.png";
+import {useUser} from "../../context/UserContext.tsx";
 
 type SidebarProps = {
   openCreateChatRoomModal: () => void;
@@ -8,6 +9,7 @@ type SidebarProps = {
 
 export default function Sidebar({openCreateChatRoomModal}: SidebarProps) {
   const navigate = useNavigate();
+  const user = useUser();
 
   const onLogout = () => {
     navigate("/auth/login");
@@ -31,13 +33,20 @@ export default function Sidebar({openCreateChatRoomModal}: SidebarProps) {
           className={"cursor-pointer"}
         />
       </div>
-      <Avatar
-        alt={"User"}
-        className={"mt-7 cursor-pointer"}
-        sx={{ width: 32, height: 32 }}
+      <Tooltip
+        title={`${user.firstName} ${user.lastName}`}
+        placement={"right"}
+        arrow
+        disableInteractive
       >
-        <i className={"fa-solid fa-user text-base text-zinc-50"} />
-      </Avatar>
+        <Avatar
+          alt={"User"}
+          className={"mt-7 cursor-pointer transition-all ease-in-out hover:bg-blue-600"}
+          sx={{ width: 32, height: 32 }}
+        >
+          <i className={"fa-solid fa-user text-base text-zinc-50"} />
+        </Avatar>
+      </Tooltip>
       <div className={"w-full my-7 border-b-[1px] border-gray-400 rounded-lg opacity-50"}/>
       <Tooltip
         title={"New chat"}

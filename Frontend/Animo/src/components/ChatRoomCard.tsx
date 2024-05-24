@@ -41,11 +41,11 @@ export default function ChatRoomCard({isSelected, chatRoom, onSelectChatRoom}: C
   return (
     <div
       onClick={onSelectChatRoom}
-      className={`flex items-center mt-0.5 px-3.5 py-3 ${isSelected ? "bg-gray-200" : ""} hover:bg-gray-200 rounded-lg cursor-pointer`}
+      className={`flex items-center mt-0.5 px-3.5 py-2.5 ${isSelected ? "bg-gray-200" : ""} hover:bg-gray-200 rounded-lg cursor-pointer`}
     >
       <Avatar
         alt={"User"}
-        sx={{width: 42, height: 42}}
+        sx={{width: 40, height: 40}}
       >
         <i className={"fa-solid fa-user"}/>
       </Avatar>

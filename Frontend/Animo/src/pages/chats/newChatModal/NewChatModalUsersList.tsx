@@ -23,8 +23,8 @@ export default function NewChatModalUsersList({search, selectedUsers, setSelecte
   });
 
   const unselectedUsers = usersSearchQuery.data?.users
-    .filter(user => !selectedUsers.some(selectedUser => {
-      return selectedUser.userId === user.userId && currentUser.userId !== user.userId
+    .filter(user => user.userId !== currentUser.userId && !selectedUsers.some(selectedUser => {
+      return selectedUser.userId === user.userId
     })) || [];
 
   const onSelectUser = (user: UserType) => {

@@ -8,16 +8,22 @@ import {AxiosError, isAxiosError} from "axios";
 type UserContextType = {
   isAuthenticated: boolean,
   userId: string | null,
+  firstName: string | null,
+  lastName: string | null,
 }
 
 type UserType = {
   isAuthenticated: boolean,
   userId: string,
+  firstName: string,
+  lastName: string,
 }
 
 const UserContext = createContext<UserContextType>({
   isAuthenticated: false,
   userId: null,
+  firstName: null,
+  lastName: null,
 })
 
 export const useUser = () => {
@@ -58,6 +64,8 @@ export default function UserContextProvider({children}: {children: ReactNode}) {
   const user: UserContextType = {
     isAuthenticated: data?.user.isAuthenticated || false,
     userId: data?.user.userId || null,
+    firstName: data?.user.firstName || null,
+    lastName: data?.user.lastName || null,
   }
 
   return (
