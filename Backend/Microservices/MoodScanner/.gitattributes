@@ -1,3 +1,0 @@
-best_rf_model.pkl filter=lfs diff=lfs merge=lfs -text
-data_files/test_data.txt filter=lfs diff=lfs merge=lfs -text
-data_files/train_data.txt filter=lfs diff=lfs merge=lfs -text

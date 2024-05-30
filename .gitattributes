@@ -1,0 +1,2 @@
+Backend/Microservices/MoodScanner/photo_emotions_data/*.pkl filter=lfs diff=lfs merge=lfs -text
+Backend/Microservices/MoodScanner/photo_emotions_data/data_files/*.txt filter=lfs diff=lfs merge=lfs -text
