@@ -144,10 +144,10 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
         )
       })}
       <div
-        className="sticky w-0 h-0 bottom-0 left-1/2 translate-x-[-50%] overflow-visible cursor-pointer"
+        className="sticky w-0 h-0 bottom-0 left-1/2 translate-x-[-50%] cursor-pointer"
         onClick={scrollToBottom}
       >
-        <div className={`flex items-center justify-center w-7 h-7 absolute bottom-14 ${!showScrollIcon ? "hidden" : ""} border-blue-600 border-[0.5px] rounded-full`}>
+        <div className={`flex items-center justify-center w-7 h-7 absolute bottom-14 ${!showScrollIcon ? "hidden" : ""} border-blue-600 border-[0.5px] bg-neutral-50 rounded-full`}>
           <i className={"fa-fw fa-solid fa-chevron-down text-blue-600 text-xl"}/>
         </div>
       </div>
