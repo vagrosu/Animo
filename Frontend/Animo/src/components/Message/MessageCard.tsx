@@ -5,6 +5,8 @@ import {MessageContent} from "./MessageContent.tsx";
 
 const getEmotionEmoji = (emotion: string) => {
   switch (emotion.toLowerCase()) {
+    case "neutral":
+      return "😐";
     case "joy":
       return "😁";
     case "sadness":
@@ -18,7 +20,7 @@ const getEmotionEmoji = (emotion: string) => {
     case "disgust":
       return "🤢";
     default:
-      return "😐";
+      return "⚠️"
   }
 }
 

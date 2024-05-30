@@ -2,6 +2,7 @@ namespace Animo.Domain.Common;
 
 public class Emotion
 {
+    public float Neutral { get; set; }
     public float Joy { get; set; }
     public float Surprise { get; set; }
     public float Sadness { get; set; }
@@ -13,6 +14,7 @@ public class Emotion
     {
         return new Emotion
         {
+            Neutral = a.Neutral + b.Neutral,
             Joy = a.Joy + b.Joy,
             Surprise = a.Surprise + b.Surprise,
             Sadness = a.Sadness + b.Sadness,
@@ -26,6 +28,7 @@ public class Emotion
     {
         var emotions = new Dictionary<string, float>
         {
+            { nameof(Neutral), emotion.Neutral },
             { nameof(Joy), emotion.Joy },
             { nameof(Surprise), emotion.Surprise },
             { nameof(Sadness), emotion.Sadness },

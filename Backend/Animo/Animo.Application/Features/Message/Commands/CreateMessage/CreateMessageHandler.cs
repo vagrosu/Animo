@@ -101,7 +101,7 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
         var messageEmotion = await HandleEmotionProcessing(request.Text);
         if (!messageEmotion.IsSuccess)
         {
-            messageEmotion = MessageEmotion.Create(0, 0, 0, 0, 0, 0);
+            messageEmotion = MessageEmotion.Create(0, 0, 0, 0, 0, 0, 0);
             warnings.Add(messageEmotion.Error);
         }
         else
@@ -161,6 +161,7 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
     private async static Task<Result<MessageEmotion>> HandleEmotionProcessing(string text)
     {
         var messageEmotionResponse = await MessageEmotionClient.GetMessageEmotionAsync(text);
+        var neutral = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("neutral", 0) ?? 0, 0.0f, 1.0f);
         var joy = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("joy", 0) ?? 0, 0.0f, 1.0f);
         var surprise = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("surprise", 0) ?? 0, 0.0f, 1.0f);
         var sadness = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("sadness", 0) ?? 0, 0.0f, 1.0f);
@@ -168,7 +169,7 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
         var anger = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("anger", 0) ?? 0, 0.0f, 1.0f);
         var fear = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("fear", 0) ?? 0, 0.0f, 1.0f);
 
-        return MessageEmotion.Create(joy, surprise, sadness, disgust, anger, fear);
+        return MessageEmotion.Create(neutral, joy, surprise, sadness, disgust, anger, fear);
     }
 
 }
