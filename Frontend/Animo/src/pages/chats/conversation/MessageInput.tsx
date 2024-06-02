@@ -59,6 +59,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
     <div className={"flex items-center px-5 py-2 border-t border-gray-200"}>
       <InputBase
         value={message}
+        onKeyUp={(e) => e.key === "Enter" && onSendMessage()}
         onChange={(e) => setMessage(e.target.value)}
         placeholder={"Type your message here..."}
         className={"w-full px-5 py-2 rounded-2xl border-0 bg-neutral-100"}

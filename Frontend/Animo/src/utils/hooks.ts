@@ -17,6 +17,10 @@ export function useLoginMutation() {
       window.location.href = "/chats";
     },
     onError: (error) => {
+      if (typeof error.response?.data === "string") {
+        toast.error(error.response?.data);
+        return;
+      }
       toast.error(error.message);
     },
   });
