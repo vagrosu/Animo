@@ -16,6 +16,7 @@ export type MessagesQueryType = {
   chatRoomId: string,
   senderId: string,
   text: string,
+  userPhoto?: Blob,
   repliedMessageId?: string,
   isForwarded?: boolean
 }

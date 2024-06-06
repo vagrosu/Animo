@@ -1,13 +1,16 @@
 import {InputBase} from "@mui/material";
-import {useState} from "react";
+import {useRef, useState} from "react";
 import {useMutation} from "react-query";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
-import {MessagesQueryType} from "../../../types/api/queries.tsx";
+import {MessagesQueryType} from "../../../types/api/queries.ts";
 import {AxiosError} from "axios";
-import {MessagesResponseType} from "../../../types/api/responses.tsx";
+import {MessagesResponseType} from "../../../types/api/responses.ts";
 import {toast} from "react-toastify";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import {base64ImageToBlob, getErrorMessage} from "../../../utils/helpers.ts";
+import {Camera} from "react-camera-pro";
+import {CameraType} from "../../../types/common.ts";
 
 type MessageInputProps = {
   selectedChatRoomId: string,
@@ -15,24 +18,34 @@ type MessageInputProps = {
 
 export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
   const user = useUser();
-  const [message, setMessage] = useState<string>("");
+  const cameraRef = useRef<CameraType>(null);
+  const [message, setMessage] = useState("");
 
   const mutation = useMutation<MessagesResponseType, Error | AxiosError, MessagesQueryType>({
-    mutationFn: async (query) => api.post(
-      "Messages",
-      {
-        chatRoomId: query.chatRoomId,
-        senderId: query.senderId,
-        text: query.text,
-        repliedMessageId: query.repliedMessageId,
-        isForwarded: query.isForwarded,
-      }
-    ),
+    mutationFn: async (query) => {
+      const formData = new FormData();
+      formData.append("chatRoomId", query.chatRoomId);
+      formData.append("senderId", query.senderId);
+      formData.append("text", query.text);
+      query.userPhoto && formData.append("userPhoto", query.userPhoto);
+      query.repliedMessageId && formData.append("repliedMessageId", query.repliedMessageId);
+      query.isForwarded && formData.append("isForwarded", query.isForwarded.toString());
+
+      return api.post(
+        "Messages",
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        }
+      )
+    },
     onSuccess: () => {
       setMessage("");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     }
   })
 
@@ -42,21 +55,56 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
       return
     }
 
-    if (!mutation.isLoading) {
-      const newMessage = {
-        chatRoomId: selectedChatRoomId,
-        senderId: user.userId,
-        text: message,
-        repliedMessageId: undefined,
-        isForwarded: false,
-      }
-
-      mutation.mutate(newMessage)
+    if (mutation.isLoading) {
+      return
     }
+
+    let userPhotoBlob: Blob | null = null;
+    if (cameraRef.current) {
+      try {
+        const userPhoto = cameraRef.current.takePhoto();
+        if (userPhoto) {
+          userPhotoBlob = base64ImageToBlob(userPhoto as string);
+        } else {
+          console.log("Failed to capture photo")
+          toast.error("Failed to capture photo")
+        }
+      } catch (e) {
+        console.log("Failed to capture photo", e)
+        toast.error("Failed to capture photo")
+      }
+    } else {
+      console.log("Camera not found")
+      toast.error("Camera not found")
+    }
+
+    const messageData = {
+      chatRoomId: selectedChatRoomId,
+      senderId: user.userId,
+      text: message,
+      ...(userPhotoBlob && {userPhoto: userPhotoBlob}),
+      repliedMessageId: undefined,
+      isForwarded: false,
+    }
+
+    mutation.mutate(messageData)
   }
 
   return (
     <div className={"flex items-center px-5 py-2 border-t border-gray-200"}>
+      <div className={"invisible"}>
+        <Camera
+          ref={cameraRef}
+          errorMessages={{
+            noCameraAccessible: 'No camera device accessible. Please connect your camera or try a different browser.',
+            permissionDenied: 'Permission denied. Please refresh and give camera permission.',
+            switchCamera:
+              'It is not possible to switch camera to different one because there is only one video device accessible.',
+            canvas: 'Canvas is not supported.',
+          }}
+          facingMode={"user"}
+        />
+      </div>
       <InputBase
         value={message}
         onKeyUp={(e) => e.key === "Enter" && onSendMessage()}

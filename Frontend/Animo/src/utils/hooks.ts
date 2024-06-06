@@ -1,7 +1,7 @@
 import {useMutation} from "react-query";
-import {AuthenticationLoginResponseType} from "../types/api/responses.tsx";
+import {AuthenticationLoginResponseType} from "../types/api/responses.ts";
 import {AxiosError} from "axios";
-import {AuthenticationLoginQueryType} from "../types/api/queries.tsx";
+import {AuthenticationLoginQueryType} from "../types/api/queries.ts";
 import {toast} from "react-toastify";
 import {api} from "../services/api.tsx";
 

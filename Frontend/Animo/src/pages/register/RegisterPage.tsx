@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {ButtonBase} from "@mui/material";
 import {useMutation} from "react-query";
-import {AuthenticationRegisterResponseType} from "../../types/api/responses.tsx";
+import {AuthenticationRegisterResponseType} from "../../types/api/responses.ts";
 import {AxiosError, isAxiosError} from "axios";
-import {AuthentificationRegisterQueryType} from "../../types/api/queries.tsx";
+import {AuthentificationRegisterQueryType} from "../../types/api/queries.ts";
 import {api} from "../../services/api.tsx";
 import {toast} from "react-toastify";
 import {useLoginMutation} from "../../utils/hooks.ts";

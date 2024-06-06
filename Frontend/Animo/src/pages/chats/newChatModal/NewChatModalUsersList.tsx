@@ -1,6 +1,6 @@
 import {useQuery} from "react-query";
 import {api} from "../../../services/api.tsx";
-import {UsersBySearchResponseType} from "../../../types/api/responses.tsx";
+import {UsersBySearchResponseType} from "../../../types/api/responses.ts";
 import {AxiosError} from "axios";
 import {UserType} from "./types.ts";
 import NewChatModalUsersListItem from "./NewChatModalUsersListItem.tsx";

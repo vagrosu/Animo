@@ -8,8 +8,8 @@ import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
 import { useNavigate } from "react-router-dom";
 import {AxiosError} from "axios";
-import {ChatRoomResponseType} from "../../../types/api/responses.tsx";
-import {ChatRoomsQueryType} from "../../../types/api/queries.tsx";
+import {ChatRoomResponseType} from "../../../types/api/responses.ts";
+import {ChatRoomsQueryType} from "../../../types/api/queries.ts";
 
 type NewChatModalProps = {
   isOpen: boolean,

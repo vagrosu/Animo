@@ -3,7 +3,7 @@ import Conversation from "./Conversation.tsx";
 import MessageInput from "./MessageInput.tsx";
 import {useQuery} from "react-query";
 import {api} from "../../../services/api.tsx";
-import {ChatRoomsByChatRoomIdResponseType, UsersByChatRoomIdResponseType} from "../../../types/api/responses.tsx";
+import {ChatRoomsByChatRoomIdResponseType, UsersByChatRoomIdResponseType} from "../../../types/api/responses.ts";
 import {AxiosError} from "axios";
 import ConversationHeader from "./ConversationHeader.tsx";
 

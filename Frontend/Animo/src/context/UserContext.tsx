@@ -1,7 +1,7 @@
 import {useQuery} from "react-query";
 import { api } from "../services/api.tsx";
 import {Navigate} from "react-router-dom";
-import {AuthenticationCurrentUserResponseType} from "../types/api/responses.tsx";
+import {AuthenticationCurrentUserResponseType} from "../types/api/responses.ts";
 import {createContext, ReactNode, useContext} from "react";
 import {AxiosError, isAxiosError} from "axios";
 

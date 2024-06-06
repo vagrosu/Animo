@@ -1,7 +1,7 @@
 import {useUser} from "../../context/UserContext.tsx";
 import {useQuery} from "react-query";
 import {api} from "../../services/api.tsx";
-import {ChatRoomsByChatRoomIdResponseType, ChatRoomsByUserIdResponseType} from "../../types/api/responses.tsx";
+import {ChatRoomsByChatRoomIdResponseType, ChatRoomsByUserIdResponseType} from "../../types/api/responses.ts";
 import {AxiosError} from "axios";
 import {ChatRoomType} from "./types.ts";
 import {useEffect, useState} from "react";

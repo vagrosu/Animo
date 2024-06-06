@@ -3,7 +3,7 @@ import {
   MessagesByChatRoomIdResponseType,
   MessagesByMessageIdResponseType,
   UsersByChatRoomIdResponseType
-} from "../../../types/api/responses.tsx";
+} from "../../../types/api/responses.ts";
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
 import {ChatRoomType, MessageType} from "../types.ts";
