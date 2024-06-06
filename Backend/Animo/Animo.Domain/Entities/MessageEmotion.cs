@@ -6,9 +6,10 @@ public class MessageEmotion : Emotion
 {
     public Guid MessageEmotionId { get; set; }
 
-    private MessageEmotion(float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
+    private MessageEmotion(bool isSuccess, float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
     {
         MessageEmotionId = Guid.NewGuid();
+        IsSuccess = isSuccess;
         Neutral = neutral;
         Joy = joy;
         Surprise = surprise;
@@ -20,7 +21,7 @@ public class MessageEmotion : Emotion
 
     public MessageEmotion() { }
 
-    public static Result<MessageEmotion> Create(float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
+    public static Result<MessageEmotion> Create(bool isSuccess, float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
     {
         if (neutral < 0 || neutral > 1)
         {
@@ -56,6 +57,6 @@ public class MessageEmotion : Emotion
             return Result<MessageEmotion>.Failure("Fear must be between 0 and 1");
         }
 
-        return Result<MessageEmotion>.Success(new MessageEmotion(neutral, joy, surprise, sadness, disgust, anger, fear));
+        return Result<MessageEmotion>.Success(new MessageEmotion(isSuccess, neutral, joy, surprise, sadness, disgust, anger, fear));
     }
 }

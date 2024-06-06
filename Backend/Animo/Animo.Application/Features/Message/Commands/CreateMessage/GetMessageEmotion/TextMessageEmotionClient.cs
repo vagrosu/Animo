@@ -1,11 +1,10 @@
 using Animo.Application.Models.APIs.RapidAPI;
 using Newtonsoft.Json;
-using System.Text.Json;
 using System.Web;
 
 namespace Animo.Application.Features.Message.Commands.CreateMessage.GetMessageEmotion;
 
-public static class MessageEmotionClient
+public static class TextMessageEmotionClient
 {
     private readonly static HttpClient Client = new HttpClient();
     private readonly static UriBuilder UriBuilder = new UriBuilder("https://twinword-emotion-analysis-v1.p.rapidapi.com/analyze/");
@@ -28,9 +27,9 @@ public static class MessageEmotionClient
         };
 
         using var response = await Client.SendAsync(request);
-        response.EnsureSuccessStatusCode();
         var body = await response.Content.ReadAsStringAsync();
-
+        Console.WriteLine("Text Message Emotion Body: " + body);
+        response.EnsureSuccessStatusCode();
         return JsonConvert.DeserializeObject<RapidApiEmotionAnalysisDto>(body);
     }
 }

@@ -6,9 +6,11 @@ public class UserPhotoEmotion : Emotion
 {
     public Guid UserPhotoEmotionId { get; set; }
 
-    private UserPhotoEmotion(float joy, float surprise, float sadness, float disgust, float anger, float fear)
+    private UserPhotoEmotion(bool isSuccess, float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
     {
         UserPhotoEmotionId = Guid.NewGuid();
+        IsSuccess = isSuccess;
+        Neutral = neutral;
         Joy = joy;
         Surprise = surprise;
         Sadness = sadness;
@@ -19,8 +21,13 @@ public class UserPhotoEmotion : Emotion
 
     public UserPhotoEmotion() { }
 
-    public static Result<UserPhotoEmotion> Create(float joy, float surprise, float sadness, float disgust, float anger, float fear)
+    public static Result<UserPhotoEmotion> Create(bool isSuccess, float neutral, float joy, float surprise, float sadness, float disgust, float anger, float fear)
     {
+        if (neutral < 0 || neutral > 1)
+        {
+            return Result<UserPhotoEmotion>.Failure("Neutral must be between 0 and 1");
+        }
+
         if (joy < 0 || joy > 1)
         {
             return Result<UserPhotoEmotion>.Failure("Joy must be between 0 and 1");
@@ -51,6 +58,6 @@ public class UserPhotoEmotion : Emotion
             return Result<UserPhotoEmotion>.Failure("Fear must be between 0 and 1");
         }
 
-        return Result<UserPhotoEmotion>.Success(new UserPhotoEmotion(joy, surprise, sadness, disgust, anger, fear));
+        return Result<UserPhotoEmotion>.Success(new UserPhotoEmotion(isSuccess, neutral, joy, surprise, sadness, disgust, anger, fear));
     }
 }

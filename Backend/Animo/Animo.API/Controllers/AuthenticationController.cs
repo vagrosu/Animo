@@ -74,14 +74,21 @@ public class AuthenticationController(IAuthService authService, ILogger<Authenti
         var query = new GetCurrentUserQuery();
         var response = await Mediator.Send(query);
 
-        if (response.StatusCode == 401)
+        switch (response.StatusCode)
         {
-            return StatusCode(StatusCodes.Status401Unauthorized, response);
-        }
+            case 401:
+                return Unauthorized(response);
+            case 404:
+                return NotFound(response);
+            case 500:
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            default:
+                if (!response.Success)
+                {
+                    return BadRequest(response);
+                }
 
-        if (response.StatusCode == 500)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, response);
+                break;
         }
 
         return Ok(response);

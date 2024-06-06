@@ -1,17 +1,26 @@
 using Animo.Application.Features.Message.Commands.CreateMessage.GetMessageEmotion;
+using Animo.Application.Models.APIs.MoodScannerAPI;
+using Animo.Application.Models.APIs.RapidAPI;
 using Animo.Application.Persistence;
 using Animo.Domain.Common;
 using Animo.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Animo.Application.Features.Message.Commands.CreateMessage;
 //ToDo: Extend to support all types of messages
-public class CreateMessageHandler(ITextMessageRepository textMessageRepository, IUserRepository userRepository, IChatRoomRepository chatRoomRepository, IMessageEmotionRepository messageEmotionRepository) : IRequestHandler<CreateMessageCommand, CreateMessageCommandResponse>
+public class CreateMessageHandler(
+    ITextMessageRepository textMessageRepository,
+    IUserRepository userRepository,
+    IChatRoomRepository chatRoomRepository,
+    IMessageEmotionRepository messageEmotionRepository,
+    IUserPhotoEmotionRepository userPhotoEmotionRepository) : IRequestHandler<CreateMessageCommand, CreateMessageCommandResponse>
 {
     private readonly ITextMessageRepository _textMessageRepository = textMessageRepository;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IChatRoomRepository _chatRoomRepository = chatRoomRepository;
     private readonly IMessageEmotionRepository _messageEmotionRepository = messageEmotionRepository;
+    private readonly IUserPhotoEmotionRepository _userPhotoEmotionRepository = userPhotoEmotionRepository;
 
     public async Task<CreateMessageCommandResponse> Handle(CreateMessageCommand request, CancellationToken cancellationToken)
     {
@@ -98,10 +107,10 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
             }
         }
 
-        var messageEmotion = await HandleEmotionProcessing(request.Text);
+        var messageEmotion = await HandleTextMessageEmotionProcessing(request.Text);
         if (!messageEmotion.IsSuccess)
         {
-            messageEmotion = MessageEmotion.Create(0, 0, 0, 0, 0, 0, 0);
+            messageEmotion = MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
             warnings.Add(messageEmotion.Error);
         }
         else
@@ -113,8 +122,29 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
             }
         }
 
-        //ToDo: replace mocked values
-        var userPhotoEmotion = UserPhotoEmotion.Create(0, 0, 0, 0, 0, 0);
+        Result<UserPhotoEmotion> userPhotoEmotion;
+        if (request.UserPhoto == null)
+        {
+            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+        }
+        else
+        {
+            userPhotoEmotion = await HandleUserPhotoEmotionProcessing(request.UserPhoto);
+        }
+
+        if (!userPhotoEmotion.IsSuccess)
+        {
+            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            warnings.Add(userPhotoEmotion.Error);
+        }
+        else
+        {
+            var userPhotoEmotionResult = await _userPhotoEmotionRepository.AddAsync(userPhotoEmotion.Value);
+            if (!userPhotoEmotionResult.IsSuccess)
+            {
+                warnings.Add(userPhotoEmotionResult.Error);
+            }
+        }
 
         var textMessage = TextMessage.Create(
             sender.Value,
@@ -158,18 +188,58 @@ public class CreateMessageHandler(ITextMessageRepository textMessageRepository, 
         };
     }
 
-    private async static Task<Result<MessageEmotion>> HandleEmotionProcessing(string text)
+    private async static Task<Result<MessageEmotion>> HandleTextMessageEmotionProcessing(string text)
     {
-        var messageEmotionResponse = await MessageEmotionClient.GetMessageEmotionAsync(text);
-        var neutral = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("neutral", 0) ?? 0, 0.0f, 1.0f);
-        var joy = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("joy", 0) ?? 0, 0.0f, 1.0f);
-        var surprise = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("surprise", 0) ?? 0, 0.0f, 1.0f);
-        var sadness = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("sadness", 0) ?? 0, 0.0f, 1.0f);
-        var disgust = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("disgust", 0) ?? 0, 0.0f, 1.0f);
-        var anger = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("anger", 0) ?? 0, 0.0f, 1.0f);
-        var fear = Math.Clamp(messageEmotionResponse?.EmotionScores?.GetValueOrDefault("fear", 0) ?? 0, 0.0f, 1.0f);
+        RapidApiEmotionAnalysisDto? messageEmotionResponse;
+        try
+        {
+            messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(text);
+        } catch (Exception e)
+        {
+            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+        }
 
-        return MessageEmotion.Create(neutral, joy, surprise, sadness, disgust, anger, fear);
+        if (messageEmotionResponse?.EmotionScores == null)
+        {
+            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        var neutral = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("neutral", 0) ?? 0, 0.0f, 1.0f);
+        var joy = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("joy", 0) ?? 0, 0.0f, 1.0f);
+        var surprise = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("surprise", 0) ?? 0, 0.0f, 1.0f);
+        var sadness = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("sadness", 0) ?? 0, 0.0f, 1.0f);
+        var disgust = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("disgust", 0) ?? 0, 0.0f, 1.0f);
+        var anger = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("anger", 0) ?? 0, 0.0f, 1.0f);
+        var fear = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("fear", 0) ?? 0, 0.0f, 1.0f);
+
+        return MessageEmotion.Create(true, neutral, joy, surprise, sadness, disgust, anger, fear);
     }
 
+
+    private async static Task<Result<UserPhotoEmotion>> HandleUserPhotoEmotionProcessing(IFormFile userPhoto)
+    {
+        MoodScannerDetectFaceEmotionDto? userPhotoEmotionResponse;
+        try
+        {
+            userPhotoEmotionResponse = await UserPhotoEmotionClient.GetUserPhotoEmotionAsync(userPhoto);
+        } catch (Exception e)
+        {
+            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        if (userPhotoEmotionResponse?.DetectedEmotions == null)
+        {
+            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+        }
+
+        var neutral = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("neutral", 0), 0.0f, 1.0f);
+        var joy = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("joy", 0), 0.0f, 1.0f);
+        var surprise = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("surprise", 0), 0.0f, 1.0f);
+        var sadness = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("sadness", 0), 0.0f, 1.0f);
+        var disgust = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("disgust", 0), 0.0f, 1.0f);
+        var anger = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("anger", 0), 0.0f, 1.0f);
+        var fear = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("fear", 0), 0.0f, 1.0f);
+
+        return UserPhotoEmotion.Create(true, neutral, joy, surprise, sadness, disgust, anger, fear);
+    }
 }

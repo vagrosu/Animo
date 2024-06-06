@@ -63,6 +63,7 @@ public static class IdentityInfrastructureRegistrationDi
         services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
         services.AddScoped<ITextMessageRepository, TextMessageRepository>();
         services.AddScoped<IMessageEmotionRepository, MessageEmotionRepository>();
+        services.AddScoped<IUserPhotoEmotionRepository, UserPhotoEmotionRepository>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
