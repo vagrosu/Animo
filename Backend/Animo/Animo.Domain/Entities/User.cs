@@ -10,6 +10,8 @@ public class User : IdentityUser<Guid>
     public string FirstName { get; set; }
     [MaxLength(256)]
     public string LastName { get; set; }
+    public bool IsSelfieConsentAsked { get; set; }
+    public bool IsSelfieConsentGiven { get; set; }
     // Join table
     public List<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();
 
@@ -17,6 +19,8 @@ public class User : IdentityUser<Guid>
     {
         FirstName = firstName;
         LastName = lastName;
+        IsSelfieConsentGiven = false;
+        IsSelfieConsentAsked = false;
         ChatRoomMembers = chatRoomMembers;
     }
 

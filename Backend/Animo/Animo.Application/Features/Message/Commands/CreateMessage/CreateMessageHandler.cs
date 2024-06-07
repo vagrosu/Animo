@@ -110,7 +110,7 @@ public class CreateMessageHandler(
         var messageEmotion = await HandleTextMessageEmotionProcessing(request.Text);
         if (!messageEmotion.IsSuccess)
         {
-            messageEmotion = MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            messageEmotion = MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze message emotion");
             warnings.Add(messageEmotion.Error);
         }
         else
@@ -123,9 +123,10 @@ public class CreateMessageHandler(
         }
 
         Result<UserPhotoEmotion> userPhotoEmotion;
-        if (request.UserPhoto == null)
+        if (request.UserPhoto == null || !sender.Value.IsSelfieConsentGiven)
         {
-            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            var errorMessage = !sender.Value.IsSelfieConsentGiven ? "User has not given consent to use their selfie" : "No selfie provided";
+            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, errorMessage);
         }
         else
         {
@@ -134,7 +135,7 @@ public class CreateMessageHandler(
 
         if (!userPhotoEmotion.IsSuccess)
         {
-            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            userPhotoEmotion = UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze selfie emotion");
             warnings.Add(userPhotoEmotion.Error);
         }
         else
@@ -193,15 +194,17 @@ public class CreateMessageHandler(
         RapidApiEmotionAnalysisDto? messageEmotionResponse;
         try
         {
-            messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(text);
+            //ToDo: uncomment before pushing
+            messageEmotionResponse = null;
+            // messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(text);
         } catch (Exception e)
         {
-            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze message emotion");
         }
 
         if (messageEmotionResponse?.EmotionScores == null)
         {
-            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "No emotions detected");
         }
 
         var neutral = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("neutral", 0) ?? 0, 0.0f, 1.0f);
@@ -224,12 +227,12 @@ public class CreateMessageHandler(
             userPhotoEmotionResponse = await UserPhotoEmotionClient.GetUserPhotoEmotionAsync(userPhoto);
         } catch (Exception e)
         {
-            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze selfie emotion");
         }
 
         if (userPhotoEmotionResponse?.DetectedEmotions == null)
         {
-            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0);
+            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "No emotions detected");
         }
 
         var neutral = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("neutral", 0), 0.0f, 1.0f);

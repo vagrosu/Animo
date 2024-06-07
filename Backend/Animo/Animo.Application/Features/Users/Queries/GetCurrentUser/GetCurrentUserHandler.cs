@@ -56,6 +56,8 @@ public class GetCurrentUserHandler(ICurrentUserService currentUserService, IUser
                 UserId = userId,
                 FirstName = user.Value.FirstName,
                 LastName = user.Value.LastName,
+                IsSelfieConsentAsked = user.Value.IsSelfieConsentAsked,
+                IsSelfieConsentGiven = user.Value.IsSelfieConsentGiven,
                 Claims = claims
             }
         };

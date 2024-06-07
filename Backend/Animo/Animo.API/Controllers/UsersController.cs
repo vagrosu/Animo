@@ -1,3 +1,4 @@
+using Animo.Application.Features.Users.Commands.UpdateSelfieConsent;
 using Animo.Application.Features.Users.Queries.GetUsersByChatRoomId;
 using Animo.Application.Features.Users.Queries.GetUsersBySearch;
 using Microsoft.AspNetCore.Authorization;
@@ -51,6 +52,37 @@ public class UsersController : ApiControllerBase
                 return BadRequest(result);
             case 404:
                 return NotFound(result);
+            default:
+            {
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                break;
+            }
+        }
+
+        return Ok(result);
+    }
+
+    [HttpPatch("update-selfie-consent")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateSelfieConsent([FromBody] UpdateSelfieConsentCommand command)
+    {
+        var result = await Mediator.Send(command);
+        switch (result.StatusCode)
+        {
+            case 400:
+                return BadRequest(result);
+            case 404:
+                return NotFound(result);
+            case 500:
+                return StatusCode(500, result);
             default:
             {
                 if (!result.Success)

@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Animo.Domain.Common;
 
 public class Emotion
 {
     public bool IsSuccess { get; set; }
+    [MaxLength(256)]
+    public string? ErrorMessage { get; set; }
     public float Neutral { get; set; }
     public float Joy { get; set; }
     public float Surprise { get; set; }
