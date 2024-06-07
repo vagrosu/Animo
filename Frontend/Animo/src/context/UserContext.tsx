@@ -10,6 +10,9 @@ type UserContextType = {
   userId: string | null,
   firstName: string | null,
   lastName: string | null,
+  isSelfieConsentAsked: boolean,
+  isSelfieConsentGiven: boolean,
+  refetch: (() => void) | null
 }
 
 type UserType = {
@@ -17,6 +20,9 @@ type UserType = {
   userId: string,
   firstName: string,
   lastName: string,
+  isSelfieConsentAsked: boolean,
+  isSelfieConsentGiven: boolean,
+  refetch: () => void
 }
 
 const UserContext = createContext<UserContextType>({
@@ -24,6 +30,9 @@ const UserContext = createContext<UserContextType>({
   userId: null,
   firstName: null,
   lastName: null,
+  isSelfieConsentAsked: false,
+  isSelfieConsentGiven: false,
+  refetch: null
 })
 
 export const useUser = () => {
@@ -40,7 +49,7 @@ export const useUser = () => {
 }
 
 export default function UserContextProvider({children}: {children: ReactNode}) {
-  const {data, isLoading, error} = useQuery<AuthenticationCurrentUserResponseType, Error | AxiosError>({
+  const {data, isLoading, error, refetch} = useQuery<AuthenticationCurrentUserResponseType, Error | AxiosError>({
     queryKey: ["Authentication", "current-user", "LoginRequiredContext"],
     queryFn: async () => api.get<AuthenticationCurrentUserResponseType>("Authentication/current-user")
       .then((res) => res.data)
@@ -66,6 +75,9 @@ export default function UserContextProvider({children}: {children: ReactNode}) {
     userId: data?.user.userId || null,
     firstName: data?.user.firstName || null,
     lastName: data?.user.lastName || null,
+    isSelfieConsentAsked: data?.user.isSelfieConsentAsked || false,
+    isSelfieConsentGiven: data?.user.isSelfieConsentGiven || false,
+    refetch: refetch
   }
 
   return (

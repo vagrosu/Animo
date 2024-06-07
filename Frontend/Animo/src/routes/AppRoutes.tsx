@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute.tsx";
 import UserContextProvider from "../context/UserContext.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
 import ChatsPage from "../pages/chats/ChatsPage.tsx";
+import SelfieConsentProtectedRoute from "./SelfieConsentProtectedRoute.tsx";
 
 export default function AppRoutes() {
   return (
@@ -18,8 +19,10 @@ export default function AppRoutes() {
 
           {/* Protected routes */}
           <Route element={<ProtectedRoute/>}>
-            <Route path={"/chats"} element={<ChatsPage/>}/>
-            <Route path={"/chats/:chatId"} element={<ChatsPage/>}/>
+            <Route element={<SelfieConsentProtectedRoute/>}>
+              <Route path={"/chats"} element={<ChatsPage/>}/>
+              <Route path={"/chats/:chatId"} element={<ChatsPage/>}/>
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/landing" replace/>}/>

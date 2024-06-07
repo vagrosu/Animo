@@ -128,7 +128,7 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
             {isFirstFromDay && (
               <div className={"w-full flex items-center justify-center my-4"}>
                 <div className={"border-[0.5px] opacity-70 border-blue-600 w-full"}/>
-                <div className={"text-center text-sm text-blue-600 px-4"}>
+                <div className={"text-center text-sm text-blue-600 text-nowrap px-4"}>
                   {formatMessageGroupDate(message.sentTime)}
                 </div>
                 <div className={"border-b-[1px] opacity-70 border-blue-600 w-full"}/>

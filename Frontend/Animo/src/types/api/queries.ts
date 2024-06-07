@@ -25,3 +25,8 @@ export type ChatRoomsQueryType = {
   name?: string,
   memberIds: string[]
 }
+
+export type UsersUpdateSelfieConsentQueryType = {
+  userId: string,
+  isSelfieConsentGiven: boolean,
+}

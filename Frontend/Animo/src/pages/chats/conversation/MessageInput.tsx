@@ -27,7 +27,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
       formData.append("chatRoomId", query.chatRoomId);
       formData.append("senderId", query.senderId);
       formData.append("text", query.text);
-      query.userPhoto && formData.append("userPhoto", query.userPhoto);
+      user.isSelfieConsentGiven && query.userPhoto && formData.append("userPhoto", query.userPhoto);
       query.repliedMessageId && formData.append("repliedMessageId", query.repliedMessageId);
       query.isForwarded && formData.append("isForwarded", query.isForwarded.toString());
 
@@ -60,29 +60,32 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
     }
 
     let userPhotoBlob: Blob | null = null;
-    if (cameraRef.current) {
-      try {
-        const userPhoto = cameraRef.current.takePhoto();
-        if (userPhoto) {
-          userPhotoBlob = base64ImageToBlob(userPhoto as string);
-        } else {
-          console.log("Failed to capture photo")
+    if (user.isSelfieConsentGiven) {
+      if (cameraRef.current) {
+        try {
+          const userPhoto = cameraRef.current.takePhoto();
+          console.log(userPhoto)
+          if (userPhoto) {
+            userPhotoBlob = base64ImageToBlob(userPhoto as string);
+          } else {
+            console.log("Failed to capture photo")
+            toast.error("Failed to capture photo")
+          }
+        } catch (e) {
+          console.log("Failed to capture photo", e)
           toast.error("Failed to capture photo")
         }
-      } catch (e) {
-        console.log("Failed to capture photo", e)
-        toast.error("Failed to capture photo")
+      } else {
+        console.log("Camera not found")
+        toast.error("Camera not found")
       }
-    } else {
-      console.log("Camera not found")
-      toast.error("Camera not found")
     }
 
     const messageData = {
       chatRoomId: selectedChatRoomId,
       senderId: user.userId,
       text: message,
-      ...(userPhotoBlob && {userPhoto: userPhotoBlob}),
+      ...(user.isSelfieConsentGiven && userPhotoBlob && {userPhoto: userPhotoBlob}),
       repliedMessageId: undefined,
       isForwarded: false,
     }
@@ -92,7 +95,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
 
   return (
     <div className={"flex items-center px-5 py-2 border-t border-gray-200"}>
-      <div className={"invisible"}>
+      {user.isSelfieConsentGiven && <div className={"invisible"}>
         <Camera
           ref={cameraRef}
           errorMessages={{
@@ -104,7 +107,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
           }}
           facingMode={"user"}
         />
-      </div>
+      </div>}
       <InputBase
         value={message}
         onKeyUp={(e) => e.key === "Enter" && onSendMessage()}

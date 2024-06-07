@@ -17,6 +17,8 @@ export type AuthenticationCurrentUserResponseType = {
     userId: string,
     firstName: string,
     lastName: string,
+    isSelfieConsentAsked: boolean,
+    isSelfieConsentGiven: boolean,
     claims: {
       [key: string]: string
     }
@@ -95,4 +97,10 @@ export type UsersBySearchResponseType = {
     firstName: string,
     lastName: string,
   }[]
+} & baseResponse;
+
+export type UsersUpdateSelfieConsentResponseType = {
+  selfieConsent: {
+    isSelfieConsentGiven: boolean,
+  }
 } & baseResponse;
