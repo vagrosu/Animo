@@ -1,10 +1,12 @@
 import {AxiosResponse} from "axios";
 
+// Naming schema: {Entity}ResponseType
+
 type baseResponse = {
   success: boolean,
   statusCode: number,
   message: string | null,
-  validationErrors: string[] | null
+  validationsErrors: string[] | null
 }
 
 export type AuthenticationLoginResponseType = string;
@@ -101,6 +103,18 @@ export type UsersBySearchResponseType = {
 
 export type UsersUpdateSelfieConsentResponseType = {
   selfieConsent: {
+    isSelfieConsentGiven: boolean,
+  }
+} & baseResponse;
+
+export type UsersByUserIdResponseType = {
+  user: {
+    userId: string,
+    username?: string,
+    firstName: string,
+    lastName: string,
+    email?: string,
+    phoneNumber?: string,
     isSelfieConsentGiven: boolean,
   }
 } & baseResponse;

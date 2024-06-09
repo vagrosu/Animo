@@ -10,6 +10,9 @@ import { useNavigate } from "react-router-dom";
 import {AxiosError} from "axios";
 import {ChatRoomResponseType} from "../../../types/api/responses.ts";
 import {ChatRoomsQueryType} from "../../../types/api/queries.ts";
+import {LoadingButton} from "@mui/lab";
+import {toast} from "react-toastify";
+import {getErrorMessage} from "../../../utils/helpers.ts";
 
 type NewChatModalProps = {
   isOpen: boolean,
@@ -33,6 +36,9 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
         navigate(`/chats/${res.data.chatRoom.chatRoomId}`)
       }
       onClose();
+    },
+    onError: (error) => {
+      toast.error(getErrorMessage(error));
     }
   })
 
@@ -51,6 +57,13 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
   }, [search]);
 
   const onCreateChat = () => {
+    const memberIds = [currentUser.userId, ...selectedUsers.map(user => user.userId)];
+
+    if (memberIds.length < 2) {
+      toast.error("Select at least one user");
+      return;
+    }
+
     createChatMutation.mutate({
       // name: ,
       memberIds: [currentUser.userId, ...selectedUsers.map(user => user.userId)],
@@ -63,12 +76,18 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
       onClose={onClose}
       maxWidth={"sm"}
       fullWidth
+      classes={{
+        paper: "!rounded-2xl !px-6 !py-4"
+      }}
     >
-      <DialogTitle className={"flex items-center"}>
+      <DialogTitle className={"flex items-center !px-0 !pt-0"}>
         New chat
-        <i className={"fas fa-times ml-auto cursor-pointer"} onClick={onClose}/>
+        <i
+          onClick={onClose}
+          className={"fas fa-times text-xl absolute right-5 top-5 cursor-pointer"}
+        />
       </DialogTitle>
-      <DialogContent className={""}>
+      <DialogContent className={"!px-0"}>
         <SearchInput
           value={search}
           onChange={e => setSearch(e.target.value)}
@@ -80,10 +99,15 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
           setSelectedUsers={setSelectedUsers}
         />
       </DialogContent>
-      <DialogActions>
-        <Button
+      <DialogActions className={"!px-0 !pb-0"}>
+        <LoadingButton
+          variant={"contained"}
+          className={"!rounded-lg !py-2.5 !px-5 !bg-blue-600 text-white !normal-case !shadow-none hover:!bg-blue-700"}
+          loading={createChatMutation.isLoading}
           onClick={onCreateChat}
-        >Create</Button>
+        >
+          Create
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )

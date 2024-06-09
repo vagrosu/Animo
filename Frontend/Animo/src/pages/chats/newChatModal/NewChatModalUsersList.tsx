@@ -27,6 +27,9 @@ export default function NewChatModalUsersList({search, selectedUsers, setSelecte
       return selectedUser.userId === user.userId
     })) || [];
 
+  const noUsersFound = !!(search && !usersSearchQuery.data?.users.find(user => user.userId !== currentUser.userId));
+  const isLoading = search && (usersSearchQuery.isLoading || usersSearchQuery.isIdle);
+
   const onSelectUser = (user: UserType) => {
     if (selectedUsers.find(selectedUser => selectedUser.userId === user.userId)) {
       setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.userId !== user.userId));
@@ -45,12 +48,11 @@ export default function NewChatModalUsersList({search, selectedUsers, setSelecte
           isSelected={true}
         />
       ))}
-      <div></div>
-      {usersSearchQuery.isLoading ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : usersSearchQuery.isError ? (
         <div>Error</div>
-      ) : !unselectedUsers.length && search ? (
+      ) : noUsersFound ? (
         <div>No users found</div>
       ) : unselectedUsers.map(user => (
         <NewChatModalUsersListItem

@@ -6,6 +6,7 @@ import UserContextProvider from "../context/UserContext.tsx";
 import LandingPage from "../pages/landing/LandingPage.tsx";
 import ChatsPage from "../pages/chats/ChatsPage.tsx";
 import SelfieConsentProtectedRoute from "./SelfieConsentProtectedRoute.tsx";
+import UserProfileModalContextProvider from "../context/UserProfileModalContext/UserProfileModalContext.tsx";
 
 export default function AppRoutes() {
   return (
@@ -20,8 +21,10 @@ export default function AppRoutes() {
           {/* Protected routes */}
           <Route element={<ProtectedRoute/>}>
             <Route element={<SelfieConsentProtectedRoute/>}>
-              <Route path={"/chats"} element={<ChatsPage/>}/>
-              <Route path={"/chats/:chatId"} element={<ChatsPage/>}/>
+              <Route element={<UserProfileModalContextProvider />}>
+                <Route path={"/chats"} element={<ChatsPage/>}/>
+                <Route path={"/chats/:chatId"} element={<ChatsPage/>}/>
+              </Route>
             </Route>
           </Route>
 

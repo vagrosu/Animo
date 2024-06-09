@@ -15,13 +15,16 @@ export function isValidHttpUrl(str: string) {
 export function getErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
     if (error.response?.data) {
-      if (error.response.data.errors)
+      if (error.response.data.errors) {
         if (typeof error.response.data.errors === "object") {
           const errors = Object.values(error.response.data.errors).flat(Infinity);
-          if(errors.length > 0 && typeof errors[0] === "string") {
+          if (errors.length > 0 && typeof errors[0] === "string") {
             return errors[0];
           }
         }
+      } else if (error.response.data.validationsErrors) {
+        return error.response.data.validationsErrors[0];
+      }
     }
   }
 
