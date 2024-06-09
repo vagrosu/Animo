@@ -2,6 +2,7 @@ using Animo.Application.Persistence;
 using Animo.Domain.Common;
 using Animo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Sprache;
 
 namespace Infrastructure.Repositories;
 
@@ -10,6 +11,17 @@ public class ChatRoomRepository : BaseRepository<ChatRoom>, IChatRoomRepository
 
     public ChatRoomRepository(AnimoContext context) : base(context)
     {
+    }
+
+    public override async Task<Result<ChatRoom>> FindByIdAsync(Guid chatRoomId)
+    {
+        var result = await _context.Set<ChatRoom>()
+            .Include(chatRoom => chatRoom.ChatRoomMembers)
+            .FirstOrDefaultAsync(chatRoom => chatRoom.ChatRoomId == chatRoomId);
+
+        return result == null
+            ? Result<ChatRoom>.Failure("Chat room not found.")
+            : Result<ChatRoom>.Success(result);
     }
 
     public async Task<Result<IReadOnlyList<ChatRoom>>> FindByUserIdAsync(Guid userId)
