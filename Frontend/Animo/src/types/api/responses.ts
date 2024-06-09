@@ -9,6 +9,13 @@ type baseResponse = {
   validationsErrors: string[] | null
 }
 
+type ChatRoomMemberType = {
+  userId: string,
+  userName: string,
+  firstName: string,
+  lastName: string,
+}
+
 export type AuthenticationLoginResponseType = string;
 
 export type AuthenticationRegisterResponseType = null;
@@ -31,6 +38,7 @@ export type ChatRoomsByChatRoomIdResponseType = {
   chatRoom: {
     chatRoomId: string,
     name: string,
+    members: ChatRoomMemberType[],
     lastUsedTime: string,
     lastActivity: string,
   }
@@ -40,6 +48,7 @@ export type ChatRoomsByUserIdResponseType = {
   chatRooms: {
     chatRoomId: string,
     name: string,
+    isGroupChat: boolean,
     lastUsedTime: string,
     lastActivity: string,
   }[]
@@ -63,33 +72,23 @@ export type MessagesByChatRoomIdResponseType = {
   textMessages: ResponseTextMessageType[]
 } & baseResponse;
 
-export type MessagesResponseType = AxiosResponse<{
+export type CreateMessagesResponseType = AxiosResponse<{
   textMessageId: string,
   text: string,
   sentTime: string,
   isForwarded?: boolean,
 } & baseResponse>;
 
-export type ChatRoomResponseType = AxiosResponse<{
+export type CreateChatRoomResponseType = AxiosResponse<{
   chatRoom: {
     chatRoomId: string,
     name: string,
-    members: {
-      userId: string,
-      userName: string,
-      firstName: string,
-      lastName: string,
-    }[]
+    members: ChatRoomMemberType[]
   }
 } & baseResponse>;
 
 export type UsersByChatRoomIdResponseType = {
-  members: {
-    userId: string,
-    userName: string,
-    firstName: string,
-    lastName: string,
-  }[]
+  members: ChatRoomMemberType[]
 } & baseResponse;
 
 export type UsersBySearchResponseType = {

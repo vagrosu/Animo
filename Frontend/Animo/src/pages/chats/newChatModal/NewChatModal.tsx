@@ -1,4 +1,4 @@
-import {Button, debounce, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField} from "@mui/material";
+import {debounce, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
 import SearchInput from "../../../components/SearchInput.tsx";
 import {useEffect, useState} from "react";
 import {useMutation, useQueryClient} from "react-query";
@@ -8,7 +8,7 @@ import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
 import { useNavigate } from "react-router-dom";
 import {AxiosError} from "axios";
-import {ChatRoomResponseType} from "../../../types/api/responses.ts";
+import {CreateChatRoomResponseType} from "../../../types/api/responses.ts";
 import {ChatRoomsQueryType} from "../../../types/api/queries.ts";
 import {LoadingButton} from "@mui/lab";
 import {toast} from "react-toastify";
@@ -27,7 +27,7 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
   const [search, setSearch] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
-  const createChatMutation = useMutation<ChatRoomResponseType, Error | AxiosError, ChatRoomsQueryType>({
+  const createChatMutation = useMutation<CreateChatRoomResponseType, Error | AxiosError, ChatRoomsQueryType>({
     mutationFn: async (data) => api.post("ChatRooms", {
       name: data.name,
       memberIds: data.memberIds,

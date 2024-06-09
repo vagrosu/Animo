@@ -1,13 +1,16 @@
-import {HubConnection} from "@microsoft/signalr";
-
-export type SelectedChatRoomType = {
-  chatRoomId?: string,
-  connection?: HubConnection,
-}
-
 export type ChatRoomType = {
   chatRoomId: string,
   name: string,
+  members: MemberType[],
+  isGroupChat: boolean,
+  lastUsedTime: string,
+  lastActivity?: string,
+}
+
+export type ChatRoomCardType = {
+  chatRoomId: string,
+  name: string,
+  isGroupChat: boolean,
   lastUsedTime: string,
   lastActivity?: string,
 }

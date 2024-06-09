@@ -13,7 +13,7 @@ export default function ConversationHeader({chatRoom}: ConversationHeaderProps) 
           alt={"User"}
           sx={{width: 42, height: 42}}
         >
-          <i className={"fa-solid fa-user"}/>
+          <i className={`fa-solid fa-${chatRoom.isGroupChat ? "users" : "user"}`}/>
         </Avatar>
         <p className={"text-xl ml-3"}>
           {chatRoom.name}

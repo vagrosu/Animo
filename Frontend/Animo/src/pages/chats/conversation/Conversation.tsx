@@ -32,10 +32,9 @@ const formatMessageGroupDate = (date: string) => {
 
 type ConversationProps = {
   chatRoom: ChatRoomType,
-  membersQuery: UseQueryResult<UsersByChatRoomIdResponseType>
 }
 
-export default function Conversation({chatRoom, membersQuery}: ConversationProps) {
+export default function Conversation({chatRoom}: ConversationProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const {connection} = useChatRoomHub();
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -97,19 +96,13 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
     containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
   }
 
-  if (messagesQuery.isLoading || membersQuery.isLoading) {
+  if (messagesQuery.isLoading) {
     return <div>Loading</div>
   }
 
   if (messagesQuery.error) {
     toast.error("Error fetching messages")
   }
-
-  if (membersQuery.error) {
-    toast.error("Error fetching members")
-  }
-
-  const members = membersQuery.data?.members || [];
 
   return (
     <div
@@ -121,7 +114,7 @@ export default function Conversation({chatRoom, membersQuery}: ConversationProps
         const isFirstFromDay = i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
         const isFirstFromGroup = isFirstFromDay || i === 0 || messages[i - 1].senderId !== message.senderId;
         const isLastFromGroup = i === messages.length - 1 || messages[i + 1].senderId !== message.senderId;
-        const sender = members.find(member => member.userId === message.senderId);
+        const sender = chatRoom.members.find(member => member.userId === message.senderId);
 
         return (
           <React.Fragment key={message.textMessageId}>

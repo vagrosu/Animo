@@ -3,7 +3,7 @@ import {useQuery} from "react-query";
 import {api} from "../../services/api.tsx";
 import {ChatRoomsByChatRoomIdResponseType, ChatRoomsByUserIdResponseType} from "../../types/api/responses.ts";
 import {AxiosError} from "axios";
-import {ChatRoomType} from "./types.ts";
+import {ChatRoomCardType} from "./types.ts";
 import {useEffect, useState} from "react";
 import SortByDropdown, {SORT_BY_OPTIONS} from "../../components/SortByDropdown.tsx";
 import ChatRoomCard from "../../components/ChatRoomCard.tsx";
@@ -12,7 +12,7 @@ import {useNavigate} from "react-router-dom";
 import {useChatRoomHub} from "../../context/ChatRoomHubContext.tsx";
 import {useChatRoomsListHub} from "../../context/ChatRoomsListHubContext.tsx";
 
-const sortByFunction = (a: Omit<ChatRoomType, "connection">, b: Omit<ChatRoomType, "connection">, sortBy: number) => {
+const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number) => {
   switch (sortBy) {
     case SORT_BY_OPTIONS.NEWEST:
       return new Date(b.lastUsedTime).getTime() - new Date(a.lastUsedTime).getTime();
@@ -39,7 +39,7 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
   const navigate = useNavigate();
 
   const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
-  const [chatRooms, setChatRooms] = useState<ChatRoomType[]>([]);
+  const [chatRooms, setChatRooms] = useState<ChatRoomCardType[]>([]);
   const [chatRoomIdToRefresh, setChatRoomIdToRefresh] = useState<string | null>(null);
 
   const chatRoomsListQuery = useQuery<ChatRoomsByUserIdResponseType, AxiosError | Error>({
@@ -56,14 +56,18 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     queryFn: async () => api.get<ChatRoomsByChatRoomIdResponseType>(`ChatRooms/${chatRoomIdToRefresh}`)
       .then((res) => res.data),
     onSuccess: (data) => {
-      setChatRooms((prev) => {
+      setChatRooms(prev => {
         const index = prev.findIndex((chatRoom) => chatRoom.chatRoomId === data.chatRoom.chatRoomId);
+        const updatedChatRoom = {
+          ...data.chatRoom,
+          isGroupChat: data.chatRoom.members.length > 2,
+        };
         if (index !== -1) {
           const newChatRooms = [...prev];
-          newChatRooms[index] = data.chatRoom;
+          newChatRooms[index] = updatedChatRoom;
           return newChatRooms;
         } else {
-          return [...prev, data.chatRoom];
+          return [...prev, updatedChatRoom];
         }
       })
     },
@@ -93,7 +97,7 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     }
   }, [chatRoomsListHub])
 
-  const onSelectChatRoom = async (chatRoom: ChatRoomType) => {
+  const onSelectChatRoom = async (chatRoom: ChatRoomCardType) => {
     if (selectedChatRoomId !== chatRoom.chatRoomId) {
       setSelectedChatRoomId(chatRoom.chatRoomId);
       navigate(`/chats/${chatRoom.chatRoomId}`)

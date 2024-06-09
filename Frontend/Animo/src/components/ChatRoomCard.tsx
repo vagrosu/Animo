@@ -1,4 +1,4 @@
-import {ChatRoomType} from "../pages/chats/types.ts";
+import {ChatRoomCardType} from "../pages/chats/types.ts";
 import {Avatar} from "@mui/material";
 import {
   differenceInDays,
@@ -32,7 +32,7 @@ const formatChatRoomCardDate = (date: string) => {
 
 type ChatRoomCardProps = {
   isSelected: boolean,
-  chatRoom: ChatRoomType,
+  chatRoom: ChatRoomCardType,
   onSelectChatRoom: () => void,
 }
 
@@ -47,7 +47,7 @@ export default function ChatRoomCard({isSelected, chatRoom, onSelectChatRoom}: C
         alt={"User"}
         sx={{width: 40, height: 40}}
       >
-        <i className={"fa-solid fa-user"}/>
+        <i className={`fa-solid fa-${chatRoom.isGroupChat ? "users" : "user"}`}/>
       </Avatar>
       <div className={"w-full flex justify-between gap-3 leading-[1.375rem] ml-2.5 truncate"}>
         <div className={"truncate"}>

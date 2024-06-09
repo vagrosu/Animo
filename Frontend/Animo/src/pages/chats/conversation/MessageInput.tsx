@@ -5,7 +5,7 @@ import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
 import {MessagesQueryType} from "../../../types/api/queries.ts";
 import {AxiosError} from "axios";
-import {MessagesResponseType} from "../../../types/api/responses.ts";
+import {CreateMessagesResponseType} from "../../../types/api/responses.ts";
 import {toast} from "react-toastify";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {base64ImageToBlob, getErrorMessage} from "../../../utils/helpers.ts";
@@ -21,7 +21,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
   const cameraRef = useRef<CameraType>(null);
   const [message, setMessage] = useState("");
 
-  const mutation = useMutation<MessagesResponseType, Error | AxiosError, MessagesQueryType>({
+  const mutation = useMutation<CreateMessagesResponseType, Error | AxiosError, MessagesQueryType>({
     mutationFn: async (query) => {
       const formData = new FormData();
       formData.append("chatRoomId", query.chatRoomId);
