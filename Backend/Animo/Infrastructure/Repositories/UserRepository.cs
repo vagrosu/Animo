@@ -42,9 +42,20 @@ public class UserRepository(AnimoContext context) : BaseRepository<User>(context
             return Result<IReadOnlyList<User>>.Failure("Search string is empty");
         }
 
-        var normalizedSearch = search.ToLower().Trim();
+        var normalizedSearch = $"%{search.ToLower().Trim()}%";
         var result = await _context.Users
-            .Where(user => EF.Functions.Like(user.FirstName.ToLower().Trim(), $"%{normalizedSearch}%") || EF.Functions.Like(user.LastName.ToLower().Trim(), $"%{normalizedSearch}%"))
+            .Where(
+                user => EF.Functions.Like(user.FirstName.ToLower().Trim(), normalizedSearch) ||
+                        EF.Functions.Like(user.LastName.ToLower().Trim(), normalizedSearch) ||
+                        EF.Functions.Like(
+                            user.FirstName.ToLower().Trim() + " " + user.LastName.ToLower().Trim(),
+                            normalizedSearch
+                        ) ||
+                        EF.Functions.Like(
+                            user.LastName.ToLower().Trim() + " " + user.FirstName.ToLower().Trim(),
+                            normalizedSearch
+                        )
+            )
             .AsNoTracking()
             .ToListAsync();
 
