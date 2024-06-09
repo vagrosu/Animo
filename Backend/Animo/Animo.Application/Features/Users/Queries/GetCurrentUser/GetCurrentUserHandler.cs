@@ -5,7 +5,10 @@ using MediatR;
 
 namespace Animo.Application.Features.Users.Queries.GetCurrentUser;
 
-public class GetCurrentUserHandler(ICurrentUserService currentUserService, IUserRepository userRepository) : IRequestHandler<GetCurrentUserQuery, GetCurrentUserResponse>
+public class GetCurrentUserHandler(
+    ICurrentUserService currentUserService,
+    IUserRepository userRepository
+) : IRequestHandler<GetCurrentUserQuery, GetCurrentUserResponse>
 {
     private readonly ICurrentUserService _currentUserService = currentUserService;
     private readonly IUserRepository _userRepository = userRepository;

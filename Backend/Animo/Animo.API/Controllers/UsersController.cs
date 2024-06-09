@@ -1,4 +1,5 @@
 using Animo.Application.Features.Users.Commands.UpdateSelfieConsent;
+using Animo.Application.Features.Users.Queries.GetUserById;
 using Animo.Application.Features.Users.Queries.GetUsersByChatRoomId;
 using Animo.Application.Features.Users.Queries.GetUsersBySearch;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,35 @@ namespace Animo.Controllers;
 
 public class UsersController : ApiControllerBase
 {
+    [HttpGet("{userId}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserById(string userId)
+    {
+        var query = new GetUserByIdQuery { UserId = userId };
+        var result = await Mediator.Send(query);
+        switch (result.StatusCode)
+        {
+            case 400:
+                return BadRequest(result);
+            case 404:
+                return NotFound(result);
+            default:
+            {
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                break;
+            }
+        }
+
+        return Ok(result);
+    }
+
     [HttpGet("by-chat-room-id")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
