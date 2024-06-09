@@ -9,13 +9,13 @@ public class ChatRoom
 {
     public Guid ChatRoomId { get; set; }
     [MaxLength(256)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public DateTime CreatedTime { get; set; }
     public DateTime LastUsedTime { get; set; }
     // Join table
     public List<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();
 
-    private ChatRoom(string name)
+    private ChatRoom(string? name = null)
     {
         ChatRoomId = Guid.NewGuid();
         Name = name;
@@ -25,13 +25,8 @@ public class ChatRoom
 
     public ChatRoom() {}
 
-    public static Result<ChatRoom> Create(string name, List<User> members)
+    public static Result<ChatRoom> Create(List<User> members, string? name = null)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return Result<ChatRoom>.Failure("Name is required");
-        }
-
         if (members == null || members.Count == 0)
         {
             return Result<ChatRoom>.Failure("Members are required");

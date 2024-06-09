@@ -83,8 +83,8 @@ public class CreateChatRoomHandler(IChatRoomRepository chatRoomRepository, IUser
             };
         }
 
-        var chatRoomName = request.Name ??= string.Join(", ", members.ConvertAll(m => m.FirstName));
-        var chatRoom = ChatRoom.Create(chatRoomName, members);
+        var chatRoomName = request.Name ??= members.Count > 2 ? string.Join(", ", members.ConvertAll(m => m.FirstName)) : null;
+        var chatRoom = ChatRoom.Create(members, chatRoomName);
         if (!chatRoom.IsSuccess)
         {
             return new CreateChatRoomCommandResponse

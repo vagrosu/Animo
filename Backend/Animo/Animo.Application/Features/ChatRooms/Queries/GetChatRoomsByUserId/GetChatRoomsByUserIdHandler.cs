@@ -1,10 +1,15 @@
 using Animo.Application.Persistence;
+using Animo.Domain.Entities;
 using MediatR;
 using System.Text;
 
 namespace Animo.Application.Features.ChatRooms.Queries.GetChatRoomsByUserId;
 
-public class GetChatRoomsByUserIdHandler(IChatRoomRepository chatRoomRepository, ITextMessageRepository textMessageRepository, IUserRepository userRepository) : IRequestHandler<GetChatRoomsByUserIdQuery, GetChatRoomsByUserIdResponse>
+public class GetChatRoomsByUserIdHandler(
+    IChatRoomRepository chatRoomRepository,
+    ITextMessageRepository textMessageRepository,
+    IUserRepository userRepository
+) : IRequestHandler<GetChatRoomsByUserIdQuery, GetChatRoomsByUserIdResponse>
 {
     private readonly IChatRoomRepository _chatRoomRepository = chatRoomRepository;
     private readonly ITextMessageRepository _textMessageRepository = textMessageRepository;
@@ -54,30 +59,18 @@ public class GetChatRoomsByUserIdHandler(IChatRoomRepository chatRoomRepository,
         foreach (var chatRoom in chatRooms.Value)
         {
             var lastMessage = await _textMessageRepository.FindLastByChatRoomIdAsync(chatRoom.ChatRoomId);
-            var lastActivity = new StringBuilder();
-            if (lastMessage.IsSuccess)
-            {
-                if (lastMessage.Value.Sender.Id == userId)
-                {
-                    lastActivity.Append("You: ");
-                }
-                else if (chatRoom.ChatRoomMembers.Count > 2)
-                {
-                    lastActivity.Append(lastMessage.Value.Sender.FirstName + ": ");
-                }
-                lastActivity.Append(lastMessage.Value.Text);
-            }
-            else
-            {
-                lastActivity.Append("Start conversation");
-            }
+            var lastActivity = ChatRoomHelpers.GetLastActivity(lastMessage.IsSuccess ? lastMessage.Value : null, chatRoom, userId);
+
+            var chatRoomMembers = await _userRepository.FindByChatRoomIdAsync(chatRoom.ChatRoomId);
+            var chatRoomName = ChatRoomHelpers.GetChatRoomName(chatRoom, userId, chatRoomMembers.IsSuccess ? chatRoomMembers.Value : new List<User>());
 
             chatRoomDtos.Add(new GetChatRoomByUserIdDto
             {
                 ChatRoomId = chatRoom.ChatRoomId,
-                Name = chatRoom.Name,
+                Name = chatRoomName,
+                IsGroupChat = chatRoomMembers.Value.Count > 2,
                 LastUsedTime = chatRoom.LastUsedTime,
-                LastActivity = lastActivity.ToString()
+                LastActivity = lastActivity
             });
         }
 
