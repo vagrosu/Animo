@@ -1,4 +1,4 @@
-import {Button, debounce, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
+import {Button, debounce, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField} from "@mui/material";
 import SearchInput from "../../../components/SearchInput.tsx";
 import {useEffect, useState} from "react";
 import {useMutation, useQueryClient} from "react-query";
@@ -23,6 +23,7 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
   const queryClient = useQueryClient();
   const currentUser = useUser();
   const navigate = useNavigate();
+  const [chatName, setChatName] = useState("");
   const [search, setSearch] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
@@ -65,7 +66,7 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
     }
 
     createChatMutation.mutate({
-      // name: ,
+      ...(chatName.trim() && {name: chatName.trim()}),
       memberIds: [currentUser.userId, ...selectedUsers.map(user => user.userId)],
     });
   }
@@ -81,13 +82,22 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
       }}
     >
       <DialogTitle className={"flex items-center !px-0 !pt-0"}>
-        New chat
+        Create chat
         <i
           onClick={onClose}
           className={"fas fa-times text-xl absolute right-5 top-5 cursor-pointer"}
         />
       </DialogTitle>
-      <DialogContent className={"!px-0"}>
+      <DialogContent className={"!p-0"}>
+        <TextField
+          variant={"standard"}
+          value={chatName}
+          onChange={e => setChatName(e.target.value)}
+          placeholder={"Chat name"}
+          fullWidth
+          className={"!mb-4 !px-1.5"}
+          disabled={selectedUsers.length < 2}
+        />
         <SearchInput
           value={search}
           onChange={e => setSearch(e.target.value)}

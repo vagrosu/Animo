@@ -5,6 +5,36 @@ import {AxiosError} from "axios";
 import {UserType} from "./types.ts";
 import NewChatModalUsersListItem from "./NewChatModalUsersListItem.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
+import {Skeleton} from "@mui/material";
+
+function Loading() {
+  return (
+    <div className={"min-h-[2.875rem] max-h-[2.875rem] overflow-hidden rounded-lg"}>
+      <Skeleton
+        className={"!mt-[-50rem]"}
+        height={"100rem"}
+      />
+    </div>
+  )
+}
+
+function Placeholder() {
+  return (
+    <div className={"my-auto flex flex-col items-center justify-center gap-4"}>
+      <i className={"fas fa-regular fa-users text-5xl text-gray-500"}/>
+      <p className={"text-gray-500"}>Add users to your chat</p>
+    </div>
+  )
+}
+
+function NoUsers() {
+  return (
+    <div className={"my-auto pt-4 flex flex-col items-center justify-center gap-4"}>
+      <i className={"fas fa-regular fa-users-slash text-5xl text-gray-500"}/>
+      <p className={"text-gray-500"}>No users match your search</p>
+    </div>
+  )
+}
 
 type NewChatModalUsersListProps = {
   search: string,
@@ -39,29 +69,35 @@ export default function NewChatModalUsersList({search, selectedUsers, setSelecte
   }
 
   return (
-    <div className={"mt-3 w-full"}>
-      {selectedUsers.map(user => (
-        <NewChatModalUsersListItem
-          key={user.userId}
-          user={user}
-          onSelect={() => onSelectUser(user)}
-          isSelected={true}
-        />
-      ))}
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : usersSearchQuery.isError ? (
-        <div>Error</div>
-      ) : noUsersFound ? (
-        <div>No users found</div>
-      ) : unselectedUsers.map(user => (
-        <NewChatModalUsersListItem
-          key={user.userId}
-          user={user}
-          onSelect={() => onSelectUser(user)}
-          isSelected={false}
-        />
-      ))}
+    <div className={"flex flex-col mt-3 w-full min-h-48"}>
+      {search || selectedUsers.length ? (
+        <>
+          {selectedUsers.map(user => (
+            <NewChatModalUsersListItem
+              key={user.userId}
+              user={user}
+              onSelect={() => onSelectUser(user)}
+              isSelected={true}
+            />
+          ))}
+          {isLoading ? (
+            <Loading />
+          ) : usersSearchQuery.isError ? (
+            <div>Error</div>
+          ) : noUsersFound ? (
+            <NoUsers />
+          ) : unselectedUsers.map(user => (
+            <NewChatModalUsersListItem
+              key={user.userId}
+              user={user}
+              onSelect={() => onSelectUser(user)}
+              isSelected={false}
+            />
+          ))}
+        </>
+      ) : (
+        <Placeholder />
+      )}
     </div>
   );
 }
