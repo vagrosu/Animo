@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Animo.Application.Features.Message.Commands.CreateMessage;
+namespace Animo.Application.Features.Messages.Commands.CreateMessage;
 
 public class CreateMessageCommandValidator : AbstractValidator<CreateMessageCommand>
 {

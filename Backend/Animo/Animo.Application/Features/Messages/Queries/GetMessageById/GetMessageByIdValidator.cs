@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Animo.Application.Features.Message.Queries.GetMessageById;
+namespace Animo.Application.Features.Messages.Queries.GetMessageById;
 
 public class GetMessageByIdValidator : AbstractValidator<GetMessageByIdQuery>
 {

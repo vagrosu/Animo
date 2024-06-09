@@ -1,4 +1,4 @@
-namespace Animo.Application.Features.Message.Queries;
+namespace Animo.Application.Features.Messages.Queries;
 
 public class ChatRoomMessageDto
 {

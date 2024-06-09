@@ -1,6 +1,6 @@
-using Animo.Application.Features.Message.Commands.CreateMessage;
-using Animo.Application.Features.Message.Queries.GetMessageById;
-using Animo.Application.Features.Message.Queries.GetTextMessageByChatRoomId;
+using Animo.Application.Features.Messages.Commands.CreateMessage;
+using Animo.Application.Features.Messages.Queries.GetMessageById;
+using Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
 using Animo.Application.Hubs;
 using Animo.Application.Persistence;
 using Microsoft.AspNetCore.Authorization;

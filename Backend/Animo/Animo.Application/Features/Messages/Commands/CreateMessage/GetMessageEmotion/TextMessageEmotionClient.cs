@@ -2,7 +2,7 @@ using Animo.Application.Models.APIs.RapidAPI;
 using Newtonsoft.Json;
 using System.Web;
 
-namespace Animo.Application.Features.Message.Commands.CreateMessage.GetMessageEmotion;
+namespace Animo.Application.Features.Messages.Commands.CreateMessage.GetMessageEmotion;
 
 public static class TextMessageEmotionClient
 {

@@ -2,9 +2,8 @@ using Animo.Application.Models.APIs.MoodScannerAPI;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using System.Text;
 
-namespace Animo.Application.Features.Message.Commands.CreateMessage.GetMessageEmotion;
+namespace Animo.Application.Features.Messages.Commands.CreateMessage.GetMessageEmotion;
 
 public static class UserPhotoEmotionClient
 {

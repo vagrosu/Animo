@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Animo.Application.Features.Message.Queries.GetMessageById;
+namespace Animo.Application.Features.Messages.Queries.GetMessageById;
 
 public class GetMessageByIdQuery : IRequest<GetMessageByIdResponse>
 {

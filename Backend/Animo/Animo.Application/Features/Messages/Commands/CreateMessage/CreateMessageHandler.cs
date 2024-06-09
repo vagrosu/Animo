@@ -1,4 +1,4 @@
-using Animo.Application.Features.Message.Commands.CreateMessage.GetMessageEmotion;
+using Animo.Application.Features.Messages.Commands.CreateMessage.GetMessageEmotion;
 using Animo.Application.Models.APIs.MoodScannerAPI;
 using Animo.Application.Models.APIs.RapidAPI;
 using Animo.Application.Persistence;
@@ -7,7 +7,7 @@ using Animo.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace Animo.Application.Features.Message.Commands.CreateMessage;
+namespace Animo.Application.Features.Messages.Commands.CreateMessage;
 //ToDo: Extend to support all types of messages
 public class CreateMessageHandler(
     ITextMessageRepository textMessageRepository,

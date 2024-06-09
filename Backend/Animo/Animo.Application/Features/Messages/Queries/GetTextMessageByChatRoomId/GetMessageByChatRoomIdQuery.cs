@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Animo.Application.Features.Message.Queries.GetTextMessageByChatRoomId;
+namespace Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
 
 public class GetMessageByChatRoomIdQuery : IRequest<GetMessageByChatRoomIdResponse>
 {

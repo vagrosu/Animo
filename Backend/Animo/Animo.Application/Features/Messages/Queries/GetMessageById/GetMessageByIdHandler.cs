@@ -2,7 +2,7 @@ using Animo.Application.Persistence;
 using Animo.Domain.Common;
 using MediatR;
 
-namespace Animo.Application.Features.Message.Queries.GetMessageById;
+namespace Animo.Application.Features.Messages.Queries.GetMessageById;
 
 public class GetMessageByIdHandler(ITextMessageRepository textMessageRepository) : IRequestHandler<GetMessageByIdQuery, GetMessageByIdResponse>
 {
