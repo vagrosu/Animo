@@ -117,3 +117,20 @@ export type UsersByUserIdResponseType = {
     isSelfieConsentGiven: boolean,
   }
 } & baseResponse;
+
+type EmotionType = {
+  isSuccess: boolean,
+  errorMessage?: string,
+  neutral: number,
+  joy: number,
+  surprise: number,
+  sadness: number,
+  disgust: number,
+  anger: number,
+  fear: number
+}
+
+export type GetEmotionsByMessageIdResponseType = {
+  messageEmotions: EmotionType,
+  userPhotoEmotions: EmotionType
+} & baseResponse;

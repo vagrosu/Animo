@@ -43,3 +43,7 @@ export function base64ImageToBlob(image: string) {
 
   return new Blob([ab], { type: mimeString });
 }
+
+export function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}

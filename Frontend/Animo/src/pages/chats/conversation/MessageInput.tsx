@@ -3,7 +3,7 @@ import {useRef, useState} from "react";
 import {useMutation} from "react-query";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
-import {MessagesQueryType} from "../../../types/api/queries.ts";
+import {CreateMessagesQueryType} from "../../../types/api/queries.ts";
 import {AxiosError} from "axios";
 import {CreateMessagesResponseType} from "../../../types/api/responses.ts";
 import {toast} from "react-toastify";
@@ -21,7 +21,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
   const cameraRef = useRef<CameraType>(null);
   const [message, setMessage] = useState("");
 
-  const mutation = useMutation<CreateMessagesResponseType, Error | AxiosError, MessagesQueryType>({
+  const mutation = useMutation<CreateMessagesResponseType, Error | AxiosError, CreateMessagesQueryType>({
     mutationFn: async (query) => {
       const formData = new FormData();
       formData.append("chatRoomId", query.chatRoomId);

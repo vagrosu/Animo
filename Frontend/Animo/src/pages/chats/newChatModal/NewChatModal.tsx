@@ -9,7 +9,7 @@ import {useUser} from "../../../context/UserContext.tsx";
 import { useNavigate } from "react-router-dom";
 import {AxiosError} from "axios";
 import {CreateChatRoomResponseType} from "../../../types/api/responses.ts";
-import {ChatRoomsQueryType} from "../../../types/api/queries.ts";
+import {CreateChatRoomsQueryType} from "../../../types/api/queries.ts";
 import {LoadingButton} from "@mui/lab";
 import {toast} from "react-toastify";
 import {getErrorMessage} from "../../../utils/helpers.ts";
@@ -27,7 +27,7 @@ export default function NewChatModal({isOpen, onClose}: NewChatModalProps) {
   const [search, setSearch] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
-  const createChatMutation = useMutation<CreateChatRoomResponseType, Error | AxiosError, ChatRoomsQueryType>({
+  const createChatMutation = useMutation<CreateChatRoomResponseType, Error | AxiosError, CreateChatRoomsQueryType>({
     mutationFn: async (data) => api.post("ChatRooms", {
       name: data.name,
       memberIds: data.memberIds,

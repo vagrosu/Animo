@@ -12,7 +12,7 @@ export type AuthentificationRegisterQueryType = {
   password: string
 }
 
-export type MessagesQueryType = {
+export type CreateMessagesQueryType = {
   chatRoomId: string,
   senderId: string,
   text: string,
@@ -21,7 +21,7 @@ export type MessagesQueryType = {
   isForwarded?: boolean
 }
 
-export type ChatRoomsQueryType = {
+export type CreateChatRoomsQueryType = {
   name?: string,
   memberIds: string[]
 }

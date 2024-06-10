@@ -27,14 +27,16 @@ const getEmotionEmoji = (emotion: string) => {
 type MessageCardProps = {
   message: MessageType,
   senderFirstName: string,
+  toggleEmotionDataModal?: () => void,
   isSentByUser: boolean,
   isFirstFromGroup: boolean,
-  isLastFromGroup: boolean
+  isLastFromGroup: boolean,
 }
 
 export function MessageCard({
                               message,
                               senderFirstName,
+                              toggleEmotionDataModal,
                               isSentByUser,
                               isFirstFromGroup,
                               // isLastFromGroup
@@ -56,7 +58,10 @@ export function MessageCard({
             placement={isSentByUser ? "left" : "right"}
             arrow={true}
           >
-            <p className={`cursor-default ${isSentByUser ? "mr-1" : "ml-1"}`}>{getEmotionEmoji(message.emotion)}</p>
+            <p
+              onClick={toggleEmotionDataModal}
+              className={`${toggleEmotionDataModal ? "cursor-pointer" : "cursor-default"} select-none text-sm ${isSentByUser ? "mr-1" : "ml-1"}`}
+            >{getEmotionEmoji(message.emotion)}</p>
           </Tooltip>
           <p>{format(parseISO(message.sentTime), "HH:mm")}</p>
         </div>
