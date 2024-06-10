@@ -61,7 +61,7 @@ public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRep
                     TextMessageId = textMessage.MessageId,
                     Text = textMessage.Text,
                     SenderId = textMessage.Sender.Id,
-                    Emotion = emotion.Key,
+                    Emotion = emotion.Value != 0 ? emotion.Key : "Unknown",
                     SentTime = textMessage.SentTime,
                     RepliedMessageId = textMessage.RepliedMessage?.MessageId,
                     IsForwarded = textMessage.IsForwarded
