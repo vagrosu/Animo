@@ -2,25 +2,26 @@ import {Tooltip} from "@mui/material";
 import {format, parseISO} from "date-fns";
 import {MessageType} from "../../pages/chats/types.ts";
 import {MessageContent} from "./MessageContent.tsx";
+import {Emoji, EmojiStyle} from "emoji-picker-react";
 
 const getEmotionEmoji = (emotion: string) => {
   switch (emotion.toLowerCase()) {
     case "neutral":
-      return "😐";
+      return "1f610";
     case "joy":
-      return "😁";
+      return "1f604";
     case "sadness":
-      return "😢";
+      return "1f622";
     case "anger":
-      return "😡";
+      return "1f621";
     case "fear":
-      return "😨";
+      return "1f628";
     case "surprise":
-      return "😲";
+      return "1f62e";
     case "disgust":
-      return "🤢";
+      return "1f922";
     default:
-      return "⚠️"
+    return "26a0-fe0f";
   }
 }
 
@@ -58,10 +59,16 @@ export function MessageCard({
             placement={isSentByUser ? "left" : "right"}
             arrow={true}
           >
-            <p
+            <div
               onClick={toggleEmotionDataModal}
-              className={`${toggleEmotionDataModal ? "cursor-pointer" : "cursor-default"} select-none text-sm ${isSentByUser ? "mr-1" : "ml-1"}`}
-            >{getEmotionEmoji(message.emotion)}</p>
+              className={`flex items-center content-center ${toggleEmotionDataModal ? "cursor-pointer" : "cursor-default"} select-none text-sm ${isSentByUser ? "mr-1" : "ml-1"}`}
+            >
+              <Emoji
+                size={16.5}
+                unified={getEmotionEmoji(message.emotion)}
+                emojiStyle={EmojiStyle.APPLE}
+              />
+            </div>
           </Tooltip>
           <p>{format(parseISO(message.sentTime), "HH:mm")}</p>
         </div>

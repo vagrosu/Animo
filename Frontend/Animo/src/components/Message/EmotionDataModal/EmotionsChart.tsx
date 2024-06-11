@@ -2,6 +2,8 @@ import {Tooltip} from "@mui/material";
 import {Doughnut} from "react-chartjs-2";
 import {ArcElement, Chart as ChartJS, ChartData, Legend, Tooltip as ChartTooltip} from "chart.js";
 import {capitalizeFirstLetter} from "../../../utils/helpers.ts";
+import {Emoji, EmojiStyle} from "emoji-picker-react";
+
 ChartJS.register(ArcElement, ChartTooltip, Legend);
 
 type EmotionType = {
@@ -63,18 +65,24 @@ export default function EmotionsChart({title, emotions}: EmotionsChartProps) {
 
   return (
     <div className={"flex flex-col items-center w-1/2"}>
-      <p className={"text-xl font-semibold mt-5 mb-3"}>
-        {title}
+      <div className={"flex items-center mt-5 mb-3"}>
+        <p className={"text-xl font-semibold mr-1"}>{title}</p>
         {!emotions.isSuccess && (
           <Tooltip
             title={emotions.errorMessage}
             placement={"top"}
             arrow
           >
-            <label> ⚠️</label>
+            <div>
+              <Emoji
+                size={20}
+                unified={"26a0-fe0f"}
+                emojiStyle={EmojiStyle.APPLE}
+              />
+            </div>
           </Tooltip>
         )}
-      </p>
+      </div>
       <Doughnut
         data={emotionsData}
         options={{
