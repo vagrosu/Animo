@@ -56,13 +56,13 @@ public class AuthService(UserManager<User> userManager, IUserRepository userRepo
 
         if (!userByEmail.IsSuccess && !userByPhoneNumber.IsSuccess && !userByUsername.IsSuccess)
         {
-            return (0, "User not found");
+            return (0, "Incorrect user or password");
         }
 
         var user = userByEmail.IsSuccess ? userByEmail.Value : (userByPhoneNumber.IsSuccess ? userByPhoneNumber.Value : userByUsername.Value);
         if (!await userManager.CheckPasswordAsync(user, model.Password))
         {
-            return (0, "Invalid password");
+            return (0, "Incorrect user or password");
         }
 
         var authClaims = new List<Claim>

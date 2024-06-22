@@ -1,4 +1,3 @@
-using Animo.Domain.Common;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
