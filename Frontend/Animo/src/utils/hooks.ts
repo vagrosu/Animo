@@ -4,6 +4,7 @@ import {AxiosError} from "axios";
 import {AuthenticationLoginQueryType} from "../types/api/queries.ts";
 import {toast} from "react-toastify";
 import {api} from "../services/api.tsx";
+import {getErrorMessage} from "./helpers.ts";
 
 export function useLoginMutation() {
   return useMutation<AuthenticationLoginResponseType, AxiosError, AuthenticationLoginQueryType>({
@@ -17,11 +18,7 @@ export function useLoginMutation() {
       window.location.href = "/chats";
     },
     onError: (error) => {
-      if (typeof error.response?.data === "string") {
-        toast.error(error.response?.data);
-        return;
-      }
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     },
   });
 }

@@ -1,4 +1,5 @@
 import {AxiosError, isAxiosError} from "axios";
+import CryptoJS from "crypto-js";
 
 export function isValidHttpUrl(str: string) {
   let url;
@@ -15,6 +16,10 @@ export function isValidHttpUrl(str: string) {
 export function getErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
     if (error.response?.data) {
+      if (typeof error.response.data === "string") {
+        return error.response.data;
+      }
+
       if (error.response.data.errors) {
         if (typeof error.response.data.errors === "object") {
           const errors = Object.values(error.response.data.errors).flat(Infinity);
@@ -22,7 +27,9 @@ export function getErrorMessage(error: Error | AxiosError): string {
             return errors[0];
           }
         }
-      } else if (error.response.data.validationsErrors) {
+      }
+
+      if (error.response.data.validationsErrors) {
         return error.response.data.validationsErrors[0];
       }
     }
@@ -46,4 +53,12 @@ export function base64ImageToBlob(image: string) {
 
 export function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export function encryptTextMessage(message: string) {
+  return CryptoJS.AES.encrypt(message, import.meta.env.VITE_TEXT_MESSAGES_SECRET).toString()
+}
+
+export function decryptTextMessage(encryptedMessage: string) {
+  return CryptoJS.AES.decrypt(encryptedMessage, import.meta.env.VITE_TEXT_MESSAGES_SECRET).toString(CryptoJS.enc.Utf8)
 }

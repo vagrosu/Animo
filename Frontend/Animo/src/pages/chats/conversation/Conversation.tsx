@@ -1,8 +1,7 @@
-import {useQuery, UseQueryResult} from "react-query";
+import {useQuery} from "react-query";
 import {
   MessagesByChatRoomIdResponseType,
-  MessagesByMessageIdResponseType,
-  UsersByChatRoomIdResponseType
+  MessagesByMessageIdResponseType
 } from "../../../types/api/responses.ts";
 import {AxiosError} from "axios";
 import {api} from "../../../services/api.tsx";
