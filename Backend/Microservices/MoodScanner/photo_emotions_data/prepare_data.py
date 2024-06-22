@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from utils import get_face_landmarks, get_emotion_from_dict
+from utils import get_face_landmarks, get_emotion_from_dict, emotion_dict
 
 
 def process_image(image, emotion_index):
