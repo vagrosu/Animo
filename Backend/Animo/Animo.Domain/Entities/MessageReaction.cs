@@ -10,7 +10,7 @@ public class MessageReaction
     [MaxLength(20)]
     public string Emoji { get; set; }
 
-    public MessageReaction(TextMessage textMessage, User user, string emoji)
+    private MessageReaction(TextMessage textMessage, User user, string emoji)
     {
         MessageReactionId = Guid.NewGuid();
         TextMessage = textMessage;

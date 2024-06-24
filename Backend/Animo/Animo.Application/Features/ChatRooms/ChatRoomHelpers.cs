@@ -1,11 +1,14 @@
 using Animo.Application.Persistence;
 using Animo.Domain.Entities;
+using Microsoft.Extensions.Primitives;
 using System.Text;
 
 namespace Animo.Application.Features.ChatRooms;
 
 public static class ChatRoomHelpers
 {
+    private const string PlainTextFlag = "/$/plain/$/";
+
     public static string GetLastActivity(TextMessage? lastMessageResult, ChatRoom chatRoom, Guid userId)
     {
         var lastActivity = new StringBuilder();
@@ -13,17 +16,17 @@ public static class ChatRoomHelpers
         {
             if (lastMessageResult.Sender.Id == userId)
             {
-                lastActivity.Append("You: ");
+                lastActivity.Append($"{PlainTextFlag}You: {PlainTextFlag}");
             }
             else if (chatRoom.ChatRoomMembers.Count > 2)
             {
-                lastActivity.Append(lastMessageResult.Sender.FirstName + ": ");
+                lastActivity.Append(PlainTextFlag + lastMessageResult.Sender.FirstName + ": " + PlainTextFlag);
             }
             lastActivity.Append(lastMessageResult.Text);
         }
         else
         {
-            lastActivity.Append("Start conversation");
+            lastActivity.Append($"{PlainTextFlag}Start conversation{PlainTextFlag}");
         }
 
         return lastActivity.ToString();

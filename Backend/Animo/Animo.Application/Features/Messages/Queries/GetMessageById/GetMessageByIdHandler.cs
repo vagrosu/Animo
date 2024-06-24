@@ -49,7 +49,7 @@ public class GetMessageByIdHandler(ITextMessageRepository textMessageRepository)
                 TextMessageId = textMessage.Value.MessageId,
                 Text = textMessage.Value.Text,
                 SenderId = textMessage.Value.Sender.Id,
-                Emotion = emotion.Key,
+                Emotion = emotion.Value != 0 ? emotion.Key : "Unknown",
                 SentTime = textMessage.Value.SentTime,
                 RepliedMessageId = textMessage.Value.RepliedMessage?.MessageId,
                 IsForwarded = textMessage.Value.IsForwarded
