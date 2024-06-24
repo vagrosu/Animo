@@ -60,5 +60,24 @@ export function encryptTextMessage(message: string) {
 }
 
 export function decryptTextMessage(encryptedMessage: string) {
-  return CryptoJS.AES.decrypt(encryptedMessage, import.meta.env.VITE_TEXT_MESSAGES_SECRET).toString(CryptoJS.enc.Utf8)
+  const plainTextFlag = "/$/plain/$/";
+  const secretKey = import.meta.env.VITE_TEXT_MESSAGES_SECRET;
+
+  const parts = encryptedMessage.split(plainTextFlag);
+  let decryptedMessage = '';
+
+  parts.forEach((part, i) => {
+    if (i % 2 === 0 && part) {
+      try {
+        const decryptedPart = CryptoJS.AES.decrypt(parts[i], secretKey).toString(CryptoJS.enc.Utf8);
+        decryptedMessage += decryptedPart;
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      decryptedMessage += parts[i];
+    }
+  })
+
+  return decryptedMessage;
 }

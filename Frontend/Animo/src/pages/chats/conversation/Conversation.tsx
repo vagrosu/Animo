@@ -11,6 +11,7 @@ import Message from "../../../components/Message/Message.tsx";
 import {differenceInCalendarDays, differenceInYears, format, isToday, isYesterday, parseISO} from "date-fns";
 import {toast} from "react-toastify";
 import {useChatRoomHub} from "../../../context/ChatRoomHubContext.tsx";
+import {decryptTextMessage} from "../../../utils/helpers.ts";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -47,7 +48,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
     onSuccess: (data) => {
       setMessages(data.textMessages.map(message => ({
         textMessageId: message.textMessageId,
-        text: message.text,
+        text: decryptTextMessage(message.text),
         senderId: message.senderId,
         emotion: message.emotion,
         sentTime: message.sentTime,
@@ -62,7 +63,10 @@ export default function Conversation({chatRoom}: ConversationProps) {
     queryFn: async () => api.get<MessagesByMessageIdResponseType>(`Messages/${newMessageId}`)
       .then((res) => res.data),
     onSuccess: (data) => {
-      setMessages([...messages, data.textMessage])
+      setMessages([...messages, {
+        ...data.textMessage,
+        text: decryptTextMessage(data.textMessage.text)
+      }])
     },
     onSettled: () => {
       setNewMessageId(null);

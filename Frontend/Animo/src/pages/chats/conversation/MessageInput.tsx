@@ -8,7 +8,7 @@ import {AxiosError} from "axios";
 import {CreateMessagesResponseType} from "../../../types/api/responses.ts";
 import {toast} from "react-toastify";
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import {base64ImageToBlob, getErrorMessage} from "../../../utils/helpers.ts";
+import {base64ImageToBlob, encryptTextMessage, getErrorMessage} from "../../../utils/helpers.ts";
 import {Camera} from "react-camera-pro";
 import {CameraType} from "../../../types/common.ts";
 
@@ -55,7 +55,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
       return
     }
 
-    if (mutation.isLoading) {
+    if (mutation.isLoading || !message.trim()) {
       return
     }
 
@@ -84,7 +84,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
     const messageData = {
       chatRoomId: selectedChatRoomId,
       senderId: user.userId,
-      text: message,
+      text: encryptTextMessage(message),
       ...(user.isSelfieConsentGiven && userPhotoBlob && {userPhoto: userPhotoBlob}),
       repliedMessageId: undefined,
       isForwarded: false,
@@ -118,7 +118,7 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
       <div className={"flex items-center justify-center w-7 h-7 ml-5 text-blue-600 hover:text-blue-500"}>
         {!mutation.isLoading ? (
           <SendRoundedIcon
-            className={"cursor-pointer"}
+            className={message.trim() ? "cursor-pointer" : "cursor-not-allowed text-blue-300"}
             style={{fontSize: "1.5rem"}}
             onClick={onSendMessage}
           />

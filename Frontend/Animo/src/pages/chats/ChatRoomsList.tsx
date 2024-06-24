@@ -11,6 +11,7 @@ import SearchInput from "../../components/SearchInput.tsx";
 import {useNavigate} from "react-router-dom";
 import {useChatRoomHub} from "../../context/ChatRoomHubContext.tsx";
 import {useChatRoomsListHub} from "../../context/ChatRoomsListHubContext.tsx";
+import {decryptTextMessage} from "../../utils/helpers.ts";
 
 const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number) => {
   switch (sortBy) {
@@ -38,6 +39,7 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
   const chatRoomsListHub = useChatRoomsListHub();
   const navigate = useNavigate();
 
+  const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
   const [chatRooms, setChatRooms] = useState<ChatRoomCardType[]>([]);
   const [chatRoomIdToRefresh, setChatRoomIdToRefresh] = useState<string | null>(null);
@@ -47,7 +49,13 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     queryFn: async () => api.get<ChatRoomsByUserIdResponseType>(`ChatRooms/by-user-id?userId=${user.userId}`)
       .then((res) => res.data),
     onSuccess: (data) => {
-      setChatRooms(data.chatRooms)
+      setChatRooms(data.chatRooms.map((chatRoom) => ({
+        chatRoomId: chatRoom.chatRoomId,
+        name: chatRoom.name,
+        lastUsedTime: chatRoom.lastUsedTime,
+        lastActivity: decryptTextMessage(chatRoom.lastActivity),
+        isGroupChat: chatRoom.isGroupChat,
+      })))
     }
   })
 
@@ -59,7 +67,10 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
       setChatRooms(prev => {
         const index = prev.findIndex((chatRoom) => chatRoom.chatRoomId === data.chatRoom.chatRoomId);
         const updatedChatRoom = {
-          ...data.chatRoom,
+          chatRoomId: data.chatRoom.chatRoomId,
+          name: data.chatRoom.name,
+          lastUsedTime: data.chatRoom.lastUsedTime,
+          lastActivity: decryptTextMessage(data.chatRoom.lastActivity),
           isGroupChat: data.chatRoom.members.length > 2,
         };
         if (index !== -1) {
@@ -104,13 +115,21 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     }
   }
 
+  const displayedChatRooms = chatRooms
+    .filter((chatRoom) => chatRoom.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => sortByFunction(a, b, sortBy))
+
   return (
-    <div className={"flex flex-col border-r border-gray-200 min-w-[17rem] w-[32vw] max-w-[23rem]"}>
+    <div className={"flex flex-col min-w-[17rem] w-[32vw] max-w-[23rem]"}>
       <div className={"pt-7 px-5"}>
         <h1 className={"font-bold text-3xl leading-8"}>
           Messages
         </h1>
-        <SearchInput className={"mt-5"}/>
+        <SearchInput
+          className={"mt-5"}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <SortByDropdown
           sortBy={sortBy}
           setSortBy={setSortBy}
@@ -118,20 +137,30 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
         />
       </div>
       <div className={"mt-2.5 p-1.5"}>
-        {chatRoomsListQuery.isLoading ? (
-          <div>Loading...</div>
-        ) : chatRoomsListQuery.error ? (
-          <div>Error</div>
-        ) : chatRooms
-          .sort((a, b) => sortByFunction(a, b, sortBy))
-          .map((chatRoom) => (
-            <ChatRoomCard
-              key={chatRoom.chatRoomId}
-              isSelected={selectedChatRoomId === chatRoom.chatRoomId}
-              chatRoom={chatRoom}
-              onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
-            />
-          ))}
+        {
+          chatRoomsListQuery.isLoading ? (
+            <div>Loading...</div>
+          ) : chatRoomsListQuery.error ? (
+            <div>Error</div>
+          ) : displayedChatRooms.length ? (
+            displayedChatRooms.map((chatRoom) => (
+              <ChatRoomCard
+                key={chatRoom.chatRoomId}
+                isSelected={selectedChatRoomId === chatRoom.chatRoomId}
+                chatRoom={chatRoom}
+                onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
+              />
+            ))
+          ) : !chatRooms.length ? (
+            <div className={"text-center text-gray-400 mt-5"}>
+              Create a new chat
+            </div>
+          ) : (
+            <div className={"text-center text-gray-400 mt-5"}>
+              No chats match your search
+            </div>
+          )
+        }
       </div>
     </div>
   )
