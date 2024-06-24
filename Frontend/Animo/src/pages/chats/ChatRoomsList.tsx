@@ -29,11 +29,13 @@ const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number
 }
 
 type ChatRoomsListProps = {
+  isChatRoomListOpen: boolean,
+  setIsChatRoomListOpen: (val: boolean) => void,
   selectedChatRoomId: string | null,
   setSelectedChatRoomId: (val: string) => void,
 }
 
-export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId}: ChatRoomsListProps) {
+export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen, selectedChatRoomId, setSelectedChatRoomId}: ChatRoomsListProps) {
   const user = useUser();
   const chatRoomHub = useChatRoomHub();
   const chatRoomsListHub = useChatRoomsListHub();
@@ -108,6 +110,10 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     }
   }, [chatRoomsListHub])
 
+  useEffect(() => {
+    setSearch("");
+  }, [isChatRoomListOpen]);
+
   const onSelectChatRoom = async (chatRoom: ChatRoomCardType) => {
     if (selectedChatRoomId !== chatRoom.chatRoomId) {
       setSelectedChatRoomId(chatRoom.chatRoomId);
@@ -120,47 +126,53 @@ export default function ChatRoomsList({selectedChatRoomId, setSelectedChatRoomId
     .sort((a, b) => sortByFunction(a, b, sortBy))
 
   return (
-    <div className={"flex flex-col min-w-[17rem] w-[32vw] max-w-[23rem]"}>
-      <div className={"pt-7 px-5"}>
-        <h1 className={"font-bold text-3xl leading-8"}>
-          Messages
-        </h1>
-        <SearchInput
-          className={"mt-5"}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <SortByDropdown
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          className={"ml-2.5 mt-2"}
+    <div className={`flex flex-col relative ${isChatRoomListOpen ? "min-w-[17rem] w-[32vw]" : ""} max-w-[23rem]`}>
+      <div className={`flex items-center ${isChatRoomListOpen ? "absolute right-5" : "justify-center"} h-[4.25rem]`}>
+        <i className={`fa-solid fa-chevron-${isChatRoomListOpen ? "left" : "right"} p-2 -m-2 cursor-pointer font-bold text-xl mt-[-0.125rem]`}
+          onClick={() => setIsChatRoomListOpen(!isChatRoomListOpen)}
         />
       </div>
-      <div className={"mt-2.5 p-1.5"}>
-        {
-          chatRoomsListQuery.isLoading ? (
-            <div>Loading...</div>
-          ) : chatRoomsListQuery.error ? (
-            <div>Error</div>
-          ) : displayedChatRooms.length ? (
-            displayedChatRooms.map((chatRoom) => (
-              <ChatRoomCard
-                key={chatRoom.chatRoomId}
-                isSelected={selectedChatRoomId === chatRoom.chatRoomId}
-                chatRoom={chatRoom}
-                onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
-              />
-            ))
-          ) : !chatRooms.length ? (
-            <div className={"text-center text-gray-400 mt-5"}>
-              Create a new chat
-            </div>
-          ) : (
-            <div className={"text-center text-gray-400 mt-5"}>
-              No chats match your search
-            </div>
-          )
-        }
+      {isChatRoomListOpen && (
+        <div className={"pt-7 px-5"}>
+          <h1 className={"font-bold text-3xl leading-8"}>
+            Messages
+          </h1>
+          <SearchInput
+            className={"mt-5"}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <SortByDropdown
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            className={"ml-2.5 mt-2"}
+          />
+        </div>
+      )}
+      <div className={`${isChatRoomListOpen ? "mt-2.5" : "mt-0.5"} p-1.5`}>
+        {chatRoomsListQuery.isLoading ? (
+          <div>Loading...</div>
+        ) : chatRoomsListQuery.error ? (
+          <div>Error</div>
+        ) : displayedChatRooms.length ? (
+          displayedChatRooms.map((chatRoom) => (
+            <ChatRoomCard
+              key={chatRoom.chatRoomId}
+              isChatRoomListOpen={isChatRoomListOpen}
+              isSelected={selectedChatRoomId === chatRoom.chatRoomId}
+              chatRoom={chatRoom}
+              onSelectChatRoom={() => onSelectChatRoom(chatRoom)}
+            />
+          ))
+        ) : !chatRooms.length ? (
+          <div className={"text-center text-gray-400 mt-5"}>
+            Create a new chat
+          </div>
+        ) : (
+          <div className={"text-center text-gray-400 mt-5"}>
+            No chats match your search
+          </div>
+        )}
       </div>
     </div>
   )

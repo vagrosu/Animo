@@ -1,5 +1,5 @@
 import {ChatRoomCardType} from "../pages/chats/types.ts";
-import {Avatar} from "@mui/material";
+import {Avatar, Tooltip} from "@mui/material";
 import {
   differenceInDays,
   differenceInMonths,
@@ -31,25 +31,38 @@ const formatChatRoomCardDate = (date: string) => {
 }
 
 type ChatRoomCardProps = {
+  isChatRoomListOpen: boolean,
   isSelected: boolean,
   chatRoom: ChatRoomCardType,
   onSelectChatRoom: () => void,
 }
 
-export default function ChatRoomCard({isSelected, chatRoom, onSelectChatRoom}: ChatRoomCardProps) {
+export default function ChatRoomCard({isChatRoomListOpen, isSelected, chatRoom, onSelectChatRoom}: ChatRoomCardProps) {
+  const avatarSize = isChatRoomListOpen ? 40 : 32;
 
   return (
     <div
       onClick={onSelectChatRoom}
-      className={`flex items-center mt-0.5 px-3.5 py-2.5 ${isSelected ? "bg-gray-200" : ""} ${!isSelected ? "hover:bg-gray-100" : ""} rounded-lg cursor-pointer`}
+      className={`flex items-center mt-0.5 ${isChatRoomListOpen ? "px-3.5" : "px-3"} py-2.5 ${isSelected ? "bg-gray-200" : ""} ${!isSelected ? "hover:bg-gray-100" : ""} rounded-lg cursor-pointer`}
     >
-      <Avatar
-        alt={"User"}
-        sx={{width: 40, height: 40}}
+      <Tooltip
+        title={chatRoom.name}
+        placement={"right"}
+        slotProps={{
+          tooltip: {
+            className: isChatRoomListOpen ? "hidden" : ""
+          }
+        }}
+        arrow
       >
-        <i className={`fa-solid fa-${chatRoom.isGroupChat ? "users" : "user"}`}/>
-      </Avatar>
-      <div className={"w-full flex justify-between gap-3 leading-[1.375rem] ml-2.5 truncate"}>
+        <Avatar
+          alt={"User"}
+          sx={{width: avatarSize, height: avatarSize}}
+        >
+          <i className={`fa-solid fa-${chatRoom.isGroupChat ? "users" : "user"} ${isChatRoomListOpen ? "text-xl" : "text-base"}`}/>
+        </Avatar>
+      </Tooltip>
+      {isChatRoomListOpen && <div className={"w-full flex justify-between gap-3 leading-[1.375rem] ml-2.5 truncate"}>
         <div className={"truncate"}>
           <p className={"truncate"}>
             {chatRoom.name}
@@ -61,7 +74,7 @@ export default function ChatRoomCard({isSelected, chatRoom, onSelectChatRoom}: C
         <p className={"font-extralight text-sm/[1.375rem]"}>
           {formatChatRoomCardDate(chatRoom.lastUsedTime)}
         </p>
-      </div>
+      </div>}
     </div>
   )
 }
