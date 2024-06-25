@@ -9,11 +9,13 @@ import ChatRoomHubContextProvider from "../../context/ChatRoomHubContext.tsx";
 import ChatRoomsListHubContextProvider from "../../context/ChatRoomsListHubContext.tsx";
 import useWindowDimensions from "../../utils/hooks.ts";
 
+export const EXPANDED_CHAT_ROOM_LIST_MIN_WIDTH = 1024;
+
 export default function ChatsPage() {
   const params = useParams();
   const screenWidth = useWindowDimensions().width;
   const [selectedChatRoomId, setSelectedChatRoomId] = useState<string | null>(null);
-  const [isChatRoomListOpen, setIsChatRoomListOpen] = useState(true);
+  const [isChatRoomListExpanded, setIsChatRoomListExpanded] = useState(true);
   const [isCreateChatModalOpen, setIsCreateChatModalOpen] = useState(false);
 
   useEffect(() => {
@@ -21,11 +23,7 @@ export default function ChatsPage() {
   }, [params.chatId]);
 
   useEffect(() => {
-    if (screenWidth < 1024) {
-      setIsChatRoomListOpen(false);
-    } else {
-      setIsChatRoomListOpen(true);
-    }
+      setIsChatRoomListExpanded(screenWidth >= EXPANDED_CHAT_ROOM_LIST_MIN_WIDTH);
   }, [screenWidth]);
 
   return (
@@ -35,23 +33,23 @@ export default function ChatsPage() {
           <Sidebar
             openCreateChatRoomModal={() => setIsCreateChatModalOpen(true)}
           />
-          <ChatRoomsList
-            isChatRoomListOpen={isChatRoomListOpen}
-            setIsChatRoomListOpen={setIsChatRoomListOpen}
-            selectedChatRoomId={selectedChatRoomId}
-            setSelectedChatRoomId={setSelectedChatRoomId}
-          />
-          <div className={"w-full h-full flex border-l border-gray-200"}>
+          <div className={"w-full h-full flex relative"}>
+            <ChatRoomsList
+              isChatRoomListExpanded={isChatRoomListExpanded}
+              setIsChatRoomListExpanded={setIsChatRoomListExpanded}
+              selectedChatRoomId={selectedChatRoomId}
+              setSelectedChatRoomId={setSelectedChatRoomId}
+            />
             {selectedChatRoomId ? (
               <ConversationContainer selectedChatRoomId={selectedChatRoomId}/>
             ) : (
               <ConversationPlaceholder/>
             )}
+            {isCreateChatModalOpen && <NewChatModal
+              isOpen={isCreateChatModalOpen}
+              onClose={() => setIsCreateChatModalOpen(false)}
+            />}
           </div>
-          {isCreateChatModalOpen && <NewChatModal
-            isOpen={isCreateChatModalOpen}
-            onClose={() => setIsCreateChatModalOpen(false)}
-          />}
         </div>
       </ChatRoomHubContextProvider>
     </ChatRoomsListHubContextProvider>

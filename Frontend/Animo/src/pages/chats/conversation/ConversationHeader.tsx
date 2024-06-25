@@ -4,9 +4,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 type ConversationHeaderProps = {
   chatRoom: ChatRoomType,
+  toggleMembersList: () => void,
 }
 
-export default function ConversationHeader({chatRoom}: ConversationHeaderProps) {
+export default function ConversationHeader({chatRoom, toggleMembersList}: ConversationHeaderProps) {
   return (
     <div className={"w-full px-5 py-3 flex items-center border-b border-gray-200"}>
         <Avatar
@@ -18,7 +19,10 @@ export default function ConversationHeader({chatRoom}: ConversationHeaderProps) 
         <p className={"text-xl ml-3"}>
           {chatRoom.name}
         </p>
-      <InfoOutlinedIcon className={"ml-auto cursor-pointer text-blue-600"}/>
+      <InfoOutlinedIcon
+        className={"ml-auto cursor-pointer text-blue-600"}
+        onClick={toggleMembersList}
+      />
     </div>
   )
 }

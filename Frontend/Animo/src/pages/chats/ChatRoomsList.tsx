@@ -12,6 +12,8 @@ import {useNavigate} from "react-router-dom";
 import {useChatRoomHub} from "../../context/ChatRoomHubContext.tsx";
 import {useChatRoomsListHub} from "../../context/ChatRoomsListHubContext.tsx";
 import {decryptTextMessage} from "../../utils/helpers.ts";
+import useWindowDimensions from "../../utils/hooks.ts";
+import {EXPANDED_CHAT_ROOM_LIST_MIN_WIDTH} from "./ChatsPage.tsx";
 
 const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number) => {
   switch (sortBy) {
@@ -29,17 +31,18 @@ const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number
 }
 
 type ChatRoomsListProps = {
-  isChatRoomListOpen: boolean,
-  setIsChatRoomListOpen: (val: boolean) => void,
+  isChatRoomListExpanded: boolean,
+  setIsChatRoomListExpanded: (val: boolean) => void,
   selectedChatRoomId: string | null,
   setSelectedChatRoomId: (val: string) => void,
 }
 
-export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen, selectedChatRoomId, setSelectedChatRoomId}: ChatRoomsListProps) {
+export default function ChatRoomsList({isChatRoomListExpanded, setIsChatRoomListExpanded, selectedChatRoomId, setSelectedChatRoomId}: ChatRoomsListProps) {
   const user = useUser();
   const chatRoomHub = useChatRoomHub();
   const chatRoomsListHub = useChatRoomsListHub();
   const navigate = useNavigate();
+  const isFloating = useWindowDimensions().width < EXPANDED_CHAT_ROOM_LIST_MIN_WIDTH;
 
   const [search, setSearch] = useState<string>("");
   const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
@@ -112,7 +115,7 @@ export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen
 
   useEffect(() => {
     setSearch("");
-  }, [isChatRoomListOpen]);
+  }, [isChatRoomListExpanded]);
 
   const onSelectChatRoom = async (chatRoom: ChatRoomCardType) => {
     if (selectedChatRoomId !== chatRoom.chatRoomId) {
@@ -126,13 +129,13 @@ export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen
     .sort((a, b) => sortByFunction(a, b, sortBy))
 
   return (
-    <div className={`flex flex-col relative ${isChatRoomListOpen ? "min-w-[17rem] w-[32vw]" : ""} max-w-[23rem]`}>
-      <div className={`flex items-center ${isChatRoomListOpen ? "absolute right-5" : "justify-center"} h-[4.25rem]`}>
-        <i className={`fa-solid fa-chevron-${isChatRoomListOpen ? "left" : "right"} p-2 -m-2 cursor-pointer font-bold text-xl mt-[-0.125rem]`}
-          onClick={() => setIsChatRoomListOpen(!isChatRoomListOpen)}
+    <div className={`flex flex-col bg-white ${isChatRoomListExpanded ? `min-w-[20rem] w-[24vw] ${isFloating ? "absolute z-50" : "relative"}` : ""} max-w-[23rem] h-full border-r border-gray-200`}>
+      <div className={`flex items-center ${isChatRoomListExpanded ? "absolute right-5" : "justify-center"} h-[4.25rem]`}>
+        <i className={`fa-solid fa-chevron-${isChatRoomListExpanded ? "left" : "right"} p-2 font-bold text-xl mt-[-0.125rem] text-blue-600 cursor-pointer`}
+          onClick={() => setIsChatRoomListExpanded(!isChatRoomListExpanded)}
         />
       </div>
-      {isChatRoomListOpen && (
+      {isChatRoomListExpanded && (
         <div className={"pt-7 px-5"}>
           <h1 className={"font-bold text-3xl leading-8"}>
             Messages
@@ -149,7 +152,7 @@ export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen
           />
         </div>
       )}
-      <div className={`${isChatRoomListOpen ? "mt-2.5" : "mt-0.5"} p-1.5`}>
+      <div className={`${isChatRoomListExpanded ? "mt-2.5" : "mt-0.5"} p-1.5`}>
         {chatRoomsListQuery.isLoading ? (
           <div>Loading...</div>
         ) : chatRoomsListQuery.error ? (
@@ -158,7 +161,7 @@ export default function ChatRoomsList({isChatRoomListOpen, setIsChatRoomListOpen
           displayedChatRooms.map((chatRoom) => (
             <ChatRoomCard
               key={chatRoom.chatRoomId}
-              isChatRoomListOpen={isChatRoomListOpen}
+              isChatRoomListExpanded={isChatRoomListExpanded}
               isSelected={selectedChatRoomId === chatRoom.chatRoomId}
               chatRoom={chatRoom}
               onSelectChatRoom={() => onSelectChatRoom(chatRoom)}

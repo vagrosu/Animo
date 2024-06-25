@@ -4,7 +4,7 @@ import {Outlet} from "react-router-dom";
 
 type UserProfileModalContextType = {
   isOpen: boolean,
-  open: (val: string) => void,
+  open: (userId: string) => void,
   close: () => void,
 }
 
