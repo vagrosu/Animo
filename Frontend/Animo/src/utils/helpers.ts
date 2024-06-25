@@ -56,12 +56,22 @@ export function capitalizeFirstLetter(s: string) {
 }
 
 export function encryptTextMessage(message: string) {
-  return CryptoJS.AES.encrypt(message, import.meta.env.VITE_TEXT_MESSAGES_SECRET).toString()
+  const keyHex = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_TEXT_MESSAGES_KEY);
+  const ivHex = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_TEXT_MESSAGES_IV);
+
+  const encrypted = CryptoJS.AES.encrypt(message, keyHex, {
+    iv: ivHex,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  });
+
+  return encrypted.toString();
 }
 
 export function decryptTextMessage(encryptedMessage: string) {
   const plainTextFlag = "/$/plain/$/";
-  const secretKey = import.meta.env.VITE_TEXT_MESSAGES_SECRET;
+  const keyHex = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_TEXT_MESSAGES_KEY);
+  const ivHex = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_TEXT_MESSAGES_IV);
 
   const parts = encryptedMessage.split(plainTextFlag);
   let decryptedMessage = '';
@@ -69,7 +79,12 @@ export function decryptTextMessage(encryptedMessage: string) {
   parts.forEach((part, i) => {
     if (i % 2 === 0 && part) {
       try {
-        const decryptedPart = CryptoJS.AES.decrypt(parts[i], secretKey).toString(CryptoJS.enc.Utf8);
+        const decryptedPart = CryptoJS.AES.decrypt(parts[i], keyHex, {
+          iv: ivHex,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        }).toString(CryptoJS.enc.Utf8);
+        
         decryptedMessage += decryptedPart;
       } catch (error) {
         console.error(error)

@@ -189,14 +189,18 @@ public class CreateMessageHandler(
         };
     }
 
-    private async static Task<Result<MessageEmotion>> HandleTextMessageEmotionProcessing(string text)
+    private async static Task<Result<MessageEmotion>> HandleTextMessageEmotionProcessing(string encryptedText)
     {
         RapidApiEmotionAnalysisDto? messageEmotionResponse;
         try
         {
+            var textMessageKey = DotNetEnv.Env.GetString("TEXT_MESSAGES_KEY");
+            var textMessageIv = DotNetEnv.Env.GetString("TEXT_MESSAGES_IV");
+            var decryptedText = CryptoHelper.DecryptTextMessage(encryptedText, textMessageKey, textMessageIv);
+
             //ToDo: uncomment before pushing
             messageEmotionResponse = null;
-            // messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(text);
+            // messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(decryptedText);
         } catch (Exception e)
         {
             return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze message emotion");
