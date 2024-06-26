@@ -40,4 +40,16 @@ public class MessageReaction
 
         return Result<MessageReaction>.Success(new MessageReaction(textMessage, sender, emoji));
     }
+
+    public Result<MessageReaction> Update(string emoji)
+    {
+        if (string.IsNullOrWhiteSpace(emoji))
+        {
+            return Result<MessageReaction>.Failure("Emoji is required");
+        }
+
+        Emoji = emoji;
+
+        return Result<MessageReaction>.Success(this);
+    }
 }

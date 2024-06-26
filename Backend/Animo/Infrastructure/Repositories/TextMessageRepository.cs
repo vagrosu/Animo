@@ -12,12 +12,13 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
     {
     }
 
-    public async Task<Result<TextMessage>> FindByIdAsync(Guid id)
+    public async override Task<Result<TextMessage>> FindByIdAsync(Guid id)
     {
         var result = await _context.Set<TextMessage>()
             .Include(message => message.Sender)
             .Include(message => message.MessageEmotion)
             .Include(message => message.UserPhotoEmotion)
+            .Include(message => message.MessageReactions)
             .FirstOrDefaultAsync(message => message.MessageId == id);
 
         return result == null ? Result<TextMessage>.Failure($"Entity with id {id} not found") : Result<TextMessage>.Success(result);
@@ -30,6 +31,7 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
             .Include(message => message.Sender)
             .Include(message => message.MessageEmotion)
             .Include(message => message.UserPhotoEmotion)
+            .Include(message => message.MessageReactions)
             .ToListAsync();
 
         return Result<IReadOnlyList<TextMessage>>.Success(result);
@@ -43,6 +45,7 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
             .Include(message => message.Sender)
             .Include(message => message.MessageEmotion)
             .Include(message => message.UserPhotoEmotion)
+            .Include(message => message.MessageReactions)
             .FirstOrDefaultAsync();
 
         return lastMessage != null

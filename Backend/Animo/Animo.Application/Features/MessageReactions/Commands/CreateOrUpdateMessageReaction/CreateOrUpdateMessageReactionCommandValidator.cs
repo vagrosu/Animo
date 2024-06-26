@@ -1,11 +1,10 @@
-using Animo.Application.Features.Messages.Commands.CreateMessage;
 using FluentValidation;
 
-namespace Animo.Application.Features.MessageReactions.Commands.CreateMessageReaction;
+namespace Animo.Application.Features.MessageReactions.Commands.CreateOrUpdateMessageReaction;
 
-public class CreateMessageReactionCommandValidator : AbstractValidator<CreateMessageReactionCommand>
+public class CreateOrUpdateMessageReactionCommandValidator : AbstractValidator<CreateOrUpdateMessageReactionCommand>
 {
-    public CreateMessageReactionCommandValidator()
+    public CreateOrUpdateMessageReactionCommandValidator()
     {
         RuleFor(c => c.MessageId)
             .NotEmpty().WithMessage("{PropertyName} is required.")

@@ -1,3 +1,4 @@
+using Animo.Application.Features.MessageReactions.Commands.CreateOrUpdateMessageReaction;
 using Animo.Application.Features.Messages.Commands.CreateMessage;
 using Animo.Application.Features.Messages.Queries.GetMessageById;
 using Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
@@ -12,10 +13,12 @@ namespace Animo.Controllers;
 public class MessagesController(
     IHubContext<ChatRoomHub> chatRoomHubContext,
     IHubContext<ChatRoomsListHub> chatRoomsListHubContext,
+    IChatRoomRepository chatRoomRepository,
     IUserRepository userRepository) : ApiControllerBase
 {
     private readonly IHubContext<ChatRoomHub> _chatRoomHubContext = chatRoomHubContext;
     private readonly IHubContext<ChatRoomsListHub> _chatRoomsListHubContext = chatRoomsListHubContext;
+    private readonly IChatRoomRepository _chatRoomRepository = chatRoomRepository;
     private readonly IUserRepository _userRepository = userRepository;
 
     [HttpPost]
@@ -43,6 +46,48 @@ public class MessagesController(
             }
         }
 
+
+        return Created("", result);
+    }
+
+    [HttpPut("reactions")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Create(CreateOrUpdateMessageReactionCommand command)
+    {
+        var result = await Mediator.Send(command);
+        switch (result.StatusCode)
+        {
+            case 400:
+                return BadRequest(result);
+            case 404:
+                return NotFound(result);
+            case 500:
+                return StatusCode(500, result);
+            default:
+            {
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                break;
+            }
+        }
+
+        if (Guid.TryParse(command.MessageId, out var messageId))
+        {
+            var chatRoom = await _chatRoomRepository.FindByMessageIdAsync(messageId);
+            if (chatRoom.IsSuccess)
+            {
+                await _chatRoomHubContext.Clients.Group(chatRoom.Value.ChatRoomId.ToString())
+                    .SendAsync("UpdateMessage", result.MessageReaction.MessageId);
+            }
+        }
 
         return Created("", result);
     }

@@ -1,6 +1,6 @@
-namespace Animo.Application.Features.MessageReactions.Commands.CreateMessageReaction;
+namespace Animo.Application.Features.MessageReactions.Commands.CreateOrUpdateMessageReaction;
 
-public class CreateMessageReactionCommandDto
+public class CreateOrUpdateMessageReactionCommandDto
 {
     public Guid MessageReactionId { get; set; }
     public Guid MessageId { get; set; }
