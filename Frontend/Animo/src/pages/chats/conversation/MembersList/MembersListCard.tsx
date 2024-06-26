@@ -19,7 +19,7 @@ export default function MembersListCard({member}: {member: MemberType}) {
       </Avatar>
       <p>{member.firstName} {member.lastName}</p>
       <i
-        className={"fa-solid fa-ellipsis ml-auto cursor-pointer p-1.5 -m-1.5 rounded-full hover:bg-gray-200"}
+        className={"fa-solid fa-ellipsis ml-auto cursor-pointer p-1.5 -m-1.5 rounded-full hover:bg-gray-200 select-none"}
         onClick={onMemberClick}
       />
     </div>

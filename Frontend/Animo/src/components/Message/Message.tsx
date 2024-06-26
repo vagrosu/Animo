@@ -6,6 +6,7 @@ import {useUserProfileModal} from "../../context/UserProfileModalContext/UserPro
 import {toast} from "react-toastify";
 import {useState} from "react";
 import EmotionDataModal from "./EmotionDataModal/EmotionDataModal.tsx";
+import ReactionPicker from "./Reactions/ReactionPicker.tsx";
 
 type MessageProps = {
   message: MessageType,
@@ -16,6 +17,7 @@ type MessageProps = {
 
 export default function Message({message, sender, isFirstFromGroup, isLastFromGroup}: MessageProps) {
   const {userId} = useUser();
+  const [isRowHovered, setIsRowHovered] = useState(false);
   const [isEmotionDataModalOpen, setIsEmotionDataModalOpen] = useState(false);
   const userProfileModal = useUserProfileModal();
   const isSentByUser = message.senderId === userId;
@@ -35,7 +37,11 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
 
   return (
     <>
-      <div className={`flex ${isSentByUser ? "justify-end" : ""} ${!isFirstFromGroup ? "ml-7" : ""} ${isLastFromGroup ? "mb-5" : "mb-1"}`}>
+      <div
+        className={`flex ${isSentByUser ? "flex-row-reverse" : ""} ${!isFirstFromGroup ? "ml-7" : ""} ${isLastFromGroup ? "mb-5" : "mb-1"}`}
+        onMouseEnter={() => setIsRowHovered(true)}
+        onMouseLeave={() => setIsRowHovered(false)}
+      >
         {isFirstFromGroup && !isSentByUser && (
           <Avatar
             alt={"User"}
@@ -53,6 +59,11 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
           isSentByUser={isSentByUser}
           isFirstFromGroup={isFirstFromGroup}
           isLastFromGroup={isLastFromGroup}
+        />
+        <ReactionPicker
+          messageId={message.textMessageId}
+          isIconDisplayed={isRowHovered}
+          setIsIconDisplayed={setIsRowHovered}
         />
       </div>
 

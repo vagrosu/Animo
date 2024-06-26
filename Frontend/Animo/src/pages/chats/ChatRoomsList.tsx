@@ -129,7 +129,7 @@ export default function ChatRoomsList({isChatRoomListExpanded, setIsChatRoomList
     .sort((a, b) => sortByFunction(a, b, sortBy))
 
   return (
-    <div className={`flex flex-col bg-white ${isChatRoomListExpanded ? `min-w-[20rem] w-[24vw] ${isFloating ? "absolute z-50" : "relative"}` : ""} max-w-[23rem] h-full border-r border-gray-200`}>
+    <div className={`flex flex-col bg-white ${isChatRoomListExpanded ? `min-w-[17.5rem] w-[24vw] ${isFloating ? "absolute z-50" : "relative"}` : ""} max-w-[23rem] h-full border-r border-gray-200`}>
       <div className={`flex items-center ${isChatRoomListExpanded ? "absolute right-5" : "justify-center"} h-[4.25rem]`}>
         <i className={`fa-solid fa-chevron-${isChatRoomListExpanded ? "left" : "right"} p-2 font-bold text-xl mt-[-0.125rem] text-blue-600 cursor-pointer`}
           onClick={() => setIsChatRoomListExpanded(!isChatRoomListExpanded)}

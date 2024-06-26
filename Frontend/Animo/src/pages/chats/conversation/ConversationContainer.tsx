@@ -14,7 +14,7 @@ type ConversationContainerProps = {
   selectedChatRoomId: string,
 }
 
-export const OPENED_CHAT_ROOM_MEMBERS_LIST_MIN_WIDTH = 1280;
+export const OPENED_CHAT_ROOM_MEMBERS_LIST_MIN_WIDTH = 1300;
 
 export default function ConversationContainer ({selectedChatRoomId}: ConversationContainerProps) {
   const screenWidth = useWindowDimensions().width;

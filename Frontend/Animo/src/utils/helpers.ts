@@ -1,5 +1,6 @@
 import {AxiosError, isAxiosError} from "axios";
 import CryptoJS from "crypto-js";
+import {RefObject, useEffect} from "react";
 
 export function isValidHttpUrl(str: string) {
   let url;
@@ -95,4 +96,19 @@ export function decryptTextMessage(encryptedMessage: string) {
   })
 
   return decryptedMessage;
+}
+
+export function useClickOutside(ref: RefObject<HTMLElement>, onClickOutside: (e: MouseEvent) => void) {
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref?.current && !ref.current.contains(event.target as Node)) {
+        onClickOutside(event);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
 }
