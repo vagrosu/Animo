@@ -218,8 +218,14 @@ public class CreateMessageHandler(
         var disgust = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("disgust", 0) ?? 0, 0.0f, 1.0f);
         var anger = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("anger", 0) ?? 0, 0.0f, 1.0f);
         var fear = Math.Clamp(messageEmotionResponse.EmotionScores?.GetValueOrDefault("fear", 0) ?? 0, 0.0f, 1.0f);
+        var total = neutral + joy + surprise + sadness + disgust + anger + fear;
 
-        return MessageEmotion.Create(true, neutral, joy, surprise, sadness, disgust, anger, fear);
+        if (total == 0)
+        {
+            return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "No emotions detected");
+        }
+
+        return MessageEmotion.Create(true, neutral / total, joy / total, surprise / total, sadness / total, disgust / total, anger / total, fear / total);
     }
 
 
