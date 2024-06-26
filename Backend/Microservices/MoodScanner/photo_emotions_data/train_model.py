@@ -19,11 +19,11 @@ def train_model(train_data_file_path, test_data_file_path):
     # Initialize and train the RandomForestClassifier with hyperparameter tuning
     param_grid = {
         'bootstrap': [True, False],
-        'max_depth': [10, 20, 30, 40, None],
-        'max_features': ['auto', 'sqrt', 'log2'],
+        'max_depth': [10, 20, 30, 40],
+        'max_features': ['auto', 'sqrt'],
         'min_samples_leaf': [1, 2, 4, 10],
         'min_samples_split': [2, 5, 10, 20],
-        'n_estimators': [100, 200, 300, 500, 1000],
+        'n_estimators': [100, 200, 300, 500],
     }
 
     rf = RandomForestClassifier()
