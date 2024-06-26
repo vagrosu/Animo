@@ -4,10 +4,15 @@ using MediatR;
 
 namespace Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
 //ToDo: Extend to support all types of messages
-public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRepository, IChatRoomRepository chatRoomRepository) : IRequestHandler<GetMessageByChatRoomIdQuery, GetMessageByChatRoomIdResponse>
+public class GetMessageByChatRoomIdHandler(
+    ITextMessageRepository textMessageRepository,
+    IChatRoomRepository chatRoomRepository,
+    IMessageReactionRepository messageReactionRepository
+    ) : IRequestHandler<GetMessageByChatRoomIdQuery, GetMessageByChatRoomIdResponse>
 {
     private readonly ITextMessageRepository _textMessageRepository = textMessageRepository;
     private readonly IChatRoomRepository _chatRoomRepository = chatRoomRepository;
+    private readonly IMessageReactionRepository _messageReactionRepository = messageReactionRepository;
 
     public async Task<GetMessageByChatRoomIdResponse> Handle(GetMessageByChatRoomIdQuery request, CancellationToken cancellationToken)
     {
@@ -49,24 +54,34 @@ public class GetMessageByChatRoomIdHandler(ITextMessageRepository textMessageRep
             };
         }
 
+        var messageDtos = new List<ChatRoomMessageDto>();
+        foreach (var textMessage in textMessages.Value)
+        {
+            var emotion = Emotion.Max(textMessage.MessageEmotion + textMessage.UserPhotoEmotion);
+            var reactionsResult = await _messageReactionRepository.FindByMessageIdAsync(textMessage.MessageId);
+            var reactionDtos = reactionsResult.Value.Select(reaction => new MessageReactionDto
+            {
+                SenderId = reaction.User.Id,
+                Emoji = reaction.Emoji
+            }).ToList();
+
+            messageDtos.Add(new ChatRoomMessageDto
+            {
+                TextMessageId = textMessage.MessageId,
+                Text = textMessage.Text,
+                SenderId = textMessage.Sender.Id,
+                Emotion = emotion.Value != 0 ? emotion.Key : "Unknown",
+                SentTime = textMessage.SentTime,
+                Reactions = reactionDtos,
+                RepliedMessageId = textMessage.RepliedMessage?.MessageId,
+                IsForwarded = textMessage.IsForwarded
+            });
+        }
+
         return new GetMessageByChatRoomIdResponse
         {
             Success = true,
-            TextMessages = textMessages.Value.Select(textMessage =>
-            {
-                var emotion = Emotion.Max(textMessage.MessageEmotion + textMessage.UserPhotoEmotion);
-
-                return new ChatRoomMessageDto
-                {
-                    TextMessageId = textMessage.MessageId,
-                    Text = textMessage.Text,
-                    SenderId = textMessage.Sender.Id,
-                    Emotion = emotion.Value != 0 ? emotion.Key : "Unknown",
-                    SentTime = textMessage.SentTime,
-                    RepliedMessageId = textMessage.RepliedMessage?.MessageId,
-                    IsForwarded = textMessage.IsForwarded
-                };
-            }).OrderBy(textMessage => textMessage.SentTime).ToList()
+            TextMessages = messageDtos.OrderBy(m => m.SentTime).ToList()
         };
     }
 }

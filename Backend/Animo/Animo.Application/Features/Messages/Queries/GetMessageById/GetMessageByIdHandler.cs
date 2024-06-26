@@ -1,12 +1,16 @@
+using Animo.Application.Features.MessageReactions;
 using Animo.Application.Persistence;
 using Animo.Domain.Common;
 using MediatR;
 
 namespace Animo.Application.Features.Messages.Queries.GetMessageById;
 
-public class GetMessageByIdHandler(ITextMessageRepository textMessageRepository) : IRequestHandler<GetMessageByIdQuery, GetMessageByIdResponse>
+public class GetMessageByIdHandler(
+    ITextMessageRepository textMessageRepository,
+    IMessageReactionRepository messageReactionRepository) : IRequestHandler<GetMessageByIdQuery, GetMessageByIdResponse>
 {
     private readonly ITextMessageRepository _textMessageRepository = textMessageRepository;
+    private readonly IMessageReactionRepository _messageReactionRepository = messageReactionRepository;
 
     public async Task<GetMessageByIdResponse> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken)
     {
@@ -41,6 +45,8 @@ public class GetMessageByIdHandler(ITextMessageRepository textMessageRepository)
 
         var emotion = Emotion.Max(textMessage.Value.MessageEmotion + textMessage.Value.UserPhotoEmotion);
 
+        var reactions = await _messageReactionRepository.FindByMessageIdAsync(textMessageId);
+
         return new GetMessageByIdResponse
         {
             Success = true,
@@ -51,6 +57,11 @@ public class GetMessageByIdHandler(ITextMessageRepository textMessageRepository)
                 SenderId = textMessage.Value.Sender.Id,
                 Emotion = emotion.Value != 0 ? emotion.Key : "Unknown",
                 SentTime = textMessage.Value.SentTime,
+                Reactions = reactions.Value.Select(reaction => new MessageReactionDto
+                {
+                    SenderId = reaction.User.Id,
+                    Emoji = reaction.Emoji
+                }).ToList(),
                 RepliedMessageId = textMessage.Value.RepliedMessage?.MessageId,
                 IsForwarded = textMessage.Value.IsForwarded
             }
