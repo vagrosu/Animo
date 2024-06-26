@@ -7,5 +7,6 @@ namespace Animo.Application.Persistence;
 public interface IChatRoomRepository : IAsyncRepository<ChatRoom>
 {
     Task<Result<IReadOnlyList<ChatRoom>>> FindByUserIdAsync(Guid userId);
-    Task<Result<ChatRoom>> FindByMemberIds(IReadOnlyList<Guid> memberIds);
+    Task<Result<ChatRoom>> FindByMemberIdsAsync(IReadOnlyList<Guid> memberIds);
+    Task<Result<ChatRoom>> FindByMessageIdAsync(Guid messageId);
 }

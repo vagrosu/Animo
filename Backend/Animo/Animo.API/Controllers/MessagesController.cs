@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Animo.Controllers;
 
-public class MessagesController(IHubContext<ChatRoomHub> chatRoomHubContext, IHubContext<ChatRoomsListHub> chatRoomsListHubContext, IUserRepository userRepository) : ApiControllerBase
+public class MessagesController(
+    IHubContext<ChatRoomHub> chatRoomHubContext,
+    IHubContext<ChatRoomsListHub> chatRoomsListHubContext,
+    IUserRepository userRepository) : ApiControllerBase
 {
     private readonly IHubContext<ChatRoomHub> _chatRoomHubContext = chatRoomHubContext;
     private readonly IHubContext<ChatRoomsListHub> _chatRoomsListHubContext = chatRoomsListHubContext;

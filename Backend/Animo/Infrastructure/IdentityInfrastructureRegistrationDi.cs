@@ -65,6 +65,7 @@ public static class IdentityInfrastructureRegistrationDi
         services.AddScoped<IMessageEmotionRepository, MessageEmotionRepository>();
         services.AddScoped<IUserPhotoEmotionRepository, UserPhotoEmotionRepository>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IMessageReactionRepository, MessageReactionRepository>();
 
         return services;
     }

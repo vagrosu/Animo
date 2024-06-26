@@ -1,3 +1,4 @@
+using Animo.Domain.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace Animo.Domain.Entities;
@@ -19,4 +20,24 @@ public class MessageReaction
     }
 
     public MessageReaction() { }
+
+    public static Result<MessageReaction> Create(TextMessage textMessage, User sender, string emoji)
+    {
+        if (textMessage == null)
+        {
+            return Result<MessageReaction>.Failure("Text message is required");
+        }
+
+        if (sender == null)
+        {
+            return Result<MessageReaction>.Failure("Sender is required");
+        }
+
+        if (string.IsNullOrWhiteSpace(emoji))
+        {
+            return Result<MessageReaction>.Failure("Emoji is required");
+        }
+
+        return Result<MessageReaction>.Success(new MessageReaction(textMessage, sender, emoji));
+    }
 }

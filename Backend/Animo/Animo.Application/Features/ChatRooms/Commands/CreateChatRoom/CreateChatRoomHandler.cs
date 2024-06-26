@@ -51,7 +51,7 @@ public class CreateChatRoomHandler(IChatRoomRepository chatRoomRepository, IUser
             }
         }
 
-        var existingChatRoom = await _chatRoomRepository.FindByMemberIds(members.Select(m => m.Id).ToList());
+        var existingChatRoom = await _chatRoomRepository.FindByMemberIdsAsync(members.Select(m => m.Id).ToList());
         if (existingChatRoom.IsSuccess)
         {
             return new CreateChatRoomCommandResponse
