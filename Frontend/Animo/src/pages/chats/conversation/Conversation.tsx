@@ -39,6 +39,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
   const {connection} = useChatRoomHub();
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
+  const [messageToUpdateId, setMessageToUpdateId] = useState<string | null>(null);
   const [showScrollIcon, setShowScrollIcon] = useState(false);
 
   const messagesQuery = useQuery<MessagesByChatRoomIdResponseType, AxiosError | Error>({
@@ -59,24 +60,43 @@ export default function Conversation({chatRoom}: ConversationProps) {
   });
 
   useQuery<MessagesByMessageIdResponseType, AxiosError | Error>({
-    queryKey: ["Messages", newMessageId],
-    queryFn: async () => api.get<MessagesByMessageIdResponseType>(`Messages/${newMessageId}`)
+    queryKey: ["Messages", newMessageId || messageToUpdateId],
+    queryFn: async () => api.get<MessagesByMessageIdResponseType>(`Messages/${newMessageId || messageToUpdateId}`)
       .then((res) => res.data),
     onSuccess: (data) => {
-      setMessages([...messages, {
+      const messageData = {
         ...data.textMessage,
         text: decryptTextMessage(data.textMessage.text)
-      }])
+      }
+
+      if (newMessageId) {
+        setMessages([...messages, messageData])
+      } else if (messageToUpdateId) {
+        const updatedMessages = messages.map(message => {
+          if (message.textMessageId === messageToUpdateId) {
+            return messageData
+          }
+
+          return message;
+        })
+
+        setMessages(updatedMessages);
+      }
     },
     onSettled: () => {
       setNewMessageId(null);
+      setMessageToUpdateId(null);
     },
-    enabled: !!newMessageId,
+    enabled: !!newMessageId || !!messageToUpdateId,
   });
 
   useEffect(() => {
     connection?.on("ReceiveMessage", (messageId: string) => {
       setNewMessageId(messageId)
+    })
+
+    connection?.on("UpdateMessage", (messageId: string) => {
+      setMessageToUpdateId(messageId)
     })
   }, [connection, chatRoom]);
 

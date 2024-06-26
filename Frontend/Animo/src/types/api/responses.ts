@@ -87,6 +87,13 @@ export type CreateChatRoomResponseType = AxiosResponse<{
   }
 } & baseResponse>;
 
+export type CreateMessageReactionResponseType = AxiosResponse<{
+  messageReactionId: string,
+  messageId: string,
+  senderId: string,
+  emoji: string,
+} & baseResponse>;
+
 export type UsersByChatRoomIdResponseType = {
   members: ChatRoomMemberType[]
 } & baseResponse;

@@ -1,6 +1,12 @@
 import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 import {useClickOutside} from "../../../utils/helpers.ts";
 import {useRef, useState} from "react";
+import {useMutation} from "react-query";
+import {CreateMessageReactionResponseType} from "../../../types/api/responses.ts";
+import {AxiosError} from "axios";
+import {CreateMessageReactionQueryType} from "../../../types/api/queries.ts";
+import {api} from "../../../services/api.tsx";
+import {useUser} from "../../../context/UserContext.tsx";
 
 type ReactionPickerProps = {
   messageId: string,
@@ -9,8 +15,17 @@ type ReactionPickerProps = {
 }
 
 export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDisplayed}: ReactionPickerProps) {
+  const user = useUser();
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+
+  const addMessageReactionMutation = useMutation<CreateMessageReactionResponseType, Error | AxiosError, CreateMessageReactionQueryType>({
+    mutationFn: async (data) => api.post(`MessageReaction`, {
+      messageId: data.messageId,
+      senderId: data.senderId,
+      emoji: data.emoji
+    })
+  })
 
   useClickOutside(emojiPickerRef, (e) => {
     e.stopPropagation();
@@ -20,6 +35,12 @@ export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDis
   const onReactionClick = (emoji: EmojiClickData) => {
     setIsEmojiPickerOpen(false);
     setIsIconDisplayed && setIsIconDisplayed(false);
+
+    addMessageReactionMutation.mutate({
+      messageId,
+      senderId: user.userId,
+      emoji: emoji.emoji
+    })
   }
 
   return (
@@ -39,7 +60,6 @@ export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDis
             style={{backgroundColor: "white"}}
             reactionsDefaultOpen={true}
             allowExpandReactions={false}
-            lazyLoadEmojis={true}
             skinTonesDisabled={true}
           />
         </div>
