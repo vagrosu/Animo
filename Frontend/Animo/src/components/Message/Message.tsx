@@ -17,10 +17,11 @@ type MessageProps = {
 
 export default function Message({message, sender, isFirstFromGroup, isLastFromGroup}: MessageProps) {
   const {userId} = useUser();
-  const [isRowHovered, setIsRowHovered] = useState(false);
-  const [isEmotionDataModalOpen, setIsEmotionDataModalOpen] = useState(false);
   const userProfileModal = useUserProfileModal();
   const isSentByUser = message.senderId === userId;
+  const userReactions = message.reactions.filter(reaction => reaction.senderId === userId);
+  const [isRowHovered, setIsRowHovered] = useState(false);
+  const [isEmotionDataModalOpen, setIsEmotionDataModalOpen] = useState(false);
 
   const toggleEmotionDataModal = () => {
     setIsEmotionDataModalOpen(!isEmotionDataModalOpen);
@@ -62,6 +63,7 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
         />
         <ReactionPicker
           messageId={message.textMessageId}
+          selectedReactions={userReactions}
           isIconDisplayed={isRowHovered}
           setIsIconDisplayed={setIsRowHovered}
         />

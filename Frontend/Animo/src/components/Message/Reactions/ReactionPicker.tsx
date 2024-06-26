@@ -7,14 +7,17 @@ import {AxiosError} from "axios";
 import {CreateMessageReactionQueryType} from "../../../types/api/queries.ts";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
+import {ReactionType} from "../../../pages/chats/types.ts";
+import styles from "./ReactionPicker.module.scss";
 
 type ReactionPickerProps = {
   messageId: string,
+  selectedReactions: ReactionType[],
   isIconDisplayed: boolean,
   setIsIconDisplayed?: (isIconDisplayed: boolean) => void,
 }
 
-export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDisplayed}: ReactionPickerProps) {
+export default function ReactionPicker({messageId, selectedReactions, isIconDisplayed, setIsIconDisplayed}: ReactionPickerProps) {
   const user = useUser();
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
@@ -39,9 +42,11 @@ export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDis
     addMessageReactionMutation.mutate({
       messageId,
       senderId: user.userId,
-      emoji: emoji.emoji
+      emoji: emoji.unified
     })
   }
+
+  const selectedReactionsClassName = selectedReactions.map(reaction => styles[reaction.emoji]).join(" ");
 
   return (
     <div className={"relative w-[28px] h-[28px] my-auto mx-1.5"}>
@@ -57,7 +62,7 @@ export default function ReactionPicker({messageId, isIconDisplayed, setIsIconDis
           <EmojiPicker
             open={isEmojiPickerOpen}
             onReactionClick={onReactionClick}
-            style={{backgroundColor: "white"}}
+            className={`!bg-gray-50 ${selectedReactionsClassName}`}
             reactionsDefaultOpen={true}
             allowExpandReactions={false}
             skinTonesDisabled={true}

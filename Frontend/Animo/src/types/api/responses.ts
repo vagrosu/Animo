@@ -54,12 +54,18 @@ export type ChatRoomsByUserIdResponseType = {
   }[]
 } & baseResponse;
 
+type ReactionType = {
+  senderId: string,
+  emoji: string,
+}
+
 type ResponseTextMessageType = {
   textMessageId: string,
   text: string,
   senderId: string,
   emotion: string,
   sentTime: string,
+  reactions: ReactionType[],
   repliedMessageId?: string,
   isForwarded?: boolean,
 }

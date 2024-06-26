@@ -1,0 +1,41 @@
+@mixin emoji-button-style($dataValue) {
+    button[data-unified="#{$dataValue}"] {
+        background-color: rgb(229 231 235) !important;
+        border-radius: 0.875rem;
+    }
+}
+
+// Thumbs up
+.\31 f44d {
+    @include emoji-button-style("1f44d");
+}
+
+// Heart
+.\32 764-fe0f {
+    @include emoji-button-style("2764-fe0f");
+}
+
+// Smiley
+.\31 f603 {
+    @include emoji-button-style("1f603");
+}
+
+// Cry
+.\31 f622 {
+    @include emoji-button-style("1f622");
+}
+
+// Pray
+.\31 f64f {
+    @include emoji-button-style("1f64f");
+}
+
+// Thumbs down
+.\31 f44e {
+    @include emoji-button-style("1f44e");
+}
+
+// Anger
+.\31 f621 {
+    @include emoji-button-style("1f621");
+}

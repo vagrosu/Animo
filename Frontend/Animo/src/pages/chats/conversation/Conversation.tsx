@@ -53,6 +53,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
         senderId: message.senderId,
         emotion: message.emotion,
         sentTime: message.sentTime,
+        reactions: message.reactions,
         repliedMessageId: message.repliedMessageId,
         isForwarded: message.isForwarded
       })))
