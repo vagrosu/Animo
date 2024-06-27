@@ -58,7 +58,6 @@ def get_emotion_from_dict(key):
 def test_get_face_landmarks(img_path):
     example_image = cv2.imread(img_path)
 
-    # Process the example image
     example_landmarks = get_face_landmarks(example_image)
 
     if example_landmarks:
@@ -66,7 +65,6 @@ def test_get_face_landmarks(img_path):
     else:
         print("No landmarks detected for the example image")
 
-    # Visualize the landmarks on the image
     if example_landmarks:
         xs = example_landmarks[0::3]
         ys = example_landmarks[1::3]
