@@ -17,7 +17,7 @@ export default function MembersList({name, members, isGroupChat, toggleMembersLi
   const [isMembersListOpened, setIsMembersListOpened] = useState(true);
 
   return (
-    <div className={`${isFloating ? "absolute right-0 z-50" : "relative"} flex flex-col items-center py-20 px-5 bg-white min-w-[17.5rem] w-[24vw] max-w-[23rem] h-full border-l border-gray-200`}>
+    <div className={`${isFloating ? "absolute right-0 z-50" : "relative"} flex flex-col items-center py-20 px-5 overflow-y-scroll bg-white min-w-[17.5rem] w-[24vw] max-w-[23rem] h-full border-l border-gray-200`}>
       {isFloating && (
         <div
           className={"absolute flex items-center justify-center top-0 left-3 h-[4.25rem]"}

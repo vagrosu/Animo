@@ -32,6 +32,11 @@ export default function ChatRoomsListHubContextProvider({ children }: { children
 
   useEffect(() => {
     if (connection) {
+      if(connection.state === "Connected") {
+        setIsConnected(true);
+        return;
+      }
+
       connection.start()
         .then(() => {
           connection.invoke("JoinChatRoomsList", userId);

@@ -30,6 +30,11 @@ export default function ChatRoomHubContextProvider({children}: {children: ReactN
 
   useEffect(() => {
     if (connection) {
+      if(connection.state === "Connected") {
+        setIsConnected(true);
+        return;
+      }
+
       connection.start()
         .then(() => {
           setIsConnected(true);

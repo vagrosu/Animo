@@ -64,7 +64,6 @@ export default function MessageInput ({selectedChatRoomId}: MessageInputProps) {
       if (cameraRef.current) {
         try {
           const userPhoto = cameraRef.current.takePhoto();
-          console.log(userPhoto)
           if (userPhoto) {
             userPhotoBlob = base64ImageToBlob(userPhoto as string);
           } else {

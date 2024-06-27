@@ -67,7 +67,7 @@ export default function SortByDropdown({sortBy, setSortBy, className}: SortByDro
               </p>
             </MenuButton>
             <Menu
-              className={"bg-gray-200 rounded-lg py-2"}
+              className={"bg-gray-200 rounded-lg py-2 z-50"}
             >
               {Object.keys(SORT_BY_OPTIONS).map((key) => (
                 <MenuItem

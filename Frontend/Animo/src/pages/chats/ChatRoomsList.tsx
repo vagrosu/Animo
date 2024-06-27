@@ -152,7 +152,7 @@ export default function ChatRoomsList({isChatRoomListExpanded, setIsChatRoomList
           />
         </div>
       )}
-      <div className={`${isChatRoomListExpanded ? "mt-2.5" : "mt-0.5"} p-1.5`}>
+      <div className={`${isChatRoomListExpanded ? "mt-2.5" : "mt-0.5"} p-1.5 overflow-y-scroll`}>
         {chatRoomsListQuery.isLoading ? (
           <div>Loading...</div>
         ) : chatRoomsListQuery.error ? (
@@ -169,7 +169,7 @@ export default function ChatRoomsList({isChatRoomListExpanded, setIsChatRoomList
           ))
         ) : !chatRooms.length ? (
           <div className={"text-center text-gray-400 mt-5"}>
-            Create a new chat
+            {isChatRoomListExpanded ? "Create a new chat" : "No chats"}
           </div>
         ) : (
           <div className={"text-center text-gray-400 mt-5"}>
