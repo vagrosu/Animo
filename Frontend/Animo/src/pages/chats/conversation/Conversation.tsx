@@ -105,7 +105,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages.length]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
@@ -161,7 +161,7 @@ export default function Conversation({chatRoom}: ConversationProps) {
         )
       })}
       <div
-        className="sticky w-0 h-0 bottom-0 left-1/2 translate-x-[-50%] cursor-pointer"
+        className="sticky w-0 h-0 z-10 bottom-0 left-1/2 translate-x-[-50%] cursor-pointer"
         onClick={scrollToBottom}
       >
         <div className={`flex items-center justify-center w-7 h-7 absolute bottom-14 ${!showScrollIcon ? "hidden" : ""} border-blue-600 border-[0.5px] bg-neutral-50 rounded-full`}>
