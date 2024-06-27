@@ -1,5 +1,6 @@
 import { ReactionType } from "../../../pages/chats/types"
 import {Emoji} from "emoji-picker-react";
+import {Tooltip} from "@mui/material";
 
 
 type MessageReactionsProps = {
@@ -8,24 +9,44 @@ type MessageReactionsProps = {
 }
 
 export default function MessageReactions({reactions, isSentByUser}: MessageReactionsProps) {
-  const emojiList = Array.from(new Set(reactions.map(reaction => reaction.emoji)));
+  const emojiSet = Array.from(new Set(reactions.map(reaction => reaction.emoji)));
+
+  const tooltipContent = (
+    <div className={"flex flex-col gap-1 text-white"}>
+      {emojiSet.map((emoji, i) => (
+        <div key={i} className={"flex items-center gap-[1px]"}>
+          <p className={"text-sm"}>{reactions.filter(r => r.emoji === emoji).length}</p>
+          <Emoji
+            unified={emoji}
+            size={15}
+          />
+        </div>
+      ))}
+    </div>
+  )
 
   return (
-    <div
-      className={`absolute flex items-center gap-[1px] py-1 px-1.5 -my-1 -mx-1.5 bg-gray-200 hover:bg-gray-300 rounded-full z-10 -bottom-2.5 ${isSentByUser ? "-left-0.5" : "-right-0.5"} cursor-pointer`}
+    <Tooltip
+      title={tooltipContent}
+      placement={isSentByUser ? "left" : "right"}
+      arrow={true}
     >
-      {emojiList.slice(0, 3).map((emoji, i) => (
-        <Emoji
-          key={i}
-          unified={emoji}
-          size={15}
-        />
-      ))}
-      <p
-        className={`text-xs font-extralight ml-0.5`}
+      <div
+        className={`absolute flex items-center gap-[1px] py-1 px-1.5 -my-1 -mx-1.5 bg-gray-200 hover:bg-gray-300 rounded-full z-10 -bottom-2.5 ${isSentByUser ? "-left-0.5" : "-right-0.5"} cursor-pointer`}
       >
-        {reactions.length}
-      </p>
-    </div>
+        {emojiSet.slice(0, 3).map((emoji, i) => (
+          <Emoji
+            key={i}
+            unified={emoji}
+            size={15}
+          />
+        ))}
+        <p
+          className={`text-xs font-extralight ml-0.5`}
+        >
+          {reactions.length}
+        </p>
+      </div>
+    </Tooltip>
   )
 }
