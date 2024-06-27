@@ -52,4 +52,18 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
             ? Result<TextMessage>.Success(lastMessage)
             : Result<TextMessage>.Failure("No messages found.");
     }
+
+    public async Task<Result<TextMessage>> FindByMessageReactionIdAsync(Guid messageReactionId)
+    {
+        var message = await _context.Set<TextMessage>()
+            .Include(textMessage => textMessage.MessageReactions)
+            .Include(textMessage => textMessage.Sender)
+            .FirstOrDefaultAsync(textMessage => textMessage.MessageReactions.Any(reaction => reaction.MessageReactionId == messageReactionId));
+
+        return message != null
+            ? Result<TextMessage>.Success(message)
+            : Result<TextMessage>.Failure("No message found.");
+    }
+
+
 }

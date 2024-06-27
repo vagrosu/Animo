@@ -1,9 +1,12 @@
 using Animo.Application.Features.MessageReactions.Commands.CreateOrUpdateMessageReaction;
+using Animo.Application.Features.MessageReactions.Commands.DeleteMessageReaction;
 using Animo.Application.Features.Messages.Commands.CreateMessage;
 using Animo.Application.Features.Messages.Queries.GetMessageById;
 using Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
 using Animo.Application.Hubs;
 using Animo.Application.Persistence;
+using Animo.Domain.Common;
+using Animo.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -14,12 +17,14 @@ public class MessagesController(
     IHubContext<ChatRoomHub> chatRoomHubContext,
     IHubContext<ChatRoomsListHub> chatRoomsListHubContext,
     IChatRoomRepository chatRoomRepository,
+    ITextMessageRepository textMessageRepository,
     IUserRepository userRepository) : ApiControllerBase
 {
     private readonly IHubContext<ChatRoomHub> _chatRoomHubContext = chatRoomHubContext;
     private readonly IHubContext<ChatRoomsListHub> _chatRoomsListHubContext = chatRoomsListHubContext;
     private readonly IChatRoomRepository _chatRoomRepository = chatRoomRepository;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly ITextMessageRepository _textMessageRepository = textMessageRepository;
 
     [HttpPost]
     [Authorize]
@@ -91,6 +96,61 @@ public class MessagesController(
 
         return Created("", result);
     }
+
+    [HttpDelete("reactions/{messageReactionId}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Delete(string messageReactionId)
+    {
+        string? chatRoomId = null;
+        string? messageId = null;
+        if (Guid.TryParse(messageReactionId, out var messageReactionGuid))
+        {
+            var message = await _textMessageRepository.FindByMessageReactionIdAsync(messageReactionGuid);
+            if (message.IsSuccess)
+            {
+                var chatRoom = await _chatRoomRepository.FindByMessageIdAsync(message.Value.MessageId);
+                if (chatRoom.IsSuccess)
+                {
+                    chatRoomId = chatRoom.Value.ChatRoomId.ToString();
+                    messageId = message.Value.MessageId.ToString();
+                }
+            }
+        }
+
+        var command = new DeleteMessageReactionCommand { MessageReactionId = messageReactionId };
+        var result = await Mediator.Send(command);
+        switch (result.StatusCode)
+        {
+            case 400:
+                return BadRequest(result);
+            case 404:
+                return NotFound(result);
+            case 500:
+                return StatusCode(500, result);
+            default:
+            {
+                if (!result.Success)
+                {
+                    return BadRequest(result);
+                }
+
+                break;
+            }
+        }
+
+        if (chatRoomId != null && messageId != null)
+        {
+            await _chatRoomHubContext.Clients.Group(chatRoomId)
+                .SendAsync("UpdateMessage", messageId);
+        }
+
+        return Ok(result);
+    }
+
 
     [HttpGet("{messageId}")]
     [Authorize]

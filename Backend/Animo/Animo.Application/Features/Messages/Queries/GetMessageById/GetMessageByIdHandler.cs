@@ -59,6 +59,7 @@ public class GetMessageByIdHandler(
                 SentTime = textMessage.Value.SentTime,
                 Reactions = reactions.Value.Select(reaction => new MessageReactionDto
                 {
+                    MessageReactionId = reaction.MessageReactionId,
                     SenderId = reaction.User.Id,
                     Emoji = reaction.Emoji
                 }).ToList(),

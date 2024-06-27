@@ -8,4 +8,5 @@ public interface ITextMessageRepository : IAsyncRepository<TextMessage>
 {
     public Task<Result<IReadOnlyList<TextMessage>>> FindByChatRoomIdAsync(Guid chatRoomId);
     public Task<Result<TextMessage>> FindLastByChatRoomIdAsync(Guid chatRoomId);
+    public Task<Result<TextMessage>> FindByMessageReactionIdAsync(Guid messageReactionId);
 }

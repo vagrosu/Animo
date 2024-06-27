@@ -61,6 +61,7 @@ public class GetMessageByChatRoomIdHandler(
             var reactionsResult = await _messageReactionRepository.FindByMessageIdAsync(textMessage.MessageId);
             var reactionDtos = reactionsResult.Value.Select(reaction => new MessageReactionDto
             {
+                MessageReactionId = reaction.MessageReactionId,
                 SenderId = reaction.User.Id,
                 Emoji = reaction.Emoji
             }).ToList();
