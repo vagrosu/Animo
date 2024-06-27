@@ -2,9 +2,12 @@ import EmojiPicker, {EmojiClickData} from "emoji-picker-react";
 import {useClickOutside} from "../../../utils/helpers.ts";
 import {useRef, useState} from "react";
 import {useMutation} from "react-query";
-import {CreateMessageReactionResponseType} from "../../../types/api/responses.ts";
+import {
+  CreateOrUpdateMessageReactionResponseType,
+  DeleteMessageReactionResponseType
+} from "../../../types/api/responses.ts";
 import {AxiosError} from "axios";
-import {CreateMessageReactionQueryType} from "../../../types/api/queries.ts";
+import {CreateOrUpdateMessageReactionsQueryType, DeleteMessageReactionsQueryType} from "../../../types/api/queries.ts";
 import {api} from "../../../services/api.tsx";
 import {useUser} from "../../../context/UserContext.tsx";
 import {ReactionType} from "../../../pages/chats/types.ts";
@@ -12,22 +15,34 @@ import styles from "./ReactionPicker.module.scss";
 
 type ReactionPickerProps = {
   messageId: string,
-  selectedReactions: ReactionType[],
+  selectedReaction: ReactionType | undefined,
   isIconDisplayed: boolean,
   setIsIconDisplayed?: (isIconDisplayed: boolean) => void,
 }
 
-export default function ReactionPicker({messageId, selectedReactions, isIconDisplayed, setIsIconDisplayed}: ReactionPickerProps) {
+export default function ReactionPicker({messageId, selectedReaction, isIconDisplayed, setIsIconDisplayed}: ReactionPickerProps) {
   const user = useUser();
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
 
-  const addMessageReactionMutation = useMutation<CreateMessageReactionResponseType, Error | AxiosError, CreateMessageReactionQueryType>({
-    mutationFn: async (data) => api.post(`MessageReaction`, {
+  const modifyMessageReactionMutation = useMutation<
+    CreateOrUpdateMessageReactionResponseType,
+    Error | AxiosError,
+    CreateOrUpdateMessageReactionsQueryType
+  >({
+    mutationFn: async (data) => api.put(`Messages/reactions`, {
       messageId: data.messageId,
       senderId: data.senderId,
       emoji: data.emoji
     })
+  })
+
+  const deleteMessageReactionMutation = useMutation<
+    DeleteMessageReactionResponseType,
+    Error | AxiosError,
+    DeleteMessageReactionsQueryType
+  >({
+    mutationFn: async (data) => api.delete(`Messages/reactions/${data.messageReactionId}`)
   })
 
   useClickOutside(emojiPickerRef, (e) => {
@@ -39,14 +54,18 @@ export default function ReactionPicker({messageId, selectedReactions, isIconDisp
     setIsEmojiPickerOpen(false);
     setIsIconDisplayed && setIsIconDisplayed(false);
 
-    addMessageReactionMutation.mutate({
-      messageId,
-      senderId: user.userId,
-      emoji: emoji.unified
-    })
+    if (selectedReaction && emoji.unified === selectedReaction.emoji) {
+      deleteMessageReactionMutation.mutate({
+        messageReactionId: selectedReaction.messageReactionId
+      })
+    } else {
+      modifyMessageReactionMutation.mutate({
+        messageId: messageId,
+        senderId: user.userId,
+        emoji: emoji.unified
+      })
+    }
   }
-
-  const selectedReactionsClassName = selectedReactions.map(reaction => styles[reaction.emoji]).join(" ");
 
   return (
     <div className={"relative w-[28px] h-[28px] my-auto mx-1.5"}>
@@ -62,7 +81,7 @@ export default function ReactionPicker({messageId, selectedReactions, isIconDisp
           <EmojiPicker
             open={isEmojiPickerOpen}
             onReactionClick={onReactionClick}
-            className={`!bg-gray-50 ${selectedReactionsClassName}`}
+            className={`!bg-gray-50 ${selectedReaction ? styles[selectedReaction.emoji] : ""}`}
             reactionsDefaultOpen={true}
             allowExpandReactions={false}
             skinTonesDisabled={true}

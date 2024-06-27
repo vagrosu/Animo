@@ -31,8 +31,12 @@ export type UsersUpdateSelfieConsentQueryType = {
   isSelfieConsentGiven: boolean,
 }
 
-export type CreateMessageReactionQueryType = {
+export type CreateOrUpdateMessageReactionsQueryType = {
   messageId: string,
   senderId: string,
   emoji: string
+}
+
+export type DeleteMessageReactionsQueryType = {
+  messageReactionId: string
 }

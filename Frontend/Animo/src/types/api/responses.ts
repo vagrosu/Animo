@@ -55,6 +55,7 @@ export type ChatRoomsByUserIdResponseType = {
 } & baseResponse;
 
 type ReactionType = {
+  messageReactionId: string,
   senderId: string,
   emoji: string,
 }
@@ -93,12 +94,14 @@ export type CreateChatRoomResponseType = AxiosResponse<{
   }
 } & baseResponse>;
 
-export type CreateMessageReactionResponseType = AxiosResponse<{
+export type CreateOrUpdateMessageReactionResponseType = AxiosResponse<{
   messageReactionId: string,
   messageId: string,
   senderId: string,
   emoji: string,
 } & baseResponse>;
+
+export type DeleteMessageReactionResponseType = AxiosResponse<baseResponse>;
 
 export type UsersByChatRoomIdResponseType = {
   members: ChatRoomMemberType[]

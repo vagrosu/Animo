@@ -3,6 +3,7 @@ import {format, parseISO} from "date-fns";
 import {MessageType} from "../../pages/chats/types.ts";
 import {MessageContent} from "./MessageContent.tsx";
 import {Emoji, EmojiStyle} from "emoji-picker-react";
+import MessageReactions from "./Reactions/MessageReactions.tsx";
 
 const getEmotionEmoji = (emotion: string) => {
   switch (emotion.toLowerCase()) {
@@ -44,12 +45,12 @@ export function MessageCard({
                             }: MessageCardProps) {
 
   return (
-    <div className={"max-w-[60%]"}>
+    <div className={"relative max-w-[60%]"}>
       {!isSentByUser && isFirstFromGroup && (
         <p className={"text-xs font-thin ml-2"}>{senderFirstName}</p>
       )}
       <div
-        className={`flex flex-col gap-2 bg-zinc-100 px-4 py-3 ${isSentByUser ? `rounded-l-2xl ${!isFirstFromGroup && "rounded-r-2xl"}` : `rounded-r-2xl ml-2`} ${!isFirstFromGroup && "rounded-l-2xl"} rounded-b-2xl`}
+        className={`flex flex-col gap-2 bg-zinc-100 px-4 py-3.5 ${isSentByUser ? `rounded-l-2xl ${!isFirstFromGroup && "rounded-r-2xl"}` : `rounded-r-2xl ml-2`} ${!isFirstFromGroup && "rounded-l-2xl"} rounded-b-2xl`}
       >
         <MessageContent message={message}/>
         <div
@@ -73,6 +74,10 @@ export function MessageCard({
           <p>{format(parseISO(message.sentTime), "HH:mm")}</p>
         </div>
       </div>
+      {!!message.reactions.length && <MessageReactions
+        reactions={message.reactions}
+        isSentByUser={isSentByUser}
+      />}
     </div>
   )
 }

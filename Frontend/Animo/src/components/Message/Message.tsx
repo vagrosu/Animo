@@ -19,7 +19,8 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
   const {userId} = useUser();
   const userProfileModal = useUserProfileModal();
   const isSentByUser = message.senderId === userId;
-  const userReactions = message.reactions.filter(reaction => reaction.senderId === userId);
+  const hasReactions = message.reactions.length > 0;
+  const userReaction = message.reactions.find(reaction => reaction.senderId === userId);
   const [isRowHovered, setIsRowHovered] = useState(false);
   const [isEmotionDataModalOpen, setIsEmotionDataModalOpen] = useState(false);
 
@@ -39,7 +40,7 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
   return (
     <>
       <div
-        className={`flex ${isSentByUser ? "flex-row-reverse" : ""} ${!isFirstFromGroup ? "ml-7" : ""} ${isLastFromGroup ? "mb-5" : "mb-1"}`}
+        className={`flex ${isSentByUser ? "flex-row-reverse" : ""} ${!isFirstFromGroup ? "ml-7" : ""} ${isLastFromGroup ? "mb-5" : `${hasReactions ? "mb-4" : "mb-1"}`}`}
         onMouseEnter={() => setIsRowHovered(true)}
         onMouseLeave={() => setIsRowHovered(false)}
       >
@@ -63,7 +64,7 @@ export default function Message({message, sender, isFirstFromGroup, isLastFromGr
         />
         <ReactionPicker
           messageId={message.textMessageId}
-          selectedReactions={userReactions}
+          selectedReaction={userReaction}
           isIconDisplayed={isRowHovered}
           setIsIconDisplayed={setIsRowHovered}
         />
