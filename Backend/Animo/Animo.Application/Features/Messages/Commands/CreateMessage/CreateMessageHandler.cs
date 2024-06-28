@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace Animo.Application.Features.Messages.Commands.CreateMessage;
-//ToDo: Extend to support all types of messages
+
 public class CreateMessageHandler(
     ITextMessageRepository textMessageRepository,
     IUserRepository userRepository,
@@ -198,9 +198,7 @@ public class CreateMessageHandler(
             var textMessageIv = DotNetEnv.Env.GetString("TEXT_MESSAGES_IV");
             var decryptedText = CryptoHelper.DecryptTextMessage(encryptedText, textMessageKey, textMessageIv);
 
-            //ToDo: uncomment before pushing
-            messageEmotionResponse = null;
-            // messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(decryptedText);
+            messageEmotionResponse = await TextMessageEmotionClient.GetMessageEmotionAsync(decryptedText);
         } catch (Exception e)
         {
             return MessageEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "Failed to analyze message emotion");
@@ -243,6 +241,11 @@ public class CreateMessageHandler(
         if (userPhotoEmotionResponse?.DetectedEmotions == null)
         {
             return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, "No emotions detected");
+        }
+
+        if (userPhotoEmotionResponse?.Success == false)
+        {
+            return UserPhotoEmotion.Create(false, 0, 0, 0, 0, 0, 0, 0, userPhotoEmotionResponse.Message ??= "Failed to analyze selfie emotion");
         }
 
         var neutral = Math.Clamp(userPhotoEmotionResponse.DetectedEmotions.GetValueOrDefault("neutral", 0), 0.0f, 1.0f);

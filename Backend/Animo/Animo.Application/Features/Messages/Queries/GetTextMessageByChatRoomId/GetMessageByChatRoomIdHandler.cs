@@ -3,7 +3,7 @@ using Animo.Domain.Common;
 using MediatR;
 
 namespace Animo.Application.Features.Messages.Queries.GetTextMessageByChatRoomId;
-//ToDo: Extend to support all types of messages
+
 public class GetMessageByChatRoomIdHandler(
     ITextMessageRepository textMessageRepository,
     IChatRoomRepository chatRoomRepository,

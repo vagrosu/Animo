@@ -41,7 +41,7 @@ public class TextMessageRepository : BaseRepository<TextMessage>, ITextMessageRe
     {
         var lastMessage = await _context.Set<TextMessage>()
             .Where(textMessage => textMessage.ChatRoom.ChatRoomId == chatRoomId)
-            .OrderByDescending(message => message.SentTime) // Efficient with indexing
+            .OrderByDescending(message => message.SentTime)
             .Include(message => message.Sender)
             .Include(message => message.MessageEmotion)
             .Include(message => message.UserPhotoEmotion)
