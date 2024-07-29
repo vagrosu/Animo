@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import SearchInput from "../../components/SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faComments, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { ChatRoomCardType } from "./types";
@@ -13,6 +14,8 @@ import { ChatRoomsByUserIdResponseType } from "../../types/api/responses";
 import { decryptTextMessage } from "../../utils/helpers";
 import SortByDropdown, { SORT_BY_OPTIONS } from "./components/SortByDropdown";
 import ChatRoomCard from "./components/ChatRoomCard";
+import COLORS from "../../utils/colors";
+import NoContent from "../../components/NoContent";
 
 const sortByFunction = (a: ChatRoomCardType, b: ChatRoomCardType, sortBy: number) => {
   switch (sortBy) {
@@ -75,7 +78,7 @@ export default function ChatsListScreen() {
     <View style={styles.container}>
       <View style={[styles.titleContainer, styles.pageHorizontalPadding]}>
         <Pressable onPress={onOpenDrawer}>
-          <FontAwesomeIcon icon={faBars} size={24} />
+          <FontAwesomeIcon icon={faBars} size={24} style={styles.menuIcon} />
         </Pressable>
         <Text style={styles.title}>Messages</Text>
       </View>
@@ -86,9 +89,13 @@ export default function ChatsListScreen() {
         </View>
         <View style={styles.chatRoomListContainer}>
           {chatRoomsListQuery.isLoading ? (
-            <Text>Loading...</Text>
+            <View style={styles.noContent}>
+              <Text>Loading...</Text>
+            </View>
           ) : chatRoomsListQuery.error ? (
-            <Text>Error</Text>
+            <View style={styles.noContent}>
+              <Text>Error</Text>
+            </View>
           ) : displayedChatRooms.length ? (
             <FlatList
               data={displayedChatRooms}
@@ -99,9 +106,19 @@ export default function ChatsListScreen() {
               scrollEnabled={false}
             />
           ) : !chatRooms.length ? (
-            <Text>Create a new chat</Text>
+            <NoContent
+              title={"You have no chats"}
+              subtitle={"Start a new private or group conversation"}
+              icon={faComments}
+              style={styles.noContent}
+            />
           ) : (
-            <Text>No chats match your search</Text>
+            <NoContent
+              title={"No chats match your search"}
+              subtitle={"Try searching for something else"}
+              icon={faEyeSlash}
+              style={styles.noContent}
+            />
           )}
         </View>
       </ScrollView>
@@ -125,6 +142,10 @@ const styles = StyleSheet.create({
     gap: 16,
   },
 
+  menuIcon: {
+    color: COLORS.blue600,
+  },
+
   scrollViewContentContainer: {
     flexGrow: 1,
   },
@@ -142,6 +163,13 @@ const styles = StyleSheet.create({
   },
 
   chatRoomListContainer: {
+    flex: 1,
     marginTop: 12,
+  },
+
+  noContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

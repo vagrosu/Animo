@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginLeft: 10,
-    gap: 16,
+    gap: 24,
   },
 
   leftColContainer: {
