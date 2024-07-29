@@ -2,7 +2,7 @@ import { View, Text, Button, Pressable, StyleSheet, FlatList, ScrollView, Virtua
 import { useNavigation } from "@react-navigation/native";
 import SearchInput from "../../components/SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faComments, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import { useUser } from "../../context/UserContext";
@@ -93,9 +93,13 @@ export default function ChatsListScreen() {
               <Text>Loading...</Text>
             </View>
           ) : chatRoomsListQuery.error ? (
-            <View style={styles.noContent}>
-              <Text>Error</Text>
-            </View>
+            <NoContent
+              title={"Failed to load chats"}
+              subtitle={"Please try again later"}
+              icon={faCircleExclamation}
+              iconColor={COLORS.red600}
+              style={styles.noContent}
+            />
           ) : displayedChatRooms.length ? (
             <FlatList
               data={displayedChatRooms}
