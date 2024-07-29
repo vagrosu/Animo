@@ -17,7 +17,7 @@ if not cap.isOpened():
 
 def preprocess_frame(frame):
 
-    landmarks = get_face_landmarks(frame)
+    landmarks = get_face_landmarks(frame, draw=True)
     if len(landmarks) == 1404:
         return np.array(landmarks).reshape(1, -1)
     else:
