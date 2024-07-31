@@ -50,7 +50,7 @@ export function MessageCard({
         <p className={"text-xs font-thin ml-2"}>{senderFirstName}</p>
       )}
       <div
-        className={`flex flex-col gap-2 bg-zinc-100 px-4 py-3.5 ${isSentByUser ? `rounded-l-2xl ${!isFirstFromGroup && "rounded-r-2xl"}` : `rounded-r-2xl ml-2`} ${!isFirstFromGroup && "rounded-l-2xl"} rounded-b-2xl`}
+        className={`flex flex-col gap-2 bg-zinc-200 px-4 py-3.5 ${isSentByUser ? `rounded-l-2xl ${!isFirstFromGroup && "rounded-r-2xl"}` : `rounded-r-2xl ml-2`} ${!isFirstFromGroup && "rounded-l-2xl"} rounded-b-2xl`}
       >
         <MessageContent message={message}/>
         <div

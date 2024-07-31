@@ -32,7 +32,7 @@ export default function MessageReactions({reactions, isSentByUser}: MessageReact
       arrow={true}
     >
       <div
-        className={`absolute flex items-center gap-[1px] py-1 px-1.5 -my-1 -mx-1.5 bg-gray-200 hover:bg-gray-300 rounded-full z-10 -bottom-2.5 ${isSentByUser ? "-left-1" : "-right-1"} cursor-pointer`}
+        className={`absolute flex items-center gap-[1px] py-1 px-1.5 -my-1 -mx-1.5 bg-gray-300 hover:bg-gray-400 rounded-full z-10 -bottom-2.5 ${isSentByUser ? "-left-1" : "-right-1"} cursor-pointer`}
       >
         {emojiSet.slice(0, 3).map((emoji, i) => (
           <Emoji
