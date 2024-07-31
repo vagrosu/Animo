@@ -54,7 +54,7 @@ export function MessageCard({
       >
         <MessageContent message={message}/>
         <div
-          className={`flex justify-end ${isSentByUser ? "pl-5" : "pr-5 flex-row-reverse"} text-nowrap text-gray-600 text-sm font-thin`}>
+          className={`flex justify-end ${isSentByUser ? "pl-5" : "pr-5 flex-row-reverse"} text-nowrap text-gray-800 text-sm font-thin`}>
           <Tooltip
             title={message.emotion}
             placement={isSentByUser ? "left" : "right"}
