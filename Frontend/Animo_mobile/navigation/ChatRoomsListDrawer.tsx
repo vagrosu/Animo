@@ -1,10 +1,10 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import ChatsListScreen from "../screens/chatsList/ChatsListScreen";
-import DrawerContent from "../screens/chatsList/DrawerContent";
+import ChatRoomsListScreen from "../screens/chatRoomsList/ChatRoomsListScreen";
+import DrawerContent from "../screens/chatRoomsList/DrawerContent";
 
 export const Drawer = createDrawerNavigator();
 
-export function ChatsListDrawer() {
+export default function ChatRoomsListDrawer() {
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -12,7 +12,7 @@ export function ChatsListDrawer() {
       }}
       drawerContent={DrawerContent}
     >
-      <Drawer.Screen name="ChatsList" component={ChatsListScreen} />
+      <Drawer.Screen name="ChatRoomsList" component={ChatRoomsListScreen} />
     </Drawer.Navigator>
   );
 }

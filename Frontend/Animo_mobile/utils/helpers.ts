@@ -1,6 +1,18 @@
 import { AxiosError, isAxiosError } from "axios";
 import CryptoJS from "crypto-js";
 
+export function isValidHttpUrl(str: string) {
+  let url;
+
+  try {
+    url = new URL(str);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 export function getErrorMessage(error: Error | AxiosError): string {
   if (isAxiosError(error)) {
     if (error.response?.data) {

@@ -3,7 +3,8 @@ import { AuthenticationCurrentUserResponseType } from "../types/api/responses.ts
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { AxiosError, isAxiosError } from "axios";
 import { useQuery } from "react-query";
-import { Text } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
+import COLORS from "../utils/colors.ts";
 
 type UserContextType = {
   isAuthenticated: boolean;
@@ -59,7 +60,7 @@ export default function UserContextProvider({ children }: { children: ReactNode 
   });
 
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <ActivityIndicator size={20} color={COLORS.blue600} />;
   }
 
   if (error) {

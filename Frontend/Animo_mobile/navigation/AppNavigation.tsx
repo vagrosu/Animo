@@ -4,8 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/login/LoginScreen";
 import RegisterScreen from "../screens/register/RegisterScreen";
 import LandingScreen from "../screens/landing/LandingScreen";
-import ChatScreen from "../screens/chat/ChatScreen";
-import { ChatsListDrawer } from "./ChatsListDrawer";
+import ChatRoomScreen from "../screens/chatRoom/ChatRoomScreen";
+import ChatRoomsListDrawer from "./ChatRoomsListDrawer";
+import ChatRoomInfoScreen from "../screens/chatRoomInfo/ChatRoomInfoScreen";
 
 const Stack = createStackNavigator();
 
@@ -21,8 +22,9 @@ export default function AppNavigation() {
       >
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="ChatsListDrawer" component={ChatsListDrawer} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="ChatRoomsListDrawer" component={ChatRoomsListDrawer} />
+            <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+            <Stack.Screen name="ChatRoomInfo" component={ChatRoomInfoScreen} />
           </>
         ) : (
           <>
