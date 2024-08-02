@@ -1,9 +1,7 @@
-import { LogBox, SafeAreaView, StyleSheet } from "react-native";
+import { LogBox, Platform, SafeAreaView, StyleSheet, StatusBar } from "react-native";
 import AppNavigation from "./navigation/AppNavigation";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { StatusBar } from "expo-status-bar";
 import UserContextProvider from "./context/UserContext";
-import Toast from "react-native-toast-message";
 import ToastProvider from "./context/ToastProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -22,8 +20,8 @@ export default function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <StatusBar style="auto" />
-        <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar barStyle={"default"} />
+        <SafeAreaView style={styles.safeAreaView}>
           <SafeAreaProvider>
             <ToastProvider>
               <UserContextProvider>
@@ -36,3 +34,10 @@ export default function App() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+});

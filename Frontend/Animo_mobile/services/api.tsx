@@ -9,7 +9,7 @@ export const createApiInstance = async () => {
     baseURL: "http://localhost:5167/api/v1/",
     headers: {
       "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : null,
+      "Authorization": token ? `Bearer ${token}` : null,
     },
   });
 };

@@ -1,29 +1,42 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { MessageType } from "../../types";
 import { format, parseISO } from "date-fns";
 import { MessageContent } from "./MessageContent";
 import COLORS from "../../../../utils/colors";
-import Icon from "react-native-ico-sensa-emoji-vectors";
+import { Emoji } from "emoji-mart-native";
+import { getEmojiNameByUnified, localEmojis } from "../../../../utils/helpers";
+import MessageReactions from "./reactions/MessageReactions";
 
 const getEmotionEmoji = (emotion: string) => {
+  let unified = "26a0-fe0f";
   switch (emotion.toLowerCase()) {
     case "neutral":
-      return "1f610";
+      unified = "1f610";
+      break;
     case "joy":
-      return "1f604";
+      unified = "1f604";
+      break;
     case "sadness":
-      return "1f622";
+      unified = "1f622";
+      break;
     case "anger":
-      return "1f621";
+      unified = "1f621";
+      break;
     case "fear":
-      return "1f628";
+      unified = "1f628";
+      break;
     case "surprise":
-      return "1f62e";
+      unified = "1f62e";
+      break;
     case "disgust":
-      return "1f922";
+      unified = "1f922";
+      break;
     default:
-      return "26a0-fe0f";
+      unified = "26a0-fe0f";
+      break;
   }
+
+  return getEmojiNameByUnified(unified);
 };
 
 type MessageCardProps = {
@@ -34,24 +47,22 @@ type MessageCardProps = {
   isFirstFromGroup: boolean;
 };
 
-export function MessageCard({ message, senderFirstName, toggleEmotionDataModal, isSentByUser, isFirstFromGroup }: MessageCardProps) {
+export function MessageCard({
+  message,
+  senderFirstName,
+  toggleEmotionDataModal,
+  isSentByUser,
+  isFirstFromGroup,
+}: MessageCardProps) {
   const dynamicStyles = StyleSheet.create({
     messageCardContainer: {
-      gap: 6,
       backgroundColor: isSentByUser ? COLORS.blue100 : COLORS.zinc200,
-      paddingVertical: 10,
-      paddingHorizontal: 12,
       marginLeft: !isSentByUser ? 8 : undefined,
       borderTopLeftRadius: isSentByUser || !isFirstFromGroup ? 16 : undefined,
       borderTopRightRadius: isSentByUser ? (!isFirstFromGroup ? 16 : undefined) : 16,
-      borderBottomLeftRadius: 16,
-      borderBottomRightRadius: 16,
     },
 
     messageMetadata: {
-      flexDirection: "row",
-      justifyContent: "flex-end",
-
       ...(isSentByUser
         ? {
             paddingLeft: 20,
@@ -61,28 +72,37 @@ export function MessageCard({ message, senderFirstName, toggleEmotionDataModal, 
             paddingRight: 20,
           }),
     },
+
+    emotionEmojiContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      width: 15,
+      height: 15,
+      ...(isSentByUser
+        ? {
+            marginRight: 4,
+          }
+        : {
+            marginLeft: 4,
+          }),
+    },
   });
 
   return (
     <View style={styles.container}>
       {!isSentByUser && isFirstFromGroup && <Text style={styles.senderNameText}>{senderFirstName}</Text>}
-      <View style={dynamicStyles.messageCardContainer}>
+      <View style={[styles.messageCardContainer, dynamicStyles.messageCardContainer]}>
         <MessageContent message={message} />
-        <View style={dynamicStyles.messageMetadata}>
-          <View
-          // onClick={toggleEmotionDataModal}
-          // className={`flex items-center content-center ${
-          //   toggleEmotionDataModal ? "cursor-pointer" : "cursor-default"
-          // } select-none text-sm ${isSentByUser ? "mr-1" : "ml-1"}`}
-          >
-            <Icon name="astonished-face" height="40" width="40" />
+        <View style={[styles.messageMetadata, dynamicStyles.messageMetadata]}>
+          <View style={[styles.emotionEmojiContainer, dynamicStyles.emotionEmojiContainer]}>
+            <Emoji emoji={getEmotionEmoji(message.emotion)} useLocalImages={localEmojis} size={15} />
           </View>
           <Text style={styles.sentTimeText} numberOfLines={1}>
             {format(parseISO(message.sentTime), "HH:mm")}
           </Text>
         </View>
       </View>
-      {/* {!!message.reactions.length && <MessageReactions reactions={message.reactions} isSentByUser={isSentByUser} />} */}
+      {!!message.reactions.length && <MessageReactions reactions={message.reactions} isSentByUser={isSentByUser} />}
     </View>
   );
 }
@@ -98,6 +118,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     marginLeft: 8,
+  },
+
+  messageCardContainer: {
+    gap: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+  },
+
+  messageMetadata: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+
+  emotionEmojiContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 15,
+    height: 15,
   },
 
   sentTimeText: {

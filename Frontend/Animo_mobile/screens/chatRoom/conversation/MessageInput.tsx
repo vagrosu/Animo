@@ -125,14 +125,14 @@ const styles = StyleSheet.create({
 
   messageInput: {
     flex: 1,
-    maxHeight: 100,
+    maxHeight: 110,
     backgroundColor: COLORS.neutral100,
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 12,
     borderRadius: 16,
   },
 
   sendButton: {
-    paddingVertical: 7,
+    paddingVertical: 12,
   },
 });

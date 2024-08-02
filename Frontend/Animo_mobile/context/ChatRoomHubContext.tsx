@@ -1,11 +1,11 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {HubConnection} from "@microsoft/signalr";
-import {chatRoomHubConnection} from "../services/api.tsx";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { HubConnection } from "@microsoft/signalr";
+import { chatRoomHubConnection } from "../services/api.tsx";
 
 type ChatRoomHubContextType = {
-  connection: HubConnection | null,
-  isConnected: boolean,
-}
+  connection: HubConnection | null;
+  isConnected: boolean;
+};
 
 const ChatRoomHubContext = createContext<ChatRoomHubContextType>({
   connection: chatRoomHubConnection,
@@ -18,9 +18,9 @@ export const useChatRoomHub = () => {
     throw new Error("useChatRoomHub must be used within a ChatRoomHubContextProvider");
   }
   return context;
-}
+};
 
-export default function ChatRoomHubContextProvider({children}: {children: ReactNode}) {
+export default function ChatRoomHubContextProvider({ children }: { children: ReactNode }) {
   const [connection, setConnection] = useState<HubConnection | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -30,12 +30,13 @@ export default function ChatRoomHubContextProvider({children}: {children: ReactN
 
   useEffect(() => {
     if (connection) {
-      if(connection.state === "Connected") {
+      if (connection.state === "Connected") {
         setIsConnected(true);
         return;
       }
 
-      connection.start()
+      connection
+        .start()
         .then(() => {
           setIsConnected(true);
         })
@@ -45,9 +46,5 @@ export default function ChatRoomHubContextProvider({children}: {children: ReactN
     }
   }, [connection]);
 
-  return (
-    <ChatRoomHubContext.Provider value={{connection, isConnected}}>
-      {children}
-    </ChatRoomHubContext.Provider>
-  )
+  return <ChatRoomHubContext.Provider value={{ connection, isConnected }}>{children}</ChatRoomHubContext.Provider>;
 }

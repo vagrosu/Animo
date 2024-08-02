@@ -23,7 +23,7 @@ export default function Message({ message, sender, isFirstFromGroup, isLastFromG
     container: {
       flexDirection: isSentByUser ? "row-reverse" : "row",
       marginLeft: !isFirstFromGroup ? 28 : undefined,
-      marginBottom: isLastFromGroup ? 18 : hasReactions ? 16 : 4,
+      marginBottom: isLastFromGroup ? 18 : hasReactions ? 12 : 4,
     },
   });
 

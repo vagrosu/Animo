@@ -1,5 +1,5 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useQuery } from "react-query";
 import { ChatRoomsByChatRoomIdResponseType } from "../../types/api/responses";
 import { AxiosError } from "axios";
@@ -8,14 +8,11 @@ import { ChatRoomType } from "./types";
 import NoContent from "../../components/NoContent";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import COLORS from "../../utils/colors";
-import ConversationHeader from "./conversation/ConversationHeader";
-import Conversation from "./conversation/Conversation";
-import MessageInput from "./conversation/MessageInput";
 import ChatRoomHubContextProvider from "../../context/ChatRoomHubContext";
+import ConversationContainer from "./conversation/ConversationContainer";
 
 export default function ChatRoomScreen() {
   const route = useRoute();
-  const navigation = useNavigation();
   const selectedChatRoomId = route.params?.chatRoomId;
 
   const chatRoomQuery = useQuery<ChatRoomsByChatRoomIdResponseType, AxiosError | Error>({
@@ -53,9 +50,7 @@ export default function ChatRoomScreen() {
   return (
     <View style={styles.container}>
       <ChatRoomHubContextProvider>
-        <ConversationHeader chatRoom={chatRoom} />
-        <Conversation chatRoom={chatRoom} />
-        <MessageInput selectedChatRoomId={selectedChatRoomId} />
+        <ConversationContainer chatRoom={chatRoom} />
       </ChatRoomHubContextProvider>
     </View>
   );

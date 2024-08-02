@@ -67,7 +67,9 @@ export default function Conversation({ chatRoom }: ConversationProps) {
     queryKey: ["Messages", newMessageId || messageToUpdateId],
     queryFn: async () => {
       const api = await createApiInstance();
-      return api.get<MessagesByMessageIdResponseType>(`Messages/${newMessageId || messageToUpdateId}`).then((res) => res.data);
+      return api
+        .get<MessagesByMessageIdResponseType>(`Messages/${newMessageId || messageToUpdateId}`)
+        .then((res) => res.data);
     },
     onSuccess: (data) => {
       const messageData = {
@@ -98,12 +100,10 @@ export default function Conversation({ chatRoom }: ConversationProps) {
 
   useEffect(() => {
     connection?.on("ReceiveMessage", (messageId: string) => {
-      console.log(messageId);
       setNewMessageId(messageId);
     });
 
     connection?.on("UpdateMessage", (messageId: string) => {
-      console.log(messageId);
       setMessageToUpdateId(messageId);
     });
   }, [connection, chatRoom]);
@@ -116,7 +116,8 @@ export default function Conversation({ chatRoom }: ConversationProps) {
         inverted
         contentContainerStyle={{ flexDirection: "column-reverse", flexGrow: 1 }}
         renderItem={({ item: message, index: i }) => {
-          const isFirstFromDay = i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
+          const isFirstFromDay =
+            i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
           const isFirstFromGroup = isFirstFromDay || i === 0 || messages[i - 1].senderId !== message.senderId;
           const isLastFromGroup = i === messages.length - 1 || messages[i + 1].senderId !== message.senderId;
           const sender = chatRoom.members.find((member) => member.userId === message.senderId);
@@ -130,7 +131,12 @@ export default function Conversation({ chatRoom }: ConversationProps) {
                   <View style={styles.dateBorder} />
                 </View>
               )}
-              <Message message={message} sender={sender} isFirstFromGroup={isFirstFromGroup} isLastFromGroup={isLastFromGroup} />
+              <Message
+                message={message}
+                sender={sender}
+                isFirstFromGroup={isFirstFromGroup}
+                isLastFromGroup={isLastFromGroup}
+              />
             </View>
           );
         }}
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     textAlign: "center",
     paddingHorizontal: 16,
+    paddingVertical: 12,
     color: COLORS.blue600,
   },
 });

@@ -1,5 +1,22 @@
 import { AxiosError, isAxiosError } from "axios";
 import CryptoJS from "crypto-js";
+import dataRequires from "emoji-mart-native/data/local-images/apple";
+import data from "emoji-mart-native/data/apple.json";
+
+export const { emojis: localEmojis } = dataRequires;
+
+export function getEmojiNameByUnified(unified: string) {
+  const emojisData = data.emojis;
+  const unifiedEmojisData = Object.keys(emojisData).map((emojiName) => {
+    const name = emojiName as keyof typeof emojisData;
+    const unified = (emojisData[name] as any).b.toLowerCase() as string;
+
+    return { [unified]: emojiName };
+  });
+  const emoji = unifiedEmojisData.find((emoji) => emoji[unified]);
+
+  return emoji ? emoji[unified] : null;
+}
 
 export function isValidHttpUrl(str: string) {
   let url;
