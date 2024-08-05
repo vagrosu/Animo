@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, GestureResponderEvent } from "react-native";
 import { MessageType } from "../../types";
 import { format, parseISO } from "date-fns";
 import { MessageContent } from "./MessageContent";
@@ -6,6 +6,9 @@ import COLORS from "../../../../utils/colors";
 import { Emoji } from "emoji-mart-native";
 import { getEmojiNameByUnified, localEmojis } from "../../../../utils/helpers";
 import MessageReactions from "./reactions/MessageReactions";
+import ReactionPicker from "./reactions/ReactionPicker";
+import { useUser } from "../../../../context/UserContext";
+import { useReactionPicker } from "../../../../context/ReactionPickerContext";
 
 const getEmotionEmoji = (emotion: string) => {
   let unified = "26a0-fe0f";
@@ -39,22 +42,8 @@ const getEmotionEmoji = (emotion: string) => {
   return getEmojiNameByUnified(unified);
 };
 
-type MessageCardProps = {
-  message: MessageType;
-  senderFirstName: string;
-  toggleEmotionDataModal?: () => void;
-  isSentByUser: boolean;
-  isFirstFromGroup: boolean;
-};
-
-export function MessageCard({
-  message,
-  senderFirstName,
-  toggleEmotionDataModal,
-  isSentByUser,
-  isFirstFromGroup,
-}: MessageCardProps) {
-  const dynamicStyles = StyleSheet.create({
+const getDynamicStyles = (isSentByUser: boolean, isFirstFromGroup: boolean) => {
+  return StyleSheet.create({
     messageCardContainer: {
       backgroundColor: isSentByUser ? COLORS.blue100 : COLORS.zinc200,
       marginLeft: !isSentByUser ? 8 : undefined,
@@ -87,22 +76,50 @@ export function MessageCard({
           }),
     },
   });
+};
+
+type MessageCardProps = {
+  message: MessageType;
+  senderFirstName: string;
+  isSentByUser: boolean;
+  isFirstFromGroup: boolean;
+};
+
+export function MessageCard({ message, senderFirstName, isSentByUser, isFirstFromGroup }: MessageCardProps) {
+  const { userId } = useUser();
+  const reactionPicker = useReactionPicker();
+  const isReactionPickerVisible = message.textMessageId === reactionPicker.selectedMessageId;
+  const userReaction = message.reactions.find((reaction) => reaction.senderId === userId) || null;
+  const dynamicStyles = getDynamicStyles(isSentByUser, isFirstFromGroup);
+
+  const onReactionPickerOpen = (e: GestureResponderEvent) => {
+    reactionPicker.setSelectedMessageId(message.textMessageId);
+  };
+
+  const onReactionPickerClose = () => {
+    reactionPicker.setSelectedMessageId(null);
+  };
 
   return (
     <View style={styles.container}>
       {!isSentByUser && isFirstFromGroup && <Text style={styles.senderNameText}>{senderFirstName}</Text>}
-      <View style={[styles.messageCardContainer, dynamicStyles.messageCardContainer]}>
-        <MessageContent message={message} />
-        <View style={[styles.messageMetadata, dynamicStyles.messageMetadata]}>
-          <View style={[styles.emotionEmojiContainer, dynamicStyles.emotionEmojiContainer]}>
-            <Emoji emoji={getEmotionEmoji(message.emotion)} useLocalImages={localEmojis} size={15} />
+      <Pressable onLongPress={onReactionPickerOpen}>
+        <View style={[styles.messageCardContainer, dynamicStyles.messageCardContainer]}>
+          <MessageContent message={message} />
+          <View style={[styles.messageMetadata, dynamicStyles.messageMetadata]}>
+            <View style={[styles.emotionEmojiContainer, dynamicStyles.emotionEmojiContainer]}>
+              <Emoji emoji={getEmotionEmoji(message.emotion)} useLocalImages={localEmojis} size={15} />
+            </View>
+            <Text style={styles.sentTimeText} numberOfLines={1}>
+              {format(parseISO(message.sentTime), "HH:mm")}
+            </Text>
           </View>
-          <Text style={styles.sentTimeText} numberOfLines={1}>
-            {format(parseISO(message.sentTime), "HH:mm")}
-          </Text>
         </View>
-      </View>
+      </Pressable>
       {!!message.reactions.length && <MessageReactions reactions={message.reactions} isSentByUser={isSentByUser} />}
+      {isReactionPickerVisible && (
+        <ReactionPicker messageId={message.textMessageId} selectedReaction={userReaction} onClose={onReactionPickerClose} />
+      )}
     </View>
   );
 }

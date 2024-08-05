@@ -10,6 +10,7 @@ import { decryptTextMessage } from "../../../utils/helpers";
 import { differenceInCalendarDays, differenceInYears, format, isToday, isYesterday, parseISO } from "date-fns";
 import COLORS from "../../../utils/colors";
 import Message from "./message/Message";
+import ReactionPickerContextProvider from "../../../context/ReactionPickerContext";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -110,37 +111,39 @@ export default function Conversation({ chatRoom }: ConversationProps) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.textMessageId}
-        inverted
-        contentContainerStyle={{ flexDirection: "column-reverse", flexGrow: 1 }}
-        renderItem={({ item: message, index: i }) => {
-          const isFirstFromDay =
-            i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
-          const isFirstFromGroup = isFirstFromDay || i === 0 || messages[i - 1].senderId !== message.senderId;
-          const isLastFromGroup = i === messages.length - 1 || messages[i + 1].senderId !== message.senderId;
-          const sender = chatRoom.members.find((member) => member.userId === message.senderId);
+      <ReactionPickerContextProvider>
+        <FlatList
+          data={messages}
+          keyExtractor={(item) => item.textMessageId}
+          inverted
+          contentContainerStyle={{ flexDirection: "column-reverse", flexGrow: 1 }}
+          renderItem={({ item: message, index: i }) => {
+            const isFirstFromDay =
+              i === 0 || new Date(messages[i - 1].sentTime).getDate() !== new Date(message.sentTime).getDate();
+            const isFirstFromGroup = isFirstFromDay || i === 0 || messages[i - 1].senderId !== message.senderId;
+            const isLastFromGroup = i === messages.length - 1 || messages[i + 1].senderId !== message.senderId;
+            const sender = chatRoom.members.find((member) => member.userId === message.senderId);
 
-          return (
-            <View style={styles.messagesListContainer}>
-              {isFirstFromDay && (
-                <View style={styles.dateContainer}>
-                  <View style={styles.dateBorder} />
-                  <Text style={styles.dateText}>{formatMessageGroupDate(message.sentTime)}</Text>
-                  <View style={styles.dateBorder} />
-                </View>
-              )}
-              <Message
-                message={message}
-                sender={sender}
-                isFirstFromGroup={isFirstFromGroup}
-                isLastFromGroup={isLastFromGroup}
-              />
-            </View>
-          );
-        }}
-      />
+            return (
+              <View style={styles.messagesListContainer}>
+                {isFirstFromDay && (
+                  <View style={styles.dateContainer}>
+                    <View style={styles.dateBorder} />
+                    <Text style={styles.dateText}>{formatMessageGroupDate(message.sentTime)}</Text>
+                    <View style={styles.dateBorder} />
+                  </View>
+                )}
+                <Message
+                  message={message}
+                  sender={sender}
+                  isFirstFromGroup={isFirstFromGroup}
+                  isLastFromGroup={isLastFromGroup}
+                />
+              </View>
+            );
+          }}
+        />
+      </ReactionPickerContextProvider>
     </View>
   );
 }

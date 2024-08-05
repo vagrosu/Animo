@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import UserContextProvider from "./context/UserContext";
 import ToastProvider from "./context/ToastProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { EventProvider } from "react-native-outside-press";
 
 LogBox.ignoreLogs(["AxiosError: Request failed with status code 401"]);
 
@@ -18,7 +19,7 @@ export default function App() {
   });
 
   return (
-    <>
+    <EventProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar barStyle={"default"} />
         <SafeAreaView style={styles.safeAreaView}>
@@ -31,7 +32,7 @@ export default function App() {
           </SafeAreaProvider>
         </SafeAreaView>
       </QueryClientProvider>
-    </>
+    </EventProvider>
   );
 }
 

@@ -4,7 +4,6 @@ import { MemberType, MessageType } from "../../types";
 import IconAvatar from "../../../../components/IconAvatar";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { MessageCard } from "./MessageCard";
-import COLORS from "../../../../utils/colors";
 
 type MessageProps = {
   message: MessageType;
@@ -17,7 +16,6 @@ export default function Message({ message, sender, isFirstFromGroup, isLastFromG
   const { userId } = useUser();
   const isSentByUser = message.senderId === userId;
   const hasReactions = message.reactions.length > 0;
-  const userReaction = message.reactions.find((reaction) => reaction.senderId === userId);
 
   const dynamicStyles = StyleSheet.create({
     container: {
@@ -33,7 +31,6 @@ export default function Message({ message, sender, isFirstFromGroup, isLastFromG
       <MessageCard
         message={message}
         senderFirstName={sender?.firstName || "Unknown"}
-        toggleEmotionDataModal={() => {}}
         isSentByUser={isSentByUser}
         isFirstFromGroup={isFirstFromGroup}
       />
