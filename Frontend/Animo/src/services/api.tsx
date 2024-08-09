@@ -4,7 +4,7 @@ import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
 const token = localStorage.getItem("token");
 
 export const api = axios.create({
-  baseURL: 'http://localhost:5167/api/v1/',
+  baseURL: `${import.meta.env.VITE_API_SERVER_BASE_URL}/api/v1/`,
   headers: {
     'Content-Type': 'application/json',
     'Authorization': token ? `Bearer ${token}` : null,
@@ -12,11 +12,11 @@ export const api = axios.create({
 });
 
 export const chatRoomHubConnection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5167/ChatRoomHub")
+  .withUrl(`${import.meta.env.VITE_API_SERVER_BASE_URL}/ChatRoomHub`)
   .configureLogging(LogLevel.Information)
   .build();
 
 export const chatRoomsListHubConnection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5167/ChatRoomsListHub")
+  .withUrl(`${import.meta.env.VITE_API_SERVER_BASE_URL}/ChatRoomsListHub`)
   .configureLogging(LogLevel.Information)
   .build();

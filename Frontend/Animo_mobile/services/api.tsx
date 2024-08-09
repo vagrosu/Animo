@@ -6,7 +6,7 @@ export const createApiInstance = async () => {
   const token = await AsyncStorage.getItem("token");
 
   return axios.create({
-    baseURL: "http://localhost:5167/api/v1/",
+    baseURL: `${process.env.API_SERVER_BASE_URL}/api/v1/`,
     headers: {
       "Content-Type": "application/json",
       "Authorization": token ? `Bearer ${token}` : null,
@@ -15,11 +15,11 @@ export const createApiInstance = async () => {
 };
 
 export const chatRoomHubConnection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5167/ChatRoomHub")
+  .withUrl(`${process.env.API_SERVER_BASE_URL}/ChatRoomHub`)
   .configureLogging(LogLevel.Information)
   .build();
 
 export const chatRoomsListHubConnection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5167/ChatRoomsListHub")
+  .withUrl(`${process.env.API_SERVER_BASE_URL}/ChatRoomsListHub`)
   .configureLogging(LogLevel.Information)
   .build();
