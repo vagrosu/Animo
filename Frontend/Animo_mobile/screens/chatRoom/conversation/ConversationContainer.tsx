@@ -4,6 +4,7 @@ import Conversation from "./Conversation";
 import ConversationHeader from "./ConversationHeader";
 import MessageInput from "./MessageInput";
 import { ChatRoomType } from "../types";
+import { KeyboardAvoidingView, StyleSheet } from "react-native";
 
 type ConversationContainerProps = {
   chatRoom: ChatRoomType;
@@ -27,8 +28,16 @@ export default function ConversationContainer({ chatRoom }: ConversationContaine
   return (
     <>
       <ConversationHeader chatRoom={chatRoom} />
-      <Conversation chatRoom={chatRoom} />
-      <MessageInput selectedChatRoomId={chatRoom.chatRoomId} />
+      <KeyboardAvoidingView behavior={"padding"} keyboardVerticalOffset={50} style={styles.keyboardAvoidingView}>
+        <Conversation chatRoom={chatRoom} />
+        <MessageInput selectedChatRoomId={chatRoom.chatRoomId} />
+      </KeyboardAvoidingView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+});

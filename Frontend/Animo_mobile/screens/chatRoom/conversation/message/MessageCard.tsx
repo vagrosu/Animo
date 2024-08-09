@@ -75,6 +75,13 @@ const getDynamicStyles = (isSentByUser: boolean, isFirstFromGroup: boolean) => {
             marginLeft: 4,
           }),
     },
+
+    reactionPickerStyle: {
+      position: "absolute",
+      top: -45,
+      right: isSentByUser ? 0 : undefined,
+      left: !isSentByUser ? 0 : undefined,
+    },
   });
 };
 
@@ -83,12 +90,18 @@ type MessageCardProps = {
   senderFirstName: string;
   isSentByUser: boolean;
   isFirstFromGroup: boolean;
+  isReactionPickerVisible: boolean;
 };
 
-export function MessageCard({ message, senderFirstName, isSentByUser, isFirstFromGroup }: MessageCardProps) {
+export function MessageCard({
+  message,
+  senderFirstName,
+  isSentByUser,
+  isFirstFromGroup,
+  isReactionPickerVisible,
+}: MessageCardProps) {
   const { userId } = useUser();
   const reactionPicker = useReactionPicker();
-  const isReactionPickerVisible = message.textMessageId === reactionPicker.selectedMessageId;
   const userReaction = message.reactions.find((reaction) => reaction.senderId === userId) || null;
   const dynamicStyles = getDynamicStyles(isSentByUser, isFirstFromGroup);
 
@@ -118,7 +131,12 @@ export function MessageCard({ message, senderFirstName, isSentByUser, isFirstFro
       </Pressable>
       {!!message.reactions.length && <MessageReactions reactions={message.reactions} isSentByUser={isSentByUser} />}
       {isReactionPickerVisible && (
-        <ReactionPicker messageId={message.textMessageId} selectedReaction={userReaction} onClose={onReactionPickerClose} />
+        <ReactionPicker
+          style={dynamicStyles.reactionPickerStyle}
+          messageId={message.textMessageId}
+          selectedReaction={userReaction}
+          onClose={onReactionPickerClose}
+        />
       )}
     </View>
   );

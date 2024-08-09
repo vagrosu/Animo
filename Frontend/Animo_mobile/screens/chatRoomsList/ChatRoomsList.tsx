@@ -140,7 +140,11 @@ export default function ChatRoomsList({ search, sortBy }: ChatRoomsListProps) {
         <FlatList
           data={displayedChatRooms}
           renderItem={({ item }) => (
-            <ChatRoomCard style={styles.pageHorizontalPadding} chatRoom={item} onSelectChatRoom={() => onSelectChatRoom(item)} />
+            <ChatRoomCard
+              style={styles.pageHorizontalPadding}
+              chatRoom={item}
+              onSelectChatRoom={() => onSelectChatRoom(item)}
+            />
           )}
           keyExtractor={(item) => item.chatRoomId}
           scrollEnabled={false}

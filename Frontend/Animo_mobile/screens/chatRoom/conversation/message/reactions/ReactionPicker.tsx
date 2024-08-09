@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet, Pressable, StyleProp, ViewStyle } from "react-native";
 import { ReactionType } from "../../../types";
 import { Emoji } from "emoji-mart-native";
 import { getEmojiNameByUnified, localEmojis } from "../../../../../utils/helpers";
@@ -16,14 +16,14 @@ import { useUser } from "../../../../../context/UserContext";
 
 type ReactionPickerProps = {
   messageId: string;
-
   selectedReaction: ReactionType | null;
   onClose: () => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 const reactions = ["1f44d", "2764-fe0f", "1f603", "1f622", "1f64f", "1f44e", "1f621"];
 
-export default function ReactionPicker({ messageId, selectedReaction, onClose }: ReactionPickerProps) {
+export default function ReactionPicker({ messageId, selectedReaction, onClose, style = {} }: ReactionPickerProps) {
   const user = useUser();
 
   const modifyMessageReactionMutation = useMutation<
@@ -69,7 +69,7 @@ export default function ReactionPicker({ messageId, selectedReaction, onClose }:
   };
 
   return (
-    <OutsidePressHandler onOutsidePress={onClose} style={styles.container}>
+    <OutsidePressHandler onOutsidePress={onClose} style={[styles.container, style]}>
       {reactions.map((reaction) => (
         <Pressable
           key={reaction}
@@ -80,7 +80,7 @@ export default function ReactionPicker({ messageId, selectedReaction, onClose }:
             emoji={getEmojiNameByUnified(reaction)}
             useLocalImages={localEmojis}
             onPress={() => onSelectReaction(reaction)}
-            size={24}
+            size={30}
           />
         </Pressable>
       ))}
@@ -90,10 +90,9 @@ export default function ReactionPicker({ messageId, selectedReaction, onClose }:
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
     flexDirection: "row",
     padding: 2,
-    gap: 2,
+    gap: 8,
     borderRadius: 14,
     backgroundColor: COLORS.neutral50,
     borderColor: COLORS.neutral200,
@@ -103,9 +102,9 @@ const styles = StyleSheet.create({
   emojiContainer: {
     alignItems: "center",
     justifyContent: "center",
-    maxWidth: 24,
-    maxHeight: 24,
-    padding: 16,
+    maxWidth: 30,
+    maxHeight: 30,
+    padding: 18,
   },
 
   selectedEmojiContainer: {

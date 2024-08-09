@@ -4,6 +4,7 @@ import { MemberType, MessageType } from "../../types";
 import IconAvatar from "../../../../components/IconAvatar";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { MessageCard } from "./MessageCard";
+import { useReactionPicker } from "../../../../context/ReactionPickerContext";
 
 type MessageProps = {
   message: MessageType;
@@ -14,11 +15,14 @@ type MessageProps = {
 
 export default function Message({ message, sender, isFirstFromGroup, isLastFromGroup }: MessageProps) {
   const { userId } = useUser();
+  const reactionPicker = useReactionPicker();
+  const isReactionPickerVisible = message.textMessageId === reactionPicker.selectedMessageId;
   const isSentByUser = message.senderId === userId;
   const hasReactions = message.reactions.length > 0;
 
   const dynamicStyles = StyleSheet.create({
     container: {
+      position: "relative",
       flexDirection: isSentByUser ? "row-reverse" : "row",
       marginLeft: !isFirstFromGroup ? 28 : undefined,
       marginBottom: isLastFromGroup ? 18 : hasReactions ? 12 : 4,
@@ -33,6 +37,7 @@ export default function Message({ message, sender, isFirstFromGroup, isLastFromG
         senderFirstName={sender?.firstName || "Unknown"}
         isSentByUser={isSentByUser}
         isFirstFromGroup={isFirstFromGroup}
+        isReactionPickerVisible={isReactionPickerVisible}
       />
     </View>
   );
