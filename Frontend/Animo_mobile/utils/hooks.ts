@@ -7,6 +7,8 @@ import { getErrorMessage } from "./helpers.ts";
 import Toast from "react-native-toast-message";
 import { useUser } from "../context/UserContext.tsx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 
 export function useLoginMutation() {
   const user = useUser();
@@ -33,4 +35,19 @@ export function useLoginMutation() {
       });
     },
   });
+}
+
+export function useSafeAreaStyle() {
+  const safeArea = useSafeAreaInsets();
+
+  const styles = StyleSheet.create({
+    safeAreaView: {
+      paddingTop: safeArea.top,
+      paddingBottom: safeArea.bottom,
+      paddingLeft: safeArea.left,
+      paddingRight: safeArea.right,
+    },
+  });
+
+  return styles.safeAreaView;
 }

@@ -1,4 +1,4 @@
-import { LogBox, Platform, SafeAreaView, StyleSheet, StatusBar } from "react-native";
+import { LogBox, Platform, StyleSheet, StatusBar } from "react-native";
 import AppNavigation from "./navigation/AppNavigation";
 import { QueryClient, QueryClientProvider } from "react-query";
 import UserContextProvider from "./context/UserContext";
@@ -22,15 +22,13 @@ export default function App() {
     <EventProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar barStyle={"default"} />
-        <SafeAreaView style={styles.safeAreaView}>
-          <SafeAreaProvider>
-            <ToastProvider>
-              <UserContextProvider>
-                <AppNavigation />
-              </UserContextProvider>
-            </ToastProvider>
-          </SafeAreaProvider>
-        </SafeAreaView>
+        <SafeAreaProvider>
+          <ToastProvider>
+            <UserContextProvider>
+              <AppNavigation />
+            </UserContextProvider>
+          </ToastProvider>
+        </SafeAreaProvider>
       </QueryClientProvider>
     </EventProvider>
   );

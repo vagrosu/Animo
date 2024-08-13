@@ -14,6 +14,7 @@ const COLORS = {
   neutral900: "rgb(23, 23, 23)",
   neutral950: "rgb(10, 10, 10)",
 
+  gray50: "color: rgb(249, 250, 251)",
   gray100: "rgb(243, 244, 246)",
   gray200: "rgb(229, 231, 235)",
   gray300: "rgb(209, 213, 219)",
