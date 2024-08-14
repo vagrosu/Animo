@@ -63,6 +63,8 @@ public class GetMessageByChatRoomIdHandler(
             {
                 MessageReactionId = reaction.MessageReactionId,
                 SenderId = reaction.User.Id,
+                SenderFirstName = reaction.User.FirstName,
+                SenderLastName = reaction.User.LastName,
                 Emoji = reaction.Emoji
             }).ToList();
 

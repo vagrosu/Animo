@@ -57,6 +57,8 @@ export type ChatRoomsByUserIdResponseType = {
 type ReactionType = {
   messageReactionId: string,
   senderId: string,
+  senderFirstName: string,
+  senderLastName: string,
   emoji: string,
 }
 

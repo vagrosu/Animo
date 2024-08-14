@@ -10,6 +10,8 @@ export type ChatRoomType = {
 export type ReactionType = {
   messageReactionId: string;
   senderId: string;
+  senderFirstName: string;
+  senderLastName: string;
   emoji: string;
 };
 

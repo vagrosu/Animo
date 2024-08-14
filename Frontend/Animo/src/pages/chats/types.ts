@@ -18,6 +18,8 @@ export type ChatRoomCardType = {
 export type ReactionType = {
   messageReactionId: string,
   senderId: string,
+  senderFirstName: string,
+  senderLastName: string,
   emoji: string,
 }
 
