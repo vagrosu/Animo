@@ -1,67 +1,20 @@
-import { Button, ImageBackground, Text, TextInput, View, StyleSheet, ImageSourcePropType, Pressable } from "react-native";
+import { ImageBackground, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import { useLoginMutation, useSafeAreaStyle } from "../../utils/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Animated, {
-  Easing,
-  runOnJS,
-  SharedValue,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faArrowLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import COLORS from "../../utils/colors";
 import { useNavigation } from "@react-navigation/native";
-
-const background1 = require("../../assets/images/background1.webp");
-const background2 = require("../../assets/images/background2.webp");
-const background3 = require("../../assets/images/background3.webp");
-
-const FADE_IN_DURATION = 750;
-const FADE_OUT_DURATION = 500;
-
-const fadeIn = (sharedValue: SharedValue<number>, callback?: () => void) => {
-  sharedValue.value = withTiming(
-    1,
-    {
-      duration: FADE_IN_DURATION,
-      easing: Easing.bezier(0.4, 0, 0.2, 1),
-    },
-    () => (callback ? runOnJS(callback)() : undefined)
-  );
-};
-
-const fadeOut = (sharedValue: SharedValue<number>, callback?: () => void) => {
-  sharedValue.value = withTiming(
-    0.75,
-    {
-      duration: FADE_OUT_DURATION,
-      easing: Easing.bezier(0.4, 0, 0.2, 1),
-    },
-    () => (callback ? runOnJS(callback)() : undefined)
-  );
-};
-
-const getAnimatedStyle = (sharedValue: SharedValue<number>) =>
-  useAnimatedStyle(() => {
-    return {
-      opacity: sharedValue.value,
-    };
-  });
+import AnimatedImageBackground from "../../components/AnimatedImageBackground";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
   const loginMutation = useLoginMutation();
   const safeAreaStyle = useSafeAreaStyle();
-  const backgroundFadeOpacity = useSharedValue(1);
-  const animatedStyle = getAnimatedStyle(backgroundFadeOpacity);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [background, setBackground] = useState<ImageSourcePropType>(background1);
-  const imageList = [background1, background2, background3];
   const isLoginButtonEnabled = !loginMutation.isLoading && identifier && password;
 
   useEffect(() => {
@@ -72,27 +25,14 @@ export default function LoginScreen() {
     resetToken();
   }, []);
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fadeOut(backgroundFadeOpacity, () => {
-        setBackground((current) => {
-          const index = imageList.indexOf(current);
-          return imageList[(index + 1) % imageList.length];
-        });
-      });
-    }, 10000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    fadeIn(backgroundFadeOpacity);
-  }, [background]);
-
   const onSignIn = () => {
     if (isLoginButtonEnabled) {
       loginMutation.mutate({ identifier, password });
     }
+  };
+
+  const goToLanding = () => {
+    navigation.navigate("Landing");
   };
 
   const goToRegister = () => {
@@ -100,63 +40,60 @@ export default function LoginScreen() {
   };
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <ImageBackground source={background} style={styles.container}>
-        <View style={[styles.modalContainer, safeAreaStyle]}>
-          <View style={styles.modal}>
-            <View style={styles.headerContainer}>
-              <Pressable onPress={() => navigation.goBack()}>
-                <FontAwesomeIcon icon={faArrowLeft} size={18} color={COLORS.black} />
-              </Pressable>
-              <Text style={styles.title}>Sign in</Text>
-            </View>
-            <Text style={styles.subtitle}>Username or email</Text>
-            <TextInput
-              value={identifier}
-              onChangeText={setIdentifier}
-              style={styles.input}
-              textContentType="emailAddress"
-              autoCapitalize={"none"}
-            />
-            <Text style={styles.subtitle}>Password</Text>
-            <View style={styles.passwordInputContainer}>
-              <TextInput
-                value={password}
-                onChangeText={setPassword}
-                style={[styles.input, styles.passwordInput]}
-                textContentType="password"
-                secureTextEntry={!showPassword}
-              />
-              <Pressable
-                onPress={() => setShowPassword(!showPassword)}
-                style={showPassword ? styles.hidePasswordButton : styles.showPasswordButton}
-              >
-                <FontAwesomeIcon
-                  icon={showPassword ? faEyeSlash : faEye}
-                  size={showPassword ? 20 : 18}
-                  color={COLORS.gray500}
-                />
-              </Pressable>
-            </View>
-            <Pressable onPress={onSignIn}>
-              <Text style={[styles.signInButton, isLoginButtonEnabled ? styles.signInButtonEnabled : null]}>Sign in</Text>
+    <AnimatedImageBackground style={styles.animatedBackground}>
+      <View style={[styles.modalContainer, safeAreaStyle]}>
+        <View style={styles.modal}>
+          <View style={styles.headerContainer}>
+            <Pressable onPress={goToLanding}>
+              <FontAwesomeIcon icon={faArrowLeft} size={18} color={COLORS.black} />
             </Pressable>
-            <View style={styles.footerContainer}>
-              <Text style={styles.subtitle}>Don't have an account?</Text>
-              <Pressable onPress={goToRegister}>
-                <Text style={[styles.subtitle, styles.toSignUpButton]}>Sign up</Text>
-              </Pressable>
-            </View>
+            <Text style={styles.title}>Sign in</Text>
+          </View>
+          <Text style={styles.subtitle}>Username or email</Text>
+          <TextInput
+            value={identifier}
+            onChangeText={setIdentifier}
+            style={styles.input}
+            textContentType="emailAddress"
+            autoCapitalize={"none"}
+          />
+          <Text style={styles.subtitle}>Password</Text>
+          <View style={styles.passwordInputContainer}>
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              style={[styles.input, styles.passwordInput]}
+              textContentType="password"
+              secureTextEntry={!showPassword}
+            />
+            <Pressable
+              onPress={() => setShowPassword(!showPassword)}
+              style={showPassword ? styles.hidePasswordButton : styles.showPasswordButton}
+            >
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                size={showPassword ? 20 : 18}
+                color={COLORS.gray500}
+              />
+            </Pressable>
+          </View>
+          <Pressable onPress={onSignIn}>
+            <Text style={[styles.signInButton, isLoginButtonEnabled ? styles.signInButtonEnabled : null]}>Sign in</Text>
+          </Pressable>
+          <View style={styles.footerContainer}>
+            <Text style={styles.subtitle}>Don't have an account?</Text>
+            <Pressable onPress={goToRegister}>
+              <Text style={[styles.subtitle, styles.toSignUpButton]}>Sign up</Text>
+            </Pressable>
           </View>
         </View>
-      </ImageBackground>
-    </Animated.View>
+      </View>
+    </AnimatedImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  animatedBackground: {
     justifyContent: "center",
   },
 
@@ -208,16 +145,16 @@ const styles = StyleSheet.create({
 
   showPasswordButton: {
     position: "absolute",
+    padding: 10,
     bottom: 0,
-    top: 19,
-    right: 10,
+    right: 0,
   },
 
   hidePasswordButton: {
     position: "absolute",
+    padding: 9,
     bottom: 0,
-    top: 18,
-    right: 9,
+    right: 0,
   },
 
   signInButton: {
