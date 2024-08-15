@@ -9,11 +9,12 @@ import { useReactionPicker } from "../../../../context/ReactionPickerContext";
 type MessageProps = {
   message: MessageType;
   sender: MemberType | undefined;
+  onReactionPress: () => void;
   isFirstFromGroup: boolean;
   isLastFromGroup: boolean;
 };
 
-export default function Message({ message, sender, isFirstFromGroup, isLastFromGroup }: MessageProps) {
+export default function Message({ message, sender, onReactionPress, isFirstFromGroup, isLastFromGroup }: MessageProps) {
   const { userId } = useUser();
   const reactionPicker = useReactionPicker();
   const isReactionPickerVisible = message.textMessageId === reactionPicker.selectedMessageId;
@@ -35,6 +36,7 @@ export default function Message({ message, sender, isFirstFromGroup, isLastFromG
       <MessageCard
         message={message}
         senderFirstName={sender?.firstName || "Unknown"}
+        onReactionPress={onReactionPress}
         isSentByUser={isSentByUser}
         isFirstFromGroup={isFirstFromGroup}
         isReactionPickerVisible={isReactionPickerVisible}

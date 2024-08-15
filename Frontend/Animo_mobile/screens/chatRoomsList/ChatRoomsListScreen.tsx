@@ -8,9 +8,11 @@ import SortByDropdown, { SORT_BY_OPTIONS } from "./components/SortByDropdown";
 import COLORS from "../../utils/colors";
 import ChatRoomsListHubContextProvider from "../../context/ChatRoomsListHubContext";
 import ChatRoomsList from "./ChatRoomsList";
+import { useSafeAreaStyle } from "../../utils/hooks";
 
 export default function ChatRoomsListScreen() {
   const navigation = useNavigation();
+  const safeAreaStyle = useSafeAreaStyle();
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState(SORT_BY_OPTIONS.NEWEST);
@@ -20,7 +22,7 @@ export default function ChatRoomsListScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, safeAreaStyle]}>
       <View style={[styles.titleContainer, styles.pageHorizontalPadding]}>
         <Pressable onPress={onOpenDrawer}>
           <FontAwesomeIcon icon={faBars} size={24} style={styles.menuIcon} />

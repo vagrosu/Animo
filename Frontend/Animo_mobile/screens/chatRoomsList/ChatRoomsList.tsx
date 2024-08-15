@@ -102,18 +102,6 @@ export default function ChatRoomsList({ search, sortBy }: ChatRoomsListProps) {
     }
   }, [chatRoomsListHub]);
 
-  // useEffect(() => {
-  //   if (selectedChatRoomId && chatRoomHub.isConnected) {
-  //     chatRoomHub.connection?.invoke("JoinChatRoom", selectedChatRoomId);
-  //   }
-
-  //   return () => {
-  //     if (selectedChatRoomId && chatRoomHub.isConnected) {
-  //       chatRoomHub.connection?.invoke("LeaveChatRoom", selectedChatRoomId);
-  //     }
-  //   };
-  // }, [selectedChatRoomId, chatRoomHub.isConnected]);
-
   const onSelectChatRoom = async (chatRoom: ChatRoomCardType) => {
     navigation.navigate("ChatRoom", { chatRoomId: chatRoom.chatRoomId });
   };

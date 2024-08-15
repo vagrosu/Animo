@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { getEmojiNameByUnified, localEmojis } from "../../../../../utils/helpers";
 import { ReactionType } from "../../../types";
 import { Emoji } from "emoji-mart-native";
@@ -7,22 +7,11 @@ import COLORS from "../../../../../utils/colors";
 type MessageReactionsProps = {
   reactions: ReactionType[];
   isSentByUser: boolean;
+  onPress: () => void;
 };
 
-export default function MessageReactions({ reactions, isSentByUser }: MessageReactionsProps) {
+export default function MessageReactions({ reactions, onPress, isSentByUser }: MessageReactionsProps) {
   const emojiSet = Array.from(new Set(reactions.map((reaction) => reaction.emoji)));
-
-  // const tooltipContent = (
-  //   <div className={"flex flex-col items-center gap-1 text-white"}>
-  //     {emojiSet.map((emoji, i) => (
-  //       <div key={i} className={"flex items-center gap-[1px]"}>
-  //         <p className={"text-sm"}>{reactions.filter((r) => r.emoji === emoji).length}</p>
-  //         {/* <Emoji unified={emoji} size={15} /> */}
-  //         <Emoji emoji={emoji} useLocalImages={localEmojis} size={14} />
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
 
   const dynamicStyles = StyleSheet.create({
     container: {
@@ -32,14 +21,14 @@ export default function MessageReactions({ reactions, isSentByUser }: MessageRea
   });
 
   return (
-    <View style={[styles.container, dynamicStyles.container]}>
+    <Pressable style={[styles.container, dynamicStyles.container]} onPress={onPress}>
       {emojiSet.slice(0, 3).map((emoji, i) => (
         <View key={i} style={styles.emojiContainer}>
-          <Emoji emoji={getEmojiNameByUnified(emoji)} useLocalImages={localEmojis} size={12} />
+          <Emoji emoji={getEmojiNameByUnified(emoji)} onPress={onPress} useLocalImages={localEmojis} size={12} />
         </View>
       ))}
       <Text style={styles.reactionsNumber}>{reactions.length}</Text>
-    </View>
+    </Pressable>
   );
 }
 

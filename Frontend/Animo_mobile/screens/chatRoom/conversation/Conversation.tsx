@@ -11,6 +11,7 @@ import { differenceInCalendarDays, differenceInYears, format, isToday, isYesterd
 import COLORS from "../../../utils/colors";
 import Message from "./message/Message";
 import ReactionPickerContextProvider from "../../../context/ReactionPickerContext";
+import ReactionsListModal from "./message/reactions/reactionsListModal/ReactionsListModa";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -39,6 +40,7 @@ export default function Conversation({ chatRoom }: ConversationProps) {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
   const [messageToUpdateId, setMessageToUpdateId] = useState<string | null>(null);
+  const [reactionsListModalId, setReactionsListModalId] = useState<string | null>(null);
 
   const messagesQuery = useQuery<MessagesByChatRoomIdResponseType, AxiosError | Error>({
     queryKey: ["Messages", "by-chat-room-id", chatRoom.chatRoomId, "ConversationContainer"],
@@ -109,6 +111,24 @@ export default function Conversation({ chatRoom }: ConversationProps) {
     });
   }, [connection, chatRoom]);
 
+  const onReactionPress = (messageId: string) => {
+    setReactionsListModalId(messageId);
+  };
+
+  const onReactionModalClose = () => {
+    setReactionsListModalId(null);
+  };
+
+  const getMessageReactions = (messageId: string) => {
+    const message = messages.find((message) => message.textMessageId === messageId);
+
+    if (message) {
+      return message.reactions;
+    }
+
+    return [];
+  };
+
   return (
     <View style={styles.container}>
       <ReactionPickerContextProvider>
@@ -136,6 +156,7 @@ export default function Conversation({ chatRoom }: ConversationProps) {
                 <Message
                   message={message}
                   sender={sender}
+                  onReactionPress={() => onReactionPress(message.textMessageId)}
                   isFirstFromGroup={isFirstFromGroup}
                   isLastFromGroup={isLastFromGroup}
                 />
@@ -144,6 +165,9 @@ export default function Conversation({ chatRoom }: ConversationProps) {
           }}
         />
       </ReactionPickerContextProvider>
+      {reactionsListModalId && (
+        <ReactionsListModal reactions={getMessageReactions(reactionsListModalId)} onClose={onReactionModalClose} />
+      )}
     </View>
   );
 }

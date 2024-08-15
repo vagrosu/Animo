@@ -10,9 +10,11 @@ import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import COLORS from "../../utils/colors";
 import ChatRoomHubContextProvider from "../../context/ChatRoomHubContext";
 import ConversationContainer from "./conversation/ConversationContainer";
+import { useSafeAreaStyle } from "../../utils/hooks";
 
 export default function ChatRoomScreen() {
   const route = useRoute();
+  const safeAreaStyle = useSafeAreaStyle();
   const selectedChatRoomId = route.params?.chatRoomId;
 
   const chatRoomQuery = useQuery<ChatRoomsByChatRoomIdResponseType, AxiosError | Error>({
@@ -24,7 +26,11 @@ export default function ChatRoomScreen() {
   });
 
   if (chatRoomQuery.isLoading) {
-    return <ActivityIndicator size={20} color={COLORS.blue600} />;
+    return (
+      <View style={safeAreaStyle}>
+        <ActivityIndicator size={20} color={COLORS.blue600} />
+      </View>
+    );
   }
 
   if (chatRoomQuery.isError || !chatRoomQuery.data) {
@@ -48,7 +54,7 @@ export default function ChatRoomScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, safeAreaStyle]}>
       <ChatRoomHubContextProvider>
         <ConversationContainer chatRoom={chatRoom} />
       </ChatRoomHubContextProvider>
@@ -59,6 +65,7 @@ export default function ChatRoomScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.white,
   },
 
   noContent: {

@@ -9,6 +9,7 @@ import MessageReactions from "./reactions/MessageReactions";
 import ReactionPicker from "./reactions/ReactionPicker";
 import { useUser } from "../../../../context/UserContext";
 import { useReactionPicker } from "../../../../context/ReactionPickerContext";
+import EmojiIcon from "../../../../components/EmojiIcon";
 
 const getEmotionEmoji = (emotion: string) => {
   let unified = "26a0-fe0f";
@@ -65,8 +66,6 @@ const getDynamicStyles = (isSentByUser: boolean, isFirstFromGroup: boolean) => {
     emotionEmojiContainer: {
       alignItems: "center",
       justifyContent: "center",
-      width: 15,
-      height: 15,
       ...(isSentByUser
         ? {
             marginRight: 4,
@@ -88,6 +87,7 @@ const getDynamicStyles = (isSentByUser: boolean, isFirstFromGroup: boolean) => {
 type MessageCardProps = {
   message: MessageType;
   senderFirstName: string;
+  onReactionPress: () => void;
   isSentByUser: boolean;
   isFirstFromGroup: boolean;
   isReactionPickerVisible: boolean;
@@ -96,6 +96,7 @@ type MessageCardProps = {
 export function MessageCard({
   message,
   senderFirstName,
+  onReactionPress,
   isSentByUser,
   isFirstFromGroup,
   isReactionPickerVisible,
@@ -120,8 +121,8 @@ export function MessageCard({
         <View style={[styles.messageCardContainer, dynamicStyles.messageCardContainer]}>
           <MessageContent message={message} />
           <View style={[styles.messageMetadata, dynamicStyles.messageMetadata]}>
-            <View style={[styles.emotionEmojiContainer, dynamicStyles.emotionEmojiContainer]}>
-              <Emoji emoji={getEmotionEmoji(message.emotion)} useLocalImages={localEmojis} size={15} />
+            <View style={dynamicStyles.emotionEmojiContainer}>
+              <EmojiIcon emoji={getEmotionEmoji(message.emotion) || ""} size={15} />
             </View>
             <Text style={styles.sentTimeText} numberOfLines={1}>
               {format(parseISO(message.sentTime), "HH:mm")}
@@ -129,7 +130,9 @@ export function MessageCard({
           </View>
         </View>
       </Pressable>
-      {!!message.reactions.length && <MessageReactions reactions={message.reactions} isSentByUser={isSentByUser} />}
+      {!!message.reactions.length && (
+        <MessageReactions reactions={message.reactions} onPress={onReactionPress} isSentByUser={isSentByUser} />
+      )}
       {isReactionPickerVisible && (
         <ReactionPicker
           style={dynamicStyles.reactionPickerStyle}
@@ -167,13 +170,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-
-  emotionEmojiContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: 15,
-    height: 15,
   },
 
   sentTimeText: {
