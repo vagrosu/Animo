@@ -8,6 +8,8 @@ type MessageDisplayProps = {
 }
 
 export function MessageDisplay({message, sender}: MessageDisplayProps) {
+  const messageWithoutReactions = {...message, reactions: []}
+
   return (
     <div
       className={"flex"}>
@@ -20,7 +22,7 @@ export function MessageDisplay({message, sender}: MessageDisplayProps) {
       </Avatar>
       <div className={"w-full [&>*]:max-w-full"}>
         <MessageCard
-          message={message}
+          message={messageWithoutReactions}
           senderFirstName={sender?.firstName || "Unknown"}
           isSentByUser={false}
           isLastFromGroup={true}
