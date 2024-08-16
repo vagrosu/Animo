@@ -171,15 +171,19 @@ export default function Conversation({ chatRoom }: ConversationProps) {
           }}
         />
       </ReactionPickerContextProvider>
-      {reactionsListModalData && <ReactionsListModal reactions={reactionsListModalData} onClose={onReactionModalClose} />}
-      {emotionModalData && (
-        <EmotionDataModal
-          isOpen={!!emotionModalData}
-          onClose={onEmotionDataModalClose}
-          message={emotionModalData.message}
-          sender={emotionModalData.sender}
-        />
-      )}
+
+      <ReactionsListModal
+        isOpen={!!reactionsListModalData}
+        reactions={reactionsListModalData || []}
+        onClose={onReactionModalClose}
+      />
+
+      <EmotionDataModal
+        isOpen={!!emotionModalData}
+        onClose={onEmotionDataModalClose}
+        message={emotionModalData?.message || null}
+        sender={emotionModalData?.sender || null}
+      />
     </View>
   );
 }

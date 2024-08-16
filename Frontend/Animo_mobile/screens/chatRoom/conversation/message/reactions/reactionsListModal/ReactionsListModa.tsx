@@ -1,17 +1,18 @@
 import { StyleSheet, View } from "react-native";
 import { ReactionType } from "../../../../types";
 import { FlatList } from "react-native-gesture-handler";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactionsTypesListItem from "./ReactionsTypesListItem";
 import ReactionsListItem from "./ReactionsListItem";
 import ModalComponent from "../../../../../../components/ModalComponent";
 
 type ReactionsListModalProps = {
-  reactions: ReactionType[];
+  isOpen: boolean;
   onClose: () => void;
+  reactions: ReactionType[];
 };
 
-export default function ReactionsListModal({ reactions, onClose }: ReactionsListModalProps) {
+export default function ReactionsListModal({ isOpen, onClose, reactions }: ReactionsListModalProps) {
   const [selectedReactionsFilter, setSelectedReactionsFilter] = useState<string | null>(null);
   const filteredReactions = reactions.filter((reaction) =>
     selectedReactionsFilter ? selectedReactionsFilter === reaction.emoji : true
@@ -22,8 +23,14 @@ export default function ReactionsListModal({ reactions, onClose }: ReactionsList
     setSelectedReactionsFilter(filter);
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedReactionsFilter(null);
+    }
+  }, [isOpen]);
+
   return (
-    <ModalComponent title={"Reactions"} onClose={onClose}>
+    <ModalComponent title={"Reactions"} isOpen={isOpen} onClose={onClose}>
       <View style={styles.reactionsListContainer}>
         <FlatList
           data={filteredReactions}

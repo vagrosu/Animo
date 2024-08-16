@@ -1,9 +1,12 @@
-import { Modal, ModalProps, View, StyleSheet, Pressable, Text } from "react-native";
+import { Modal, ModalProps, View, StyleSheet, Pressable, Text, Animated } from "react-native";
 import { useSafeAreaStyle } from "../utils/hooks";
 import OutsidePressHandler from "react-native-outside-press";
 import COLORS from "../utils/colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef } from "react";
+
+const FADE_DURATION = 250;
 
 type ModalComponentProps = {
   title: string;
@@ -15,10 +18,27 @@ type ModalComponentProps = {
 
 export default function ModalComponent({ title, isOpen, onClose, modalStyle, children, ...rest }: ModalComponentProps) {
   const safeAreaStyle = useSafeAreaStyle();
+  const fadeAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isOpen) {
+      Animated.timing(fadeAnimation, {
+        toValue: 0.7,
+        duration: FADE_DURATION,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(fadeAnimation, {
+        toValue: 0,
+        duration: FADE_DURATION,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [fadeAnimation, isOpen]);
 
   return (
     <Modal animationType="none" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
-      <View style={styles.modalBackground} />
+      <Animated.View style={[styles.modalBackground, { opacity: fadeAnimation }]} />
       <Modal animationType="slide" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
         <View style={[styles.modalContainer, safeAreaStyle]}>
           <View style={styles.modalWrapper}>
@@ -45,7 +65,7 @@ const styles = StyleSheet.create({
   },
 
   modalBackground: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: COLORS.black,
     flex: 1,
   },
 
