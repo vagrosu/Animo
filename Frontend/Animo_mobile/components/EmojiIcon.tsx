@@ -1,15 +1,17 @@
 import { View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { Emoji } from "emoji-mart-native";
 import { localEmojis } from "../utils/helpers";
+import { forwardRef } from "react";
 
 type EmojiIconProps = {
   emoji: string;
   size: number;
   onPress?: () => void;
+  onLongPress?: () => void;
   style?: StyleProp<ViewStyle>;
 };
 
-export default function EmojiIcon({ emoji, size, onPress, style = {} }: EmojiIconProps) {
+const EmojiIcon = forwardRef<View, EmojiIconProps>(({ emoji, size, onPress, onLongPress, style = {} }, ref) => {
   const styles = StyleSheet.create({
     container: {
       width: size,
@@ -20,8 +22,10 @@ export default function EmojiIcon({ emoji, size, onPress, style = {} }: EmojiIco
   });
 
   return (
-    <View style={[styles.container, style]}>
-      <Emoji onPress={onPress} emoji={emoji} useLocalImages={localEmojis} size={size} />
+    <View ref={ref} style={[styles.container, style]}>
+      <Emoji emoji={emoji} useLocalImages={localEmojis} size={size} onPress={onPress} onLongPress={onLongPress} />
     </View>
   );
-}
+});
+
+export default EmojiIcon;

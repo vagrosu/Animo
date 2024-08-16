@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet, Pressable, GestureResponderEvent } from "react-native";
+import { View, Text, StyleSheet, Pressable, StyleProp, ViewStyle } from "react-native";
 import { MessageType } from "../../types";
 import { format, parseISO } from "date-fns";
 import { MessageContent } from "./MessageContent";
 import COLORS from "../../../../utils/colors";
-import { Emoji } from "emoji-mart-native";
-import { getEmojiNameByUnified, localEmojis } from "../../../../utils/helpers";
+import { getEmojiNameByUnified } from "../../../../utils/helpers";
 import MessageReactions from "./reactions/MessageReactions";
 import ReactionPicker from "./reactions/ReactionPicker";
 import { useUser } from "../../../../context/UserContext";
@@ -88,25 +87,29 @@ type MessageCardProps = {
   message: MessageType;
   senderFirstName: string;
   onReactionPress: () => void;
+  onEmotionDataPress: () => void;
   isSentByUser: boolean;
   isFirstFromGroup: boolean;
   isReactionPickerVisible: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function MessageCard({
   message,
   senderFirstName,
   onReactionPress,
+  onEmotionDataPress,
   isSentByUser,
   isFirstFromGroup,
   isReactionPickerVisible,
+  style,
 }: MessageCardProps) {
   const { userId } = useUser();
   const reactionPicker = useReactionPicker();
   const userReaction = message.reactions.find((reaction) => reaction.senderId === userId) || null;
   const dynamicStyles = getDynamicStyles(isSentByUser, isFirstFromGroup);
 
-  const onReactionPickerOpen = (e: GestureResponderEvent) => {
+  const onReactionPickerOpen = () => {
     reactionPicker.setSelectedMessageId(message.textMessageId);
   };
 
@@ -115,14 +118,19 @@ export function MessageCard({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {!isSentByUser && isFirstFromGroup && <Text style={styles.senderNameText}>{senderFirstName}</Text>}
-      <Pressable onLongPress={onReactionPickerOpen}>
+      <Pressable onPress={onEmotionDataPress} onLongPress={onReactionPickerOpen}>
         <View style={[styles.messageCardContainer, dynamicStyles.messageCardContainer]}>
           <MessageContent message={message} />
           <View style={[styles.messageMetadata, dynamicStyles.messageMetadata]}>
             <View style={dynamicStyles.emotionEmojiContainer}>
-              <EmojiIcon emoji={getEmotionEmoji(message.emotion) || ""} size={15} />
+              <EmojiIcon
+                emoji={getEmotionEmoji(message.emotion) || ""}
+                size={15}
+                onPress={onEmotionDataPress}
+                onLongPress={onReactionPickerOpen}
+              />
             </View>
             <Text style={styles.sentTimeText} numberOfLines={1}>
               {format(parseISO(message.sentTime), "HH:mm")}
@@ -147,7 +155,6 @@ export function MessageCard({
 
 const styles = StyleSheet.create({
   container: {
-    maxWidth: "80%",
     minWidth: 100,
   },
 

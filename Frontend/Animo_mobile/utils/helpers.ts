@@ -96,3 +96,7 @@ export function decryptTextMessage(encryptedMessage: string) {
 
   return decryptedMessage;
 }
+
+export function capitalizeFirstLetter(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}

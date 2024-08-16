@@ -10,11 +10,19 @@ type MessageProps = {
   message: MessageType;
   sender: MemberType | undefined;
   onReactionPress: () => void;
+  onEmotionDataPress: () => void;
   isFirstFromGroup: boolean;
   isLastFromGroup: boolean;
 };
 
-export default function Message({ message, sender, onReactionPress, isFirstFromGroup, isLastFromGroup }: MessageProps) {
+export default function Message({
+  message,
+  sender,
+  onReactionPress,
+  onEmotionDataPress,
+  isFirstFromGroup,
+  isLastFromGroup,
+}: MessageProps) {
   const { userId } = useUser();
   const reactionPicker = useReactionPicker();
   const isReactionPickerVisible = message.textMessageId === reactionPicker.selectedMessageId;
@@ -36,7 +44,9 @@ export default function Message({ message, sender, onReactionPress, isFirstFromG
       <MessageCard
         message={message}
         senderFirstName={sender?.firstName || "Unknown"}
+        style={styles.messageCard}
         onReactionPress={onReactionPress}
+        onEmotionDataPress={onEmotionDataPress}
         isSentByUser={isSentByUser}
         isFirstFromGroup={isFirstFromGroup}
         isReactionPickerVisible={isReactionPickerVisible}
@@ -46,6 +56,10 @@ export default function Message({ message, sender, onReactionPress, isFirstFromG
 }
 
 const styles = StyleSheet.create({
+  messageCard: {
+    maxWidth: "80%",
+  },
+
   userAvatar: {
     marginTop: 20,
   },

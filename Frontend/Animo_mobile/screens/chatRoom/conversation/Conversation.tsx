@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { ChatRoomType, MessageType } from "../types";
+import { ChatRoomType, MemberType, MessageType, ReactionType } from "../types";
 import { useChatRoomHub } from "../../../context/ChatRoomHubContext";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
@@ -12,6 +12,7 @@ import COLORS from "../../../utils/colors";
 import Message from "./message/Message";
 import ReactionPickerContextProvider from "../../../context/ReactionPickerContext";
 import ReactionsListModal from "./message/reactions/reactionsListModal/ReactionsListModa";
+import EmotionDataModal from "./message/emotionDataModal/EmotionDataModal";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -40,9 +41,10 @@ export default function Conversation({ chatRoom }: ConversationProps) {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
   const [messageToUpdateId, setMessageToUpdateId] = useState<string | null>(null);
-  const [reactionsListModalId, setReactionsListModalId] = useState<string | null>(null);
+  const [reactionsListModalData, setReactionsListModalData] = useState<ReactionType[] | null>(null);
+  const [emotionModalData, setEmotionModalData] = useState<{ message: MessageType; sender: MemberType } | null>(null);
 
-  const messagesQuery = useQuery<MessagesByChatRoomIdResponseType, AxiosError | Error>({
+  useQuery<MessagesByChatRoomIdResponseType, AxiosError | Error>({
     queryKey: ["Messages", "by-chat-room-id", chatRoom.chatRoomId, "ConversationContainer"],
     queryFn: async () => {
       const api = await createApiInstance();
@@ -111,22 +113,25 @@ export default function Conversation({ chatRoom }: ConversationProps) {
     });
   }, [connection, chatRoom]);
 
-  const onReactionPress = (messageId: string) => {
-    setReactionsListModalId(messageId);
+  const onReactionPress = (reactions: ReactionType[]) => {
+    setReactionsListModalData(reactions);
   };
 
   const onReactionModalClose = () => {
-    setReactionsListModalId(null);
+    setReactionsListModalData(null);
   };
 
-  const getMessageReactions = (messageId: string) => {
-    const message = messages.find((message) => message.textMessageId === messageId);
-
-    if (message) {
-      return message.reactions;
+  const onEmotionDataPress = (message: MessageType | null, sender: MemberType | null) => {
+    if (message && sender) {
+      setEmotionModalData({
+        message,
+        sender,
+      });
     }
+  };
 
-    return [];
+  const onEmotionDataModalClose = () => {
+    setEmotionModalData(null);
   };
 
   return (
@@ -156,7 +161,8 @@ export default function Conversation({ chatRoom }: ConversationProps) {
                 <Message
                   message={message}
                   sender={sender}
-                  onReactionPress={() => onReactionPress(message.textMessageId)}
+                  onReactionPress={() => onReactionPress(message.reactions)}
+                  onEmotionDataPress={() => onEmotionDataPress(message, sender || null)}
                   isFirstFromGroup={isFirstFromGroup}
                   isLastFromGroup={isLastFromGroup}
                 />
@@ -165,8 +171,14 @@ export default function Conversation({ chatRoom }: ConversationProps) {
           }}
         />
       </ReactionPickerContextProvider>
-      {reactionsListModalId && (
-        <ReactionsListModal reactions={getMessageReactions(reactionsListModalId)} onClose={onReactionModalClose} />
+      {reactionsListModalData && <ReactionsListModal reactions={reactionsListModalData} onClose={onReactionModalClose} />}
+      {emotionModalData && (
+        <EmotionDataModal
+          isOpen={!!emotionModalData}
+          onClose={onEmotionDataModalClose}
+          message={emotionModalData.message}
+          sender={emotionModalData.sender}
+        />
       )}
     </View>
   );
