@@ -58,13 +58,13 @@ export default function SelfieConsentModal({isOpen, toggle, onGiveConsentExtra}:
         <br/>
         <p>Here’s what you should know:</p>
         <ul style={{listStyleType: 'disc', marginLeft: '20px'}}>
-          <li><strong>Security:</strong> We don't store your images, they are automatically deleted after analysis.
+          <li><strong className={"text-blue-500"}>Security:</strong> We don't store your images, they are automatically deleted after analysis.
           </li>
-          <li><strong>Encryption:</strong> All data is securely encrypted during transmission.</li>
-          <li><strong>Processing:</strong> All emotion analysis is conducted on our secure server, not on your device.
+          <li><strong className={"text-blue-500"}>Encryption:</strong> All data is securely encrypted during transmission.</li>
+          <li><strong className={"text-blue-500"}>Processing:</strong> All emotion analysis is conducted on our secure server, not on your device.
           </li>
-          <li><strong>Control:</strong> You can withdraw consent at any time from your profile settings.</li>
-          <li><strong>Usage:</strong> The camera is used only when you send a message.</li>
+          <li><strong className={"text-blue-500"}>Control:</strong> You can withdraw consent at any time from your profile settings.</li>
+          <li><strong className={"text-blue-500"}>Usage:</strong> The camera is used only when you send a message.</li>
         </ul>
         <br/>
         <p>By agreeing, you allow us to access your camera and process your selfie under these conditions.</p>

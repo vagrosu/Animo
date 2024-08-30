@@ -63,14 +63,16 @@ export default function UserProfileModal({isOpen, toggle, userId}: UserProfileMo
                     {user.username && <label className={"font-light text-xl text-gray-500"}> ({user.username})</label>}
                   </h2>
                   {
-                    user.email && <p className={"font-medium text-gray-600"}>
-                      Email: <label className={"font-normal text-gray-500"}>{user.email}</label>
-                    </p>
+                    user.phoneNumber && <div className={"flex items-center gap-2"}>
+                      <i className={"fa-solid fa-fw fa-phone text-blue-400"}/>
+                      <p className={"font-normal text-gray-500"}>{user.phoneNumber}</p>
+                    </div>
                   }
                   {
-                    user.phoneNumber && <p className={"font-medium text-gray-600"}>
-                      Phone: <label className={"font-normal text-gray-500"}>{user.phoneNumber}</label>
-                    </p>
+                    user.email && <div className={"flex items-center gap-2"}>
+                      <i className={"fa-solid fa-fw fa-envelope text-blue-400"}/>
+                      <p className={"font-normal text-gray-500"}>{user.email}</p>
+                    </div>
                   }
                 </div>
               </div>
