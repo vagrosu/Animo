@@ -9,17 +9,35 @@ DotNetEnv.Env.TraversePath().Load();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
-builder.Services.AddCors(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.AddPolicy(
-        "Open",
-        corsBuilder => corsBuilder
-            .WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(
+            "Open",
+            corsBuilder => corsBuilder
+                .WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+        );
+    });
+}
+else
+{
+    builder.Services.AddCors(
+        options =>
+        {
+            options.AddPolicy(
+                "Open",
+                corsBuilder => corsBuilder
+                    .WithOrigins("https://specific-domain.com")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+            );
+        }
     );
-});
+}
 // Add services to the container.
 builder.Services.AddSignalR();
 builder.Services.AddIdentityInfrastructureToDi(builder.Configuration);
