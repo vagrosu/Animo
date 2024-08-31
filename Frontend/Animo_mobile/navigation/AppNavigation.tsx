@@ -7,6 +7,8 @@ import LandingScreen from "../screens/landing/LandingScreen";
 import ChatRoomScreen from "../screens/chatRoom/ChatRoomScreen";
 import ChatRoomsListDrawer from "./ChatRoomsListDrawer";
 import ChatRoomInfoScreen from "../screens/chatRoomInfo/ChatRoomInfoScreen";
+import UserProfileScreen from "../screens/userProfile/UserProfileScreen";
+import SelfieConsentProtectedContext from "../context/SelfieConsentProtectedContext/SelfieConsentProtectedContext";
 
 const Stack = createStackNavigator();
 
@@ -15,25 +17,30 @@ export default function AppNavigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        {isAuthenticated ? (
-          <>
+      {isAuthenticated ? (
+        <SelfieConsentProtectedContext>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
             <Stack.Screen name="ChatRoomsListDrawer" component={ChatRoomsListDrawer} />
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="ChatRoomInfo" component={ChatRoomInfoScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Landing" component={LandingScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-          </>
-        )}
-      </Stack.Navigator>
+            <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          </Stack.Navigator>
+        </SelfieConsentProtectedContext>
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Landing" component={LandingScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }

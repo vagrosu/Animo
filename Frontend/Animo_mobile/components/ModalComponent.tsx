@@ -11,13 +11,13 @@ const FADE_DURATION = 250;
 type ModalComponentProps = {
   title: string;
   isOpen?: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   modalStyle?: any;
   children: React.ReactNode;
 } & ModalProps;
 
 export default function ModalComponent({ title, isOpen, onClose, modalStyle, children, ...rest }: ModalComponentProps) {
-  const safeAreaStyle = useSafeAreaStyle();
+  const safeAreaStyle = useSafeAreaStyle(styles.modalContainer);
   const fadeAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -40,14 +40,16 @@ export default function ModalComponent({ title, isOpen, onClose, modalStyle, chi
     <Modal animationType="none" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
       <Animated.View style={[styles.modalBackground, { opacity: fadeAnimation }]} />
       <Modal animationType="slide" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
-        <View style={[styles.modalContainer, safeAreaStyle]}>
+        <View style={safeAreaStyle}>
           <View style={styles.modalWrapper}>
-            <OutsidePressHandler style={[styles.modal, modalStyle]} onOutsidePress={onClose}>
+            <OutsidePressHandler style={[styles.modal, modalStyle]} onOutsidePress={onClose || (() => {})}>
               <View style={styles.headerContainer}>
                 <Text style={styles.title}>{title}</Text>
-                <Pressable onPress={onClose} style={styles.closeButton}>
-                  <FontAwesomeIcon icon={faXmark} size={20} color={COLORS.blue600} />
-                </Pressable>
+                {onClose && (
+                  <Pressable onPress={onClose} style={styles.closeButton}>
+                    <FontAwesomeIcon icon={faXmark} size={20} color={COLORS.blue600} />
+                  </Pressable>
+                )}
               </View>
               {children}
             </OutsidePressHandler>
