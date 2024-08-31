@@ -32,7 +32,7 @@ export default function ChatRoomsListScreen() {
       <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
         <View style={[styles.filtersContainer, styles.pageHorizontalPadding]}>
           <SearchInput value={search} onChangeText={setSearch} />
-          <SortByDropdown />
+          <SortByDropdown value={sortBy} onChange={setSortBy} />
         </View>
         <ChatRoomsListHubContextProvider>
           <ChatRoomsList search={search} sortBy={sortBy} />
