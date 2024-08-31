@@ -1,9 +1,9 @@
-import { ImageBackground, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
+import { Text, TextInput, View, StyleSheet, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import { useLoginMutation, useSafeAreaStyle } from "../../utils/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faArrowLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import COLORS from "../../utils/colors";
 import { useNavigation } from "@react-navigation/native";
 import AnimatedImageBackground from "../../components/AnimatedImageBackground";
@@ -11,7 +11,7 @@ import AnimatedImageBackground from "../../components/AnimatedImageBackground";
 export default function LoginScreen() {
   const navigation = useNavigation();
   const loginMutation = useLoginMutation();
-  const safeAreaStyle = useSafeAreaStyle();
+  const safeAreaStyle = useSafeAreaStyle(styles.modalContainer);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,11 +41,11 @@ export default function LoginScreen() {
 
   return (
     <AnimatedImageBackground style={styles.animatedBackground}>
-      <View style={[styles.modalContainer, safeAreaStyle]}>
+      <View style={safeAreaStyle}>
         <View style={styles.modal}>
           <View style={styles.headerContainer}>
             <Pressable onPress={goToLanding}>
-              <FontAwesomeIcon icon={faArrowLeft} size={18} color={COLORS.black} />
+              <FontAwesomeIcon icon={faChevronLeft} size={18} color={COLORS.black} />
             </Pressable>
             <Text style={styles.title}>Sign in</Text>
           </View>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   modalContainer: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 
   modal: {

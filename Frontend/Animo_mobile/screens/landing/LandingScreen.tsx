@@ -8,7 +8,7 @@ const animoLogo = require("../../assets/images/animo-logo.png");
 
 export default function LandingScreen() {
   const navigation = useNavigation();
-  const safeAreaStyle = useSafeAreaStyle();
+  const safeAreaStyle = useSafeAreaStyle(styles.container);
 
   const onLoginPress = () => {
     navigation.navigate("Login");
@@ -36,7 +36,7 @@ export default function LandingScreen() {
         ]}
         style={styles.background}
       />
-      <View style={[styles.container, safeAreaStyle]}>
+      <View style={safeAreaStyle}>
         <Text style={styles.pitchText}>We make emotions </Text>
         <Text style={styles.pitchText}>clear and simple</Text>
         <Image style={styles.animoLogo} source={animoLogo} />
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 24,
+    paddingHorizontal: 24,
   },
 
   animoLogo: {

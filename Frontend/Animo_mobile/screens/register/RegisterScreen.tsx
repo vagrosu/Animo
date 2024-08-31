@@ -11,11 +11,11 @@ import { AuthentificationRegisterQueryType } from "../../types/api/queries";
 import Toast from "react-native-toast-message";
 import { createApiInstance } from "../../services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faArrowLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
-  const safeAreaStyle = useSafeAreaStyle();
+  const safeAreaStyle = useSafeAreaStyle(styles.modalContainer);
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -105,11 +105,11 @@ export default function RegisterScreen() {
 
   return (
     <AnimatedImageBackground style={styles.animatedBackground}>
-      <KeyboardAvoidingView behavior="position" style={[styles.modalContainer, safeAreaStyle]}>
+      <KeyboardAvoidingView behavior="position" style={safeAreaStyle}>
         <View style={styles.modal}>
           <View style={styles.headerContainer}>
             <Pressable onPress={goToLanding}>
-              <FontAwesomeIcon icon={faArrowLeft} size={18} color={COLORS.black} />
+              <FontAwesomeIcon icon={faChevronLeft} size={18} color={COLORS.black} />
             </Pressable>
             <Text style={styles.title}>Sign up</Text>
           </View>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
 
   modalContainer: {
-    marginHorizontal: 18,
+    paddingHorizontal: 18,
   },
 
   modal: {

@@ -5,7 +5,6 @@ import ConversationHeader from "./ConversationHeader";
 import MessageInput from "./MessageInput";
 import { ChatRoomType } from "../types";
 import { KeyboardAvoidingView, StyleSheet } from "react-native";
-import { useSafeAreaStyle } from "../../../utils/hooks";
 
 type ConversationContainerProps = {
   chatRoom: ChatRoomType;
@@ -13,7 +12,6 @@ type ConversationContainerProps = {
 
 export default function ConversationContainer({ chatRoom }: ConversationContainerProps) {
   const chatRoomHub = useChatRoomHub();
-  const safeAreaStyle = useSafeAreaStyle();
 
   useEffect(() => {
     if (chatRoom.chatRoomId && chatRoomHub.isConnected) {
