@@ -13,6 +13,7 @@ import Message from "./message/Message";
 import ReactionPickerContextProvider from "../../../context/ReactionPickerContext";
 import ReactionsListModal from "./message/reactions/reactionsListModal/ReactionsListModa";
 import EmotionDataModal from "./message/emotionDataModal/EmotionDataModal";
+import { useShowUserProfileWithActionSheet } from "../../../utils/hooks";
 
 const formatMessageGroupDate = (date: string) => {
   const dateIso = parseISO(date);
@@ -37,6 +38,7 @@ type ConversationProps = {
 
 export default function Conversation({ chatRoom }: ConversationProps) {
   const { connection } = useChatRoomHub();
+  const showUserProfileWithActionSheet = useShowUserProfileWithActionSheet();
 
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [newMessageId, setNewMessageId] = useState<string | null>(null);
@@ -134,6 +136,10 @@ export default function Conversation({ chatRoom }: ConversationProps) {
     setEmotionModalData(null);
   };
 
+  const onUserPress = (sender: MemberType) => {
+    showUserProfileWithActionSheet(sender);
+  };
+
   return (
     <View style={styles.container}>
       <ReactionPickerContextProvider>
@@ -161,6 +167,7 @@ export default function Conversation({ chatRoom }: ConversationProps) {
                 <Message
                   message={message}
                   sender={sender}
+                  onUserPress={sender ? () => onUserPress(sender) : null}
                   onReactionPress={() => onReactionPress(message.reactions)}
                   onEmotionDataPress={() => onEmotionDataPress(message, sender || null)}
                   isFirstFromGroup={isFirstFromGroup}

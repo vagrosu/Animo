@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useUser } from "../../../../context/UserContext";
 import { MemberType, MessageType } from "../../types";
 import IconAvatar from "../../../../components/IconAvatar";
@@ -9,6 +9,7 @@ import { useReactionPicker } from "../../../../context/ReactionPickerContext";
 type MessageProps = {
   message: MessageType;
   sender: MemberType | undefined;
+  onUserPress: (() => void) | null;
   onReactionPress: () => void;
   onEmotionDataPress: () => void;
   isFirstFromGroup: boolean;
@@ -18,6 +19,7 @@ type MessageProps = {
 export default function Message({
   message,
   sender,
+  onUserPress,
   onReactionPress,
   onEmotionDataPress,
   isFirstFromGroup,
@@ -40,7 +42,11 @@ export default function Message({
 
   return (
     <View style={dynamicStyles.container}>
-      {isFirstFromGroup && !isSentByUser && <IconAvatar icon={faUser} style={styles.userAvatar} size={28} />}
+      {isFirstFromGroup && !isSentByUser && (
+        <Pressable onPress={onUserPress}>
+          <IconAvatar icon={faUser} style={styles.userAvatar} size={28} />
+        </Pressable>
+      )}
       <MessageCard
         message={message}
         senderFirstName={sender?.firstName || "Unknown"}
