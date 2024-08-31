@@ -5,6 +5,7 @@ import UserContextProvider from "./context/UserContext";
 import ToastProvider from "./context/ToastProvider";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { EventProvider } from "react-native-outside-press";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 LogBox.ignoreLogs(["AxiosError: Request failed with status code 401"]);
 
@@ -19,18 +20,20 @@ export default function App() {
   });
 
   return (
-    <EventProvider>
-      <QueryClientProvider client={queryClient}>
-        <StatusBar barStyle={"default"} />
-        <SafeAreaProvider>
-          <ToastProvider>
-            <UserContextProvider>
-              <AppNavigation />
-            </UserContextProvider>
-          </ToastProvider>
-        </SafeAreaProvider>
-      </QueryClientProvider>
-    </EventProvider>
+    <ActionSheetProvider>
+      <EventProvider>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar barStyle={"default"} />
+          <SafeAreaProvider>
+            <ToastProvider>
+              <UserContextProvider>
+                <AppNavigation />
+              </UserContextProvider>
+            </ToastProvider>
+          </SafeAreaProvider>
+        </QueryClientProvider>
+      </EventProvider>
+    </ActionSheetProvider>
   );
 }
 
