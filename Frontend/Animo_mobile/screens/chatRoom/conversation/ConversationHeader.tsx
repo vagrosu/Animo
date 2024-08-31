@@ -19,7 +19,11 @@ export default function ConversationHeader({ chatRoom }: ConversationHeaderProps
   };
 
   const onInfoPress = () => {
-    navigation.navigate("ChatRoomInfo");
+    navigation.navigate("ChatRoomInfo", {
+      name: chatRoom.name,
+      members: chatRoom.members,
+      isGroupChat: chatRoom.isGroupChat,
+    });
   };
 
   return (
