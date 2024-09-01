@@ -1,24 +1,19 @@
 import { Image, Pressable, StyleSheet, View, Text } from "react-native";
 import { useUser } from "../../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import IconAvatar from "../../components/IconAvatar";
 import { faArrowRightFromBracket, faComment, faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import COLORS from "../../utils/colors";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { useSafeAreaStyle } from "../../utils/hooks";
 
 const animoLogo = require("../../assets/images/animo-logo.png");
 
 export default function DrawerContent() {
   const user = useUser();
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
-
-  const containerStyle = StyleSheet.flatten([
-    styles.container,
-    { paddingTop: styles.container.padding + insets.top, paddingBottom: styles.container.padding + insets.bottom },
-  ]);
+  const safeAreaStyle = useSafeAreaStyle(styles.container);
 
   const closeDrawer = () => {
     navigation.dispatch(DrawerActions.closeDrawer());
@@ -40,28 +35,28 @@ export default function DrawerContent() {
   };
 
   return (
-    <View style={containerStyle}>
+    <View style={safeAreaStyle}>
       <View style={styles.row}>
         <Image source={animoLogo} resizeMode={"contain"} style={styles.logo} />
         <Text style={[styles.rowText, styles.logoText]}>Animo</Text>
       </View>
-      <Pressable onPress={onProfilePress} style={styles.row}>
+      <Pressable onPress={onProfilePress} style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
         <IconAvatar icon={faUser} size={32} />
         <Text style={styles.rowText}>
           {user.firstName} {user.lastName}
         </Text>
       </Pressable>
       <View style={styles.separator} />
-      <Pressable onPress={onNewChatPress} style={styles.row}>
+      <Pressable onPress={onNewChatPress} style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
         <IconAvatar icon={faComment} size={32} />
         <Text style={styles.rowText}>New chat</Text>
       </Pressable>
       <View style={styles.bottomRows}>
-        <View style={styles.row}>
+        <Pressable style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
           <FontAwesomeIcon icon={faGear} size={26} style={styles.icon} />
           <Text style={styles.rowText}>Settings</Text>
-        </View>
-        <Pressable onPress={onLogout} style={styles.row}>
+        </Pressable>
+        <Pressable onPress={onLogout} style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}>
           <FontAwesomeIcon
             icon={faArrowRightFromBracket}
             size={26}
@@ -78,15 +73,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    padding: 20,
-    gap: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    gap: 4,
   },
 
   row: {
     flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 8,
     gap: 12,
-    height: 32,
+    height: 50,
+  },
+
+  rowPressed: {
+    backgroundColor: COLORS.gray200,
+    borderRadius: 8,
   },
 
   logo: {
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
 
   bottomRows: {
     marginTop: "auto",
-    gap: 18,
+    gap: 4,
   },
 
   icon: {

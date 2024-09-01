@@ -41,10 +41,16 @@ export default function LandingScreen() {
         <Text style={styles.pitchText}>clear and simple</Text>
         <Image style={styles.animoLogo} source={animoLogo} />
         <View style={styles.buttonsContainer}>
-          <Pressable onPress={onLoginPress} style={[styles.loginButton, styles.button]}>
+          <Pressable
+            onPress={onLoginPress}
+            style={({ pressed }) => [styles.loginButton, styles.button, pressed && styles.loginuttonPressed]}
+          >
             <Text style={styles.loginButtonText}>Sign in</Text>
           </Pressable>
-          <Pressable onPress={onRegisterPress} style={[styles.registerButton, styles.button]}>
+          <Pressable
+            onPress={onRegisterPress}
+            style={({ pressed }) => [styles.registerButton, styles.button, pressed && styles.registerButtonPressed]}
+          >
             <Text style={styles.registerButtonText}>Sign up</Text>
           </Pressable>
         </View>
@@ -100,6 +106,11 @@ const styles = StyleSheet.create({
     borderColor: COLORS.blue600,
   },
 
+  loginuttonPressed: {
+    borderColor: COLORS.blue800,
+    opacity: 0.5,
+  },
+
   loginButtonText: {
     textAlign: "center",
     color: COLORS.blue600,
@@ -109,6 +120,11 @@ const styles = StyleSheet.create({
   registerButton: {
     backgroundColor: COLORS.blue600,
     borderColor: COLORS.blue600,
+  },
+
+  registerButtonPressed: {
+    backgroundColor: COLORS.blue800,
+    borderColor: COLORS.blue800,
   },
 
   registerButtonText: {
