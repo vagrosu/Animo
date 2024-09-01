@@ -4,14 +4,24 @@ import COLORS from "../utils/colors";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 type SearchInputProps = {
+  value: string;
+  onChangeText: (text: string) => void;
   style?: StyleProp<ViewStyle>;
 } & Omit<TextInputProps, "style">;
 
-export default function SearchInput({ style, ...rest }: SearchInputProps) {
+export default function SearchInput({ value, onChangeText, style, ...rest }: SearchInputProps) {
   return (
     <View style={[styles.container, style]}>
       <FontAwesomeIcon icon={faSearch} style={styles.searchIcon} size={12} />
-      <TextInput style={styles.textInput} placeholder={"Search"} autoCorrect={false} autoCapitalize={"none"} {...rest} />
+      <TextInput
+        style={styles.textInput}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={"Search"}
+        autoCorrect={false}
+        autoCapitalize={"none"}
+        {...rest}
+      />
     </View>
   );
 }

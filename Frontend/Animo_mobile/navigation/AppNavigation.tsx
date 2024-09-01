@@ -9,6 +9,7 @@ import ChatRoomsListDrawer from "./ChatRoomsListDrawer";
 import ChatRoomInfoScreen from "../screens/chatRoomInfo/ChatRoomInfoScreen";
 import UserProfileScreen from "../screens/userProfile/UserProfileScreen";
 import SelfieConsentProtectedContext from "../context/SelfieConsentProtectedContext/SelfieConsentProtectedContext";
+import NewChatScreen from "../screens/newChat/NewChatScreen";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ export default function AppNavigation() {
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="ChatRoomInfo" component={ChatRoomInfoScreen} />
             <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+            <Stack.Screen name="NewChat" component={NewChatScreen} />
           </Stack.Navigator>
         </SelfieConsentProtectedContext>
       ) : (

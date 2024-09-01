@@ -100,3 +100,18 @@ export function decryptTextMessage(encryptedMessage: string) {
 export function capitalizeFirstLetter(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
+export function debounce(callback: () => void, wait: number) {
+  let timeout: NodeJS.Timeout;
+
+  function debounced() {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, wait);
+  }
+
+  debounced.clear = () => {
+    clearTimeout(timeout);
+  };
+
+  return debounced;
+}

@@ -29,6 +29,11 @@ export default function DrawerContent() {
     navigation.navigate("UserProfile", { userId: user.userId });
   };
 
+  const onNewChatPress = () => {
+    closeDrawer();
+    navigation.navigate("NewChat");
+  };
+
   const onLogout = async () => {
     await AsyncStorage.removeItem("token");
     user.refetch();
@@ -47,10 +52,10 @@ export default function DrawerContent() {
         </Text>
       </Pressable>
       <View style={styles.separator} />
-      <View style={styles.row}>
+      <Pressable onPress={onNewChatPress} style={styles.row}>
         <IconAvatar icon={faComment} size={32} />
         <Text style={styles.rowText}>New chat</Text>
-      </View>
+      </Pressable>
       <View style={styles.bottomRows}>
         <View style={styles.row}>
           <FontAwesomeIcon icon={faGear} size={26} style={styles.icon} />

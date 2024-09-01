@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import COLORS from "../utils/colors";
 
 type NoDataProps = {
-  title: string;
+  title?: string;
   subtitle?: string;
   icon?: React.ComponentProps<typeof FontAwesomeIcon>["icon"];
   style: StyleProp<ViewStyle>;
@@ -15,7 +15,7 @@ export default function NoContent({ title, subtitle, icon, style, iconSize, icon
   return (
     <View style={[styles.container, style]}>
       {icon && <FontAwesomeIcon icon={icon} size={iconSize || 68} style={styles.icon} color={iconColor || COLORS.blue600} />}
-      <Text style={styles.title}>{title}</Text>
+      {title && <Text style={styles.title}>{title}</Text>}
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
   );

@@ -15,7 +15,7 @@ export default function ConversationHeader({ chatRoom }: ConversationHeaderProps
   const navigation = useNavigation();
 
   const onBackPress = () => {
-    navigation.goBack();
+    navigation.navigate("ChatRoomsListDrawer");
   };
 
   const onInfoPress = () => {
