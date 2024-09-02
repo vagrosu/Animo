@@ -35,7 +35,9 @@ export default function ReactionsListModal({ isOpen, onClose, reactions }: React
         <FlatList
           data={filteredReactions}
           keyExtractor={(reaction) => reaction.messageReactionId}
-          renderItem={({ item, index }) => <ReactionsListItem isLastItem={index === reactions.length - 1} reaction={item} />}
+          renderItem={({ item, index }) => (
+            <ReactionsListItem isLastItem={index === filteredReactions.length - 1} reaction={item} />
+          )}
         />
         <View style={styles.reactionsTypesListContainer}>
           <ReactionsTypesListItem
