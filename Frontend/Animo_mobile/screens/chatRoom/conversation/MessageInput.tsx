@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
 import COLORS from "../../../utils/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
@@ -95,7 +95,7 @@ export default function MessageInput({ selectedChatRoomId }: MessageInputProps) 
         style={styles.messageInput}
         placeholder={"Type your message here..."}
         multiline
-        numberOfLines={4}
+        numberOfLines={message.split(/\r\n|\r|\n/).length}
       />
       <View style={styles.sendButton}>
         {!mutation.isLoading ? (
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     maxHeight: 110,
     backgroundColor: COLORS.neutral100,
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: Platform.OS === "android" ? 8 : 12,
     borderRadius: 16,
   },
 

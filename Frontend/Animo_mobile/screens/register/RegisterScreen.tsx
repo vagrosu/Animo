@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     marginTop: 4,
+    height: 38,
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderWidth: 1,

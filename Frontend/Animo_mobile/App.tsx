@@ -7,7 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { EventProvider } from "react-native-outside-press";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
-LogBox.ignoreLogs(["AxiosError: Request failed with status code 401"]);
+LogBox.ignoreLogs(["AxiosError: Request failed with status code 401", "Possible unhandled promise rejection (id: "]);
 
 export default function App() {
   const queryClient = new QueryClient({

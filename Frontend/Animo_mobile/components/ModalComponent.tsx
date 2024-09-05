@@ -1,10 +1,10 @@
-import { Modal, ModalProps, View, StyleSheet, Pressable, Text, Animated } from "react-native";
+import { Modal, ModalProps, View, StyleSheet, Pressable, Text, Animated, Platform } from "react-native";
 import { useSafeAreaStyle } from "../utils/hooks";
 import OutsidePressHandler from "react-native-outside-press";
 import COLORS from "../utils/colors";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FADE_DURATION = 250;
 
@@ -19,6 +19,7 @@ type ModalComponentProps = {
 export default function ModalComponent({ title, isOpen, onClose, modalStyle, children, ...rest }: ModalComponentProps) {
   const safeAreaStyle = useSafeAreaStyle(styles.modalContainer);
   const fadeAnimation = useRef(new Animated.Value(0)).current;
+  const [isBackgroundOpen, setisBackgroundOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,13 +34,29 @@ export default function ModalComponent({ title, isOpen, onClose, modalStyle, chi
         duration: FADE_DURATION,
         useNativeDriver: true,
       }).start();
+      setisBackgroundOpen(false);
     }
   }, [fadeAnimation, isOpen]);
 
   return (
-    <Modal animationType="none" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
+    <Modal
+      animationType="none"
+      visible={isOpen}
+      onRequestClose={onClose}
+      onDismiss={onClose}
+      onShow={() => setisBackgroundOpen(true)}
+      transparent
+      {...rest}
+    >
       <Animated.View style={[styles.modalBackground, { opacity: fadeAnimation }]} />
-      <Modal animationType="slide" visible={isOpen} onRequestClose={onClose} onDismiss={onClose} transparent {...rest}>
+      <Modal
+        animationType="slide"
+        visible={Platform.OS === "ios" ? isOpen : isBackgroundOpen}
+        onRequestClose={onClose}
+        onDismiss={onClose}
+        transparent
+        {...rest}
+      >
         <View style={safeAreaStyle}>
           <View style={styles.modalWrapper}>
             <OutsidePressHandler style={[styles.modal, modalStyle]} onOutsidePress={onClose || (() => {})}>
@@ -67,12 +84,13 @@ const styles = StyleSheet.create({
   },
 
   modalBackground: {
-    backgroundColor: COLORS.black,
     flex: 1,
+    backgroundColor: COLORS.black,
   },
 
   modalWrapper: {
     marginHorizontal: 8,
+    marginBottom: Platform.OS === "android" ? 16 : 0,
   },
 
   modal: {

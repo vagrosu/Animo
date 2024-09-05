@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 8,
     gap: 12,
-    height: 50,
+    height: 54,
   },
 
   rowPressed: {
