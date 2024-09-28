@@ -47,7 +47,16 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
   ![Message Reactions](<./Media/message-reactions(edited).gif>)
   ![Message Reactions](./Media/message-reactions-list.png)
 
-## App Structure
+## App Logic
 
 - **App Architecture:**\
   ![App Architecture](./Media/animo_architecture.png)
+
+- **API Architecture:**\
+  ![App Architecture](./Media/backend_c4.png)
+
+- **Microservice Architecture:**\
+  ![App Architecture](./Media/moodscanner_c4.png)
+
+- **Database Architecture:**\
+  ![Database Architecture](./Media/database_design.png)
