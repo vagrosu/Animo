@@ -14,13 +14,34 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
 
 ## Pages
 
-- **Landing Page:**\
-  ![Landing Page](./Media/landing.png)
+- **Landing:**\
+  ![Landing](./Media/landing.png)
 
-- **Login Page:**\
-  ![Login Page](./Media/login.png)
+- **Login:**\
+  ![Login](./Media/login.png)
+
+- **Register:**\
+  ![Register](./Media/register.png)
+
+- **User Profile:**\
+  ![User Profile](./Media/user-profile.png)
+
+- **Selfie Consent:**\
+  ![Selfie Consent](./Media/selfie-consent.png)
+
+- **Chats List:**\
+  ![Chats List](./Media/chats-list.png)
+
+- **Chat:**\
+  ![Chat](./Media/specific-chat.png)
+
+- **Chat Members:**\
+  ![Chat Members](./Media/chat-members.png)
 
 ## Features
 
+- **Message Emotions:**\
+  ![Message Emotions](./Media/message-emotions.png)
+
 - **Message Reactions:**\
-  ![Message Reactions](./Media/message-reactions.gif)
+  ![Message Reactions](./Media/message-reactions-list.png)
