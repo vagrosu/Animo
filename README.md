@@ -11,3 +11,8 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
 - Backend: [ASP.NET Core](https://dotnet.microsoft.com/en-us/apps/aspnet)
 - Microservices: [Flask](https://flask.palletsprojects.com/en/3.0.x/)
 - AI Facial Emotion Analysis: [MediaPipe](https://ai.google.dev/edge/mediapipe/solutions/guide), [OpenCV](https://opencv.org/get-started/), [Scikit-learn](https://scikit-learn.org/stable/)
+
+## Pages
+
+- **Landing Page:**\
+  ![Landing Page](./Media/Screenshot%202024-09-28%20at%2021.17.28.png)
