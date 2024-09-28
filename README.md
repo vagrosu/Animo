@@ -2,7 +2,7 @@
 
 Animo is a cross platform messaging app designed to change online communication by integrating AI for emotion analysis. Its core features allow users to send messages, create group chats, and share selfies, with AI analyzing and displaying emotional states to improve understanding in conversations.
 
-<div style="display: flex; align-items: center;">
+<div style="display: flex; align-items: center; justify-content: center;">
   <img src="./Media/youtube.svg" alt="YouTube Icon" style="width: 20px; height: 20px; margin-right: 8px;" />
   <span>Demo: <a href="https://youtu.be/P04D65B8hx4">Animo: Web and Mobile Messaging App with AI Emotion Analysis</a></span>
 </div>
@@ -29,54 +29,68 @@ Animo is a cross platform messaging app designed to change online communication 
 
 ## Pages
 
-- **Landing:** A welcoming page that introduces users to Animo’s core features and provides access to login and registration.\
+- **Landing:** A welcoming page that introduces users to Animo’s core features and provides access to login and registration.
+
   ![Landing](./Media/landing.png)
 
-- **Login:** Allows existing users to sign into their accounts.\
+- **Login:** Allows existing users to sign into their accounts.
+
   ![Login](./Media/login.png)
 
-- **Register:** Enables new users to create an account by providing essential details.\
+- **Register:** Enables new users to create an account by providing essential details.
+
   ![Register](./Media/register.png)
 
-- **User Profile:** Displays user information such as name, username, phone number, email and selfie consent status.\
+- **User Profile:** Displays user information such as name, username, phone number, email and selfie consent status.
+
   ![User Profile](./Media/user-profile.png)
 
-- **Selfie Consent:** Asks users for consent to capture and analyze their selfies for emotion detection during chats.\
+- **Selfie Consent:** Asks users for consent to capture and analyze their selfies for emotion detection during chats.
+
   ![Selfie Consent](./Media/selfie-consent.png)
 
-- **Chats List:** Lists all ongoing and past chats, allowing users to quickly access their conversations. In the web version, the selected chat is also displayed with its messages and members\
+- **Chats List:** Lists all ongoing and past chats, allowing users to quickly access their conversations. In the web version, the selected chat is also displayed with its messages and members
+
   ![Chats List](./Media/chats-list.png)
 
-- **Chat:** A real-time messaging interface where AI-based emotional insights and reactions are displayed alongside messages.\
+- **Chat:** A real-time messaging interface where AI-based emotional insights and reactions are displayed alongside messages.
+
   ![Chat](./Media/specific-chat.png)
 
-- **Chat Members:** Shows the participants of the current chat.\
+- **Chat Members:** Shows the participants of the current chat.
+
   ![Chat Members](./Media/chat-members.png)
 
 ## Key Features
 
-- **Create Chat:** Quickly create new group or individual chats by selecting users from a search list.\
+- **Create Chat:** Quickly create new group or individual chats by selecting users from a search list.
+
   ![Create Chat](./Media/create-chat.png)
 
-- **Message Emotions:** Analyzes the emotion behind each message in real-time, using AI to display mood indicators like joy, anger, or surprise. This feature leverages the MoodScanner microservice to analyze facial emotions from user selfies and Rapid API for contextual emotion analysis based on message inputs.\
+- **Message Emotions:** Analyzes the emotion behind each message in real-time, using AI to display mood indicators like joy, anger, or surprise. This feature leverages the MoodScanner microservice to analyze facial emotions from user selfies and Rapid API for contextual emotion analysis based on message inputs.
+
   ![Message Emotions](./Media/message-emotions.png)
 
-- **Message Reactions:** Users can react to messages with emojis in real time. A dedicated reactions list shows the emojis used and the users who reacted.\
+- **Message Reactions:** Users can react to messages with emojis in real time. A dedicated reactions list shows the emojis used and the users who reacted.
+
   ![Message Reactions](<./Media/message-reactions(edited).gif>)
   ![Message Reactions](./Media/message-reactions-list.png)
 
 ## App Logic
 
-- **App Architecture:** An overview of the structure connecting the front-end and back-end components, detailing how messages and emotions are processed.\
+- **App Architecture:** An overview of the structure connecting the front-end and back-end components, detailing how messages and emotions are processed.
+
   ![App Architecture](./Media/animo_architecture.png)
 
 - **API Architecture:** The API architecture is centered around the API Controller, which uses various backend services. Key components include SignalR Hubs for real-time communication, Emotions Controller for emotion analysis, and feature-specific services for managing chat rooms, messages, and user reactions.\
   ![App Architecture](./Media/backend_c4.png)
 
-- **MoodScanner Microservice Architecture:** A specific microservice responsible for analyzing selfies to generate emotion data.\
+- **MoodScanner Microservice Architecture:** A specific microservice responsible for analyzing selfies to generate emotion data.
+
   ![App Architecture](./Media/moodscanner_c4.png)
 
-- **Database Architecture:** The relational database schema that manages user profiles, chats, messages, and more.\
+- **Database Architecture:** The relational database schema that manages user profiles, chats, messages, and more.
+
   ![Database Architecture](./Media/database_design.png)
 
 ## Author
