@@ -38,7 +38,7 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
 - **Chat Members:**\
   ![Chat Members](./Media/chat-members.png)
 
-## Features
+## Key Features
 
 - **Message Emotions:**\
   ![Message Emotions](./Media/message-emotions.png)
@@ -46,3 +46,8 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
 - **Message Reactions:**\
   ![Message Reactions](<./Media/message-reactions(edited).gif>)
   ![Message Reactions](./Media/message-reactions-list.png)
+
+## App Structure
+
+- **App Architecture:**\
+  ![App Architecture](./Media/animo_architecture.png)
