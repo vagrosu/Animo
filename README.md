@@ -44,4 +44,5 @@ Demo: [Animo: Web and Mobile Messaging App with AI Emotion Analysis](https://you
   ![Message Emotions](./Media/message-emotions.png)
 
 - **Message Reactions:**\
+  ![Message Reactions](<./Media/message-reactions(edited).gif>)
   ![Message Reactions](./Media/message-reactions-list.png)
