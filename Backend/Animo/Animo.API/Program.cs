@@ -16,7 +16,7 @@ if (builder.Environment.IsDevelopment())
         options.AddPolicy(
             "Open",
             corsBuilder => corsBuilder
-                .WithOrigins("http://localhost:3000")
+                .WithOrigins("http://192.168.101.16:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
