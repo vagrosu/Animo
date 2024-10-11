@@ -71,11 +71,13 @@ Animo is a cross platform messaging app designed to change online communication 
 
 - **Create Chat:** Quickly create new group or individual chats by selecting users from a search list.
 
-  ![Create Chat](./Media/create-chat.png)
+  ![Create Chat Web](./Media/create-chat_web.png)
+  ![Create Chat Mobile](./Media/create-chat_mobile.png)
 
 - **Message Emotions:** Analyzes the emotion behind each message in real-time, using AI to display mood indicators like joy, anger, or surprise. This feature leverages the MoodScanner microservice to analyze facial emotions from user selfies and Rapid API for contextual emotion analysis based on message inputs.
 
-  ![Message Emotions](./Media/message-emotions.png)
+  ![Message Emotions Web](./Media/message-emotions_web.png)
+  ![Message Emotions Mobile](./Media/message-emotions_mobile.png)
 
 - **Message Reactions:** Users can react to messages with emojis in real time. A dedicated reactions list shows the emojis used and the users who reacted.
 
