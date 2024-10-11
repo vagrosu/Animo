@@ -2,8 +2,8 @@
 
 Animo is a cross platform messaging app designed to change online communication by integrating AI for emotion analysis. Its core features allow users to send messages, create group chats, and share selfies, with AI analyzing and displaying emotional states to improve understanding in conversations.
 
-<div style="display: flex; align-items: center; justify-content: center;">
-  <img src="./Media/youtube.svg" alt="YouTube Icon" style="width: 20px; height: 20px; margin-right: 8px;" />
+<div align="center">
+	<img src="./Media/youtube.svg" alt="YouTube Icon" style="width: 20px; height: 12px;" />
   <span>Demo: <a href="https://youtu.be/P04D65B8hx4">Animo: Web and Mobile Messaging App with AI Emotion Analysis</a></span>
 </div>
 
