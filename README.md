@@ -31,27 +31,33 @@ Animo is a cross platform messaging app designed to change online communication 
 
 - **Landing:** A welcoming page that introduces users to Animo’s core features and provides access to login and registration.
 
-  ![Landing](./Media/landing.png)
+  ![Landing Web](./Media/landing_web.png)
+  ![Landing Mobile](./Media/landing_mobile.png)
 
 - **Login:** Allows existing users to sign into their accounts.
 
-  ![Login](./Media/login.png)
+  ![Login Web](./Media/login_web.png)
+  ![Login Mobile](./Media/login_mobile.png)
 
 - **Register:** Enables new users to create an account by providing essential details.
 
-  ![Register](./Media/register.png)
+  ![Register Web](./Media/register_web.png)
+  ![Register Mobile](./Media/register_mobile.png)
 
 - **User Profile:** Displays user information such as name, username, phone number, email and selfie consent status.
 
-  ![User Profile](./Media/user-profile.png)
+  ![User Profile Web](./Media/user-profile_web.png)
+  ![User Profile Mobile](./Media/user-profile_mobile.png)
 
 - **Selfie Consent:** Asks users for consent to capture and analyze their selfies for emotion detection during chats.
 
-  ![Selfie Consent](./Media/selfie-consent.png)
+  ![Selfie Consent Web](./Media/selfie-consent_web.png)
+  ![Selfie Consent Mobile](./Media/selfie-consent_mobile.png)
 
 - **Chats List:** Lists all ongoing and past chats, allowing users to quickly access their conversations. In the web version, the selected chat is also displayed with its messages and members
 
-  ![Chats List](./Media/chats-list.png)
+  ![Chats List Web](./Media/chats-list_web.png)
+  ![Chats List Mobile](./Media/chats-list_mobile.png)
 
 - **Chat:** A real-time messaging interface where AI-based emotional insights and reactions are displayed alongside messages.
 
